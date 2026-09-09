@@ -1,0 +1,15 @@
+This aircraft is derived from the "quadtailsitter" simulation model that ships with
+PX4-Autopilot (Tools/simulation/gz/models/quadtailsitter), a model of the HEQ Swan K1
+quad tailsitter, and carries that model's geometry, mass, motor cant and aerodynamic
+data. The meshes are the source model's own, converted to glTF and recoloured after the
+manufacturer's photographs.
+
+The upstream model is distributed under the BSD 3-Clause License; see LICENSE in
+this folder for its text and copyright notice.
+
+  https://github.com/PX4/PX4-Autopilot
+
+The propeller thrust and power tables are taken from the UIUC Propeller Data Site
+(Brandt, Deters, Ananda, Dantsker and Selig), APC 9x6E wind-tunnel measurements.
+
+  https://m-selig.ae.illinois.edu/props/propDB.html

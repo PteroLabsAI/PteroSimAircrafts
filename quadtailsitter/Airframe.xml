@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<airframe>
+  <!-- How it rests when nobody says. A heading belongs to whoever places the vehicle, so none is given here. -->
+  <rest pitch="90"/>
+
+  <!-- The flight controller flies a tailsitter in its hover frame: rotors up, gravity on Z. Without this the
+       estimator reads a vehicle pitched ninety degrees and preflight refuses to arm. -->
+  <sensors pitch="90"/>
+</airframe>

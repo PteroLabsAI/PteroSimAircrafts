@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<control_bindings stack="PX4">
+  <binding channel="0" type="Motor" index="0" in="0 1" out="0 1" label="motor1_fr_ccw"/>
+  <binding channel="1" type="Motor" index="1" in="0 1" out="0 1" label="motor2_bl_ccw"/>
+  <binding channel="2" type="Motor" index="2" in="0 1" out="0 1" label="motor3_fl_cw"/>
+  <binding channel="3" type="Motor" index="3" in="0 1" out="0 1" label="motor4_br_cw"/>
+</control_bindings>
