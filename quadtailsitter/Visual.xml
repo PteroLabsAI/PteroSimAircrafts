@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right,
+  Z up. An axis is read in the frame of whatever turns.
+-->
+<visual>
+  <fixture file="meshes/base_link__fuselage_visual.glb" xyz="0 0 0" rpy="0 0 -90"/>
+  <fixture file="meshes/motor1_link__motor_visual.glb" xyz="-0.0227588 0.248611 -0.161368" rpy="-9.85108 1.72794 -80.1489"/>
+  <fixture file="meshes/motor2_link__motor_visual.glb" xyz="-0.0227588 -0.248611 0.161368" rpy="9.85107 1.72794 -99.8511"/>
+  <fixture file="meshes/motor3_link__motor_visual.glb" xyz="-0.0227588 -0.248611 -0.161368" rpy="-9.85108 -1.72794 -99.8511"/>
+  <fixture file="meshes/motor4_link__motor_visual.glb" xyz="-0.0227588 0.248611 0.161368" rpy="9.85107 -1.72794 -80.1489"/>
+
+  <propeller file="meshes/motor1_link__prop_visual.glb" xyz="0.0145477 0.002605 0.002565" rpy="80.1489 1.72794 -80.1489" motor="motor1_fr_ccw" axis="-0.969846 -0.173648 -0.17101"/>
+  <propeller file="meshes/motor2_link__prop_visual.glb" xyz="0.0145477 -0.002605 -0.002565" rpy="99.8511 1.72794 -99.8511" motor="motor2_bl_ccw" axis="-0.969846 0.173648 0.17101"/>
+  <propeller file="meshes/motor3_link__prop_visual.glb" xyz="0.0145477 -0.002605 0.002565" rpy="80.1489 -1.72794 -99.8511" motor="motor3_fl_cw" axis="0.969846 -0.173648 0.17101"/>
+  <propeller file="meshes/motor4_link__prop_visual.glb" xyz="0.0145477 0.002605 -0.002565" rpy="99.8511 -1.72794 -80.1489" motor="motor4_br_cw" axis="0.969846 0.173648 -0.17101"/>
+
+</visual>

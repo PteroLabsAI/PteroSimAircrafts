@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+  <propulsion>
+    <engine file="SwanK1_Motor" name="motor1_fr_ccw">
+      <thruster file="SwanK1_Prop_9x6">
+        <location unit="M">
+          <x>  0.015 </x>
+          <y> 0.25 </y>
+          <z> -0.16 </z>
+        </location>
+        <orient unit="DEG">
+          <roll>   0 </roll>
+          <pitch> 9.8465 </pitch>
+          <yaw> 10.1511 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="SwanK1_Motor" name="motor2_bl_ccw">
+      <thruster file="SwanK1_Prop_9x6">
+        <location unit="M">
+          <x>  0.015 </x>
+          <y> -0.25 </y>
+          <z> 0.16 </z>
+        </location>
+        <orient unit="DEG">
+          <roll>   0 </roll>
+          <pitch> -9.8465 </pitch>
+          <yaw> -10.1511 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="SwanK1_Motor" name="motor3_fl_cw">
+      <thruster file="SwanK1_Prop_9x6">
+        <location unit="M">
+          <x>  0.015 </x>
+          <y> -0.25 </y>
+          <z> -0.16 </z>
+        </location>
+        <orient unit="DEG">
+          <roll>   0 </roll>
+          <pitch> 9.8465 </pitch>
+          <yaw> -10.1511 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="SwanK1_Motor" name="motor4_br_cw">
+      <thruster file="SwanK1_Prop_9x6">
+        <location unit="M">
+          <x>  0.015 </x>
+          <y> 0.25 </y>
+          <z> 0.16 </z>
+        </location>
+        <orient unit="DEG">
+          <roll>   0 </roll>
+          <pitch> -9.8465 </pitch>
+          <yaw> 10.1511 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+  </propulsion>

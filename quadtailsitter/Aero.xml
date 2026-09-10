@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+  <aerodynamics>
+    <function name="aero/coefficient/CL_basic">
+        <table>
+            <independentVar lookup="row">aero/alpha-rad</independentVar>
+            <tableData>-1.5708 0.000
+-0.6000 -0.850
+-0.3391 -1.548
+0.0000 0.152
+0.3391 1.852
+0.6000 0.850
+1.5708 0.000</tableData>
+        </table>
+    </function>
+    <function name="aero/coefficient/CL_q">
+        <product>
+            <value>7.971792</value>
+            <property>aero/ci2vel</property>
+            <property>velocities/q-aero-rad_sec</property>
+        </product>
+    </function>
+    <function name="aero/coefficient/CL">
+        <sum>
+            <property>aero/coefficient/CL_basic</property>
+            <property>aero/coefficient/CL_q</property>
+        </sum>
+    </function>
+    <function name="aero/coefficient/CD">
+        <sum>
+            <table>
+                <independentVar lookup="row">aero/alpha-rad</independentVar>
+                <tableData>-1.5708 1.500
+-0.6000 0.450
+-0.3391 0.282
+0.0000 0.150
+0.3391 0.282
+0.6000 0.450
+1.5708 1.500</tableData>
+            </table>
+            <product>
+                <value>0.03861</value>
+                <property>aero/coefficient/CL_basic</property>
+                <property>aero/coefficient/CL_basic</property>
+            </product>
+        </sum>
+    </function>
+    <function name="aero/coefficient/CY">
+        <sum>
+            <product>
+                <value>-0.258244</value>
+                <property>aero/beta-rad</property>
+            </product>
+            <product>
+                <value>0.065861</value>
+                <property>aero/bi2vel</property>
+                <property>velocities/p-aero-rad_sec</property>
+            </product>
+            <product>
+                <value>0.230299</value>
+                <property>aero/bi2vel</property>
+                <property>velocities/r-aero-rad_sec</property>
+            </product>
+        </sum>
+    </function>
+    <function name="aero/coefficient/Cl">
+        <sum>
+            <product>
+                <value>-0.039250</value>
+                <property>aero/beta-rad</property>
+            </product>
+            <product>
+                <value>-0.487407</value>
+                <property>aero/bi2vel</property>
+                <property>velocities/p-aero-rad_sec</property>
+            </product>
+            <product>
+                <value>0.078165</value>
+                <property>aero/bi2vel</property>
+                <property>velocities/r-aero-rad_sec</property>
+            </product>
+        </sum>
+    </function>
+    <function name="aero/coefficient/Cm">
+        <sum>
+            <value>0.0</value><!-- the source model's Cem0 of 0.075 has nothing to trim against with the aerodynamic reference at the CG and reads as a permanent pitch rate in cruise -->
+            <product>
+                <value>-0.463966</value>
+                <property>aero/alpha-rad</property>
+            </product>
+            <product>
+                <value>-12.140140</value>
+                <property>aero/ci2vel</property>
+                <property>velocities/q-aero-rad_sec</property>
+            </product>
+        </sum>
+    </function>
+    <function name="aero/coefficient/Cn">
+        <sum>
+            <product>
+                <value>0.100826</value>
+                <property>aero/beta-rad</property>
+            </product>
+            <product>
+                <value>-0.040416</value>
+                <property>aero/bi2vel</property>
+                <property>velocities/p-aero-rad_sec</property>
+            </product>
+            <product>
+                <value>-0.089947</value>
+                <property>aero/bi2vel</property>
+                <property>velocities/r-aero-rad_sec</property>
+            </product>
+        </sum>
+    </function>
+    <axis name="LIFT">
+      <function name="aero/force/Lift">
+          <product>
+              <property>aero/qbar-area</property>
+              <property>aero/coefficient/CL</property>
+          </product>
+      </function>
+    </axis>
+    <axis name="DRAG">
+      <function name="aero/force/Drag">
+          <product>
+              <property>aero/qbar-area</property>
+              <property>aero/coefficient/CD</property>
+          </product>
+      </function>
+    </axis>
+    <axis name="SIDE">
+      <function name="aero/force/Side">
+          <product>
+              <property>aero/qbar-area</property>
+              <property>aero/coefficient/CY</property>
+          </product>
+      </function>
+    </axis>
+    <axis name="ROLL">
+      <function name="aero/moment/Roll">
+          <product>
+              <property>aero/qbar-area</property>
+              <property>metrics/bw-ft</property>
+              <property>aero/coefficient/Cl</property>
+          </product>
+      </function>
+    </axis>
+    <axis name="PITCH">
+      <function name="aero/moment/Pitch">
+          <product>
+              <property>aero/qbar-area</property>
+              <property>metrics/cbarw-ft</property>
+              <property>aero/coefficient/Cm</property>
+          </product>
+      </function>
+      <function name="aero/moment/Pitch_propwash_damp">
+          <description>Pitch damping from the propeller slipstream over the wing. qbar is built from freestream velocity, ~0 at hover, so the wing's Cemq=-12.14 damping is off exactly at hover while the props' induced flow keeps it active in reality. M = C * Vind_avg[fps] * q with Vind from FGPropeller's momentum-theory induced velocity, as stock c172p and pc7 do; C = 1/4*rho*S*cbar^2*Cemq in English units (S 4.306 ft2, cbar 0.722 ft) = -0.01619. Vind falls with airspeed, so the term fades in cruise and does not double-count the freestream Cemq.</description>
+          <product>
+              <value>-0.01619</value>
+              <property>velocities/q-rad_sec</property>
+              <quotient>
+                  <sum>
+                      <property>propulsion/engine[0]/prop-induced-velocity_fps</property>
+                      <property>propulsion/engine[1]/prop-induced-velocity_fps</property>
+                      <property>propulsion/engine[2]/prop-induced-velocity_fps</property>
+                      <property>propulsion/engine[3]/prop-induced-velocity_fps</property>
+                  </sum>
+                  <value>4.0</value>
+              </quotient>
+          </product>
+      </function>
+    </axis>
+    <axis name="YAW">
+      <function name="aero/moment/Yaw">
+          <product>
+              <property>aero/qbar-area</property>
+              <property>metrics/bw-ft</property>
+              <property>aero/coefficient/Cn</property>
+          </product>
+      </function>
+    </axis>
+  </aerodynamics>

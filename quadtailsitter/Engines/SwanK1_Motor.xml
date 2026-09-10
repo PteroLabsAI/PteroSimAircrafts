@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!-- Swan K1 motor: 2212 KV980, 3S/4S LiPo -->
+<brushless_dc_motor name="SwanK1_Motor">
+  <velocityconstant> 980 </velocityconstant>   <!-- KV: rpm/V -->
+  <coilresistance> 0.10 </coilresistance>       <!-- Ohm, typical 2212 -->
+  <noloadcurrent> 0.50 </noloadcurrent>         <!-- A -->
+  <maxvolts> 14.8 </maxvolts>                   <!-- 4S LiPo nominal -->
+</brushless_dc_motor>

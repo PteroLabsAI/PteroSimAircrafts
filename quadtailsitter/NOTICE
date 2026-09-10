@@ -1,0 +1,23 @@
+This aircraft is derived from the "swan_k1_hwing" simulation model in ArduPilot's SITL_Models
+(Gazebo/models/swan_k1_hwing), a model of the HEQ Swan K-1 HWing by Brandon MacDougall,
+Andrew Tridgell and Rhys Mainwaring. It carries that model's geometry, mass, motor cant and
+control layout; the fuselage and motor meshes are the source model's own, converted to glTF
+and recoloured after the manufacturer's photographs. The propeller meshes are the Iris
+propellers that model ships with.
+
+SITL_Models distributes its Gazebo models as the ROS package "ardupilot_sitl_models" under
+the GNU General Public License v3.0; see LICENSE in this folder for its text.
+
+  https://github.com/ArduPilot/SITL_Models
+
+The PX4 airframe file (px4_quadtailsitter) follows PX4-Autopilot's 4018_gz_quadtailsitter,
+and the aerodynamic coefficients are the ones both that project's "quadtailsitter" Gazebo
+model and the ArduPilot model carry. PX4-Autopilot is distributed under the BSD 3-Clause
+License.
+
+  https://github.com/PX4/PX4-Autopilot
+
+The propeller thrust and power tables are taken from the UIUC Propeller Data Site
+(Brandt, Deters, Ananda, Dantsker and Selig), APC 9x6E wind-tunnel measurements.
+
+  https://m-selig.ae.illinois.edu/props/propDB.html
