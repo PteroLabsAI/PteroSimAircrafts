@@ -15,4 +15,6 @@
   <propeller file="meshes/motor3_link__prop_visual.glb" xyz="0.0145477 -0.002605 0.002565" rpy="80.1489 -1.72794 -99.8511" motor="motor3_fl_cw" axis="0.969846 -0.173648 0.17101"/>
   <propeller file="meshes/motor4_link__prop_visual.glb" xyz="0.0145477 0.002605 -0.002565" rpy="99.8511 -1.72794 -80.1489" motor="motor4_br_cw" axis="0.969846 0.173648 -0.17101"/>
 
+  <chase xyz="0 0 0" rpy="0 -90 0" length="3"/>
+
 </visual>
