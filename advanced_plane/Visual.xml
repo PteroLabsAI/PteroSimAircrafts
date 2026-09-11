@@ -19,4 +19,6 @@
   <surface file="meshes/elevator__elevator_visual.glb" xyz="0.554268 0 -0.0574932" rpy="0 0 -90" source="elevator" axis="0 1 0" hinge="-0.4892 0 -0.0055" limit="44.6907"/>
   <surface file="meshes/rudder__rudder_visual.glb" xyz="0.600183 0.00124853 -0.166808" rpy="0 0 -90" source="rudder" axis="0.4461 0 -1" hinge="-0.535115 -0.00124853 0.103814" limit="44.6907"/>
 
+  <chase xyz="0.0117 0 0.057122" rpy="0 -15 0" length="3"/>
+
 </visual>
