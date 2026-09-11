@@ -7,4 +7,5 @@
   <sensor type="barometer" name="air_pressure_sensor" xyz="0 0 0" rpy="0 0 0" hz="50"/>
   <sensor type="imu" name="imu_sensor" xyz="0 0 0" rpy="0 0 0" hz="250"/>
   <sensor type="gps" name="navsat_sensor" xyz="0 0 0" rpy="0 0 0" hz="30"/>
+  <sensor type="camera" name="camera"/>
 </sensors>
