@@ -8,8 +8,9 @@
   <property value="0.0">fcs/servo-0-cmd-norm</property>
   <property value="0.0">fcs/servo-1-cmd-norm</property>
   <property value="0.0">fcs/servo-2-cmd-norm</property>
-  <property value="0.0">fcs/servo-3-cmd-norm</property>
-  <property value="0.0">fcs/servo-4-cmd-norm</property>
+  <!-- The tilts are linear 0..90, so -1 is their 0 deg rest and PX4's hover output; 0 would be the 45 deg midpoint. -->
+  <property value="-1.0">fcs/servo-3-cmd-norm</property>
+  <property value="-1.0">fcs/servo-4-cmd-norm</property>
 
   <channel name="servo_0">
     <aerosurface_scale name="fcs/servo-0-scale">
