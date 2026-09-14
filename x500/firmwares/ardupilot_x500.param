@@ -1,0 +1,27 @@
+# ArduCopter SITL parameters for x500: sim_vehicle.py -v ArduCopter -f quad --model JSON:<host> --add-param-file=<this>.
+# Only what the frame and the gimbal are; everything else is ArduCopter's own default.
+FRAME_CLASS 1
+FRAME_TYPE 1
+
+# The CGO3 as a servo mount (MNT1_TYPE 1) on SERVO5-7, which are Controls.xml channels 4-6, aimed over MAVLink
+# (MNT1_DEFLT_MODE 3). Each MIN/MAX is the binding's out=: ArduPilot maps the angle to PWM linearly across it.
+MNT1_TYPE 1
+MNT1_DEFLT_MODE 3
+MNT1_ROLL_MIN -45
+MNT1_ROLL_MAX 45
+MNT1_PITCH_MIN -90
+MNT1_PITCH_MAX 90
+MNT1_YAW_MIN -180
+MNT1_YAW_MAX 180
+SERVO5_FUNCTION 8
+SERVO6_FUNCTION 7
+SERVO7_FUNCTION 6
+
+# The full PWM span: the simulator reads (PWM - 1500) / 500, and ArduPilot's default 1100..1900 would trim a
+# fifth off every travel.
+SERVO5_MIN 1000
+SERVO5_MAX 2000
+SERVO6_MIN 1000
+SERVO6_MAX 2000
+SERVO7_MIN 1000
+SERVO7_MAX 2000

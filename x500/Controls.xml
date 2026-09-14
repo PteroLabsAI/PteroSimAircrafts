@@ -2,13 +2,22 @@
 <!--
   Generated from the source Gazebo model. A sidecar: JSBSim never reads this file.
 
-  Motors take the low channels in the order the model's motorNumber states, then the servos in the
-  order their joint controllers state. The PX4 airframe generated beside this uses the same order,
+  Motors take the low channels in the order the model's motorNumber states, which is also ArduCopter's
+  quad-X order (front right, aft left, front left, aft right), so the rows name both autopilots. The PX4
+  airframe (firmwares/px4_x500) and the ArduCopter parameters (firmwares/ardupilot_x500.param) use the same order,
   which is the only reason the two ends agree.
+
+  The gimbal rides channels 4-6: PX4's Gimbal_Roll/Pitch/Yaw output functions on PWM 5-7, ArduPilot's
+  SERVO5-7 as Mount1 roll/pitch/yaw. Each out= is the travel the autopilot's parameters state. PX4 maps
+  its stick to that travel about zero, so a travel here has to be symmetric to land on the angle PX4 meant;
+  ArduPilot maps linearly across MNT1_*_MIN..MAX, which are these same numbers.
 -->
 <control_bindings stack="PX4">
-  <binding channel="0" type="Motor" index="0" label="rotor_0"/>
-  <binding channel="1" type="Motor" index="1" label="rotor_1"/>
-  <binding channel="2" type="Motor" index="2" label="rotor_2"/>
-  <binding channel="3" type="Motor" index="3" label="rotor_3"/>
+  <binding stack="ArduPilot PX4" channel="0" type="Motor" index="0" label="rotor_0"/>
+  <binding stack="ArduPilot PX4" channel="1" type="Motor" index="1" label="rotor_1"/>
+  <binding stack="ArduPilot PX4" channel="2" type="Motor" index="2" label="rotor_2"/>
+  <binding stack="ArduPilot PX4" channel="3" type="Motor" index="3" label="rotor_3"/>
+  <binding stack="ArduPilot PX4" channel="4" type="Gimbal" index="0" in="-1 1" out="-45 45" label="gimbal roll"/>
+  <binding stack="ArduPilot PX4" channel="5" type="Gimbal" index="1" in="-1 1" out="-90 90" label="gimbal pitch"/>
+  <binding stack="ArduPilot PX4" channel="6" type="Gimbal" index="2" in="-1 1" out="-180 180" label="gimbal yaw"/>
 </control_bindings>
