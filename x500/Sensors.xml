@@ -8,5 +8,5 @@
   <sensor type="imu" name="imu_sensor" hz="250"/>
   <sensor type="gps" name="navsat_sensor" hz="30"/>
   <sensor type="camera" name="camera" xyz="0.1695 0 0"/>
-  <sensor type="camera" name="gimbal_camera" xyz="0.035 0 0" parent="gimbal_1"/>
+  <sensor type="camera" name="gimbal_camera" xyz="0.035 0 0" parent="gimbal_1" field_of_view="115"/>
 </sensors>
