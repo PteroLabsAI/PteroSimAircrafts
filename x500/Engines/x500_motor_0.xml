@@ -1,19 +1,17 @@
 <?xml version="1.0"?>
 <!--
-  Sized to the model's maxRotVelocity of 1000 rad/s, which is 9549 rpm: the
-  velocity constant is that speed divided by a 14.8 V pack, so full throttle turns the
-  propeller as fast as the source says and no faster.
+  T-Motor (LIGPOWER) MN3510 KV630, 12N14P, the motor sold for 13-inch blades: velocity constant 630 rpm/V, internal
+  resistance 65 milliohm, idle current 0.5 A at 10 V, 3-4S, 22 A / 495 W continuous (RobotShop copy of the datasheet,
+  ligpower_mn3510_kv630_high_performance_uav_motor_f). With the 13x4.4 CF this model reproduces the datasheet's
+  rows to within a tenth: 4400 rpm and 6 A at half throttle against 4500 and 3.4; 7700 rpm and 1650 g at full
+  against 7300 and 1500.
 
-  Coil resistance is what makes this rotor reach a new speed in the 0.0125 s the model states as its
-  timeConstantUp, which is the whole of how quickly the vehicle can answer its autopilot. It is not a
-  borrowed number.
-
-  No-load current is NOT from the model either. It shapes how much current this draws rather than how
-  much thrust it makes, and is the figure to replace first if the vehicle is ever given a battery.
+  maxvolts is the calibration knob: a 4S pack is 14.8 V on paper and less under 14 A through an ESC, and the model
+  has no ESC. 13.5 V lands the full-throttle row closest without starving the half-throttle one.
 -->
 <brushless_dc_motor name="x500_motor_0">
-  <velocityconstant> 645.2 </velocityconstant>
-  <coilresistance> 0.007627 </coilresistance>
-  <noloadcurrent> 0.45 </noloadcurrent>
-  <maxvolts> 14.8 </maxvolts>
+  <velocityconstant> 630 </velocityconstant>
+  <coilresistance> 0.065 </coilresistance>
+  <noloadcurrent> 0.5 </noloadcurrent>
+  <maxvolts> 13.5 </maxvolts>
 </brushless_dc_motor>
