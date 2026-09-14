@@ -1,7 +1,13 @@
 This aircraft is derived from the "x500" simulation model that ships with
 PX4-Autopilot (Tools/simulation/gz/models/x500), and carries that model's geometry,
 mass, aerodynamic and propulsion data. The meshes are the source model's own,
-converted to glTF.
+converted to glTF. The gimbal is the CGO3 from the same collection
+(Tools/simulation/gz/models/gimbal, by Stefano Colli, Auterion), the four meshes
+converted the same way: the post turns with yaw, the fork with roll, the camera body
+with pitch, all about the camera's pitch axis, so the yaw axis sits 16 mm from where
+the source model's joint has it. The remesh's lens funnel is covered by a flat bezel
+and glass disc of our own, the fork's badge ends are silver, and the meshes are
+welded, shaded smooth and textured in PteroSim.
 
 The upstream model is distributed under the BSD 3-Clause License; see LICENSE in
 this folder for its text and copyright notice.

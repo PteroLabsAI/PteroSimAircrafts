@@ -41,7 +41,25 @@ param set-default PWM_MAIN_FUNC2 102
 param set-default PWM_MAIN_FUNC3 103
 param set-default PWM_MAIN_FUNC4 104
 
+# The gimbal: a servo mount on PWM 5-7 (MNT_MODE_OUT 0), aimed over MAVLink gimbal protocol v2 (MNT_MODE_IN 4).
+# The travels are what Controls.xml binds; PX4 maps +-1 to them about zero, so each RANGE is twice the out= half-travel.
+# The pitch range is spelled both ways, MNT_RANGE_PITCH up to v1.16 and MNT_MIN/MAX_PITCH on main: the one a build
+# has not got prints a "not found" line and changes nothing.
+param set-default PWM_MAIN_FUNC5 420
+param set-default PWM_MAIN_FUNC6 421
+param set-default PWM_MAIN_FUNC7 422
+param set-default MNT_MODE_IN 4
+param set-default MNT_MODE_OUT 0
+param set-default MNT_RANGE_ROLL 90
+param set-default MNT_RANGE_PITCH 180
+param set-default MNT_MIN_PITCH -90
+param set-default MNT_MAX_PITCH 90
+param set-default MNT_RANGE_YAW 360
+
 param set-default MPC_THR_HOVER 0.59
 param set-default SIM_BAT_ENABLE 0
 param set-default COM_ARM_CHK_ESCS 0
 param set-default SYS_HAS_NUM_ASPD 0
+
+# No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.
+param set-default COM_RC_IN_MODE 4
