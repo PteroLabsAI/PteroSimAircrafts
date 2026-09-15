@@ -42,8 +42,7 @@ so JSBSim loads the new definition.
 
 The main XML file (`<model>.xml`) assembles a JSBSim model from mass, aerodynamic,
 landing-gear, engine, sensor, and control definitions. `Visual.xml` references the
-meshes in `meshes/` and describes their moving parts. `firmwares/` contains supported
-autopilot settings; `Controls.xml` maps their output channels to motors, servos, and
-payloads.
+meshes in `meshes/` and describes their moving parts. Additional files provide the
+control, sensor, and supported-autopilot configuration for the model.
 
 Third-party licences and notices remain in the directories of the relevant aircraft.
