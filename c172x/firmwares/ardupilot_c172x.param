@@ -1,0 +1,27 @@
+# ArduPlane parameters for the c172x, layered over ArduPilot's Tools/autotest/models/plane.parm:
+#   sim_vehicle.py -v ArduPlane --model JSON:<host> --add-param-file Tools/autotest/models/plane.parm --add-param-file <this file>
+# plane.parm is written for a small RC plane (cruise 22 m/s, minimum 10 m/s); a 172 stalls above that.
+# The simulator's airspeed sensor arrives in the JSON "airspeed" field, which only the SITL sensor type reads.
+ARSPD_TYPE 100
+ARSPD_USE 1
+# Speeds from the Cessna 172P POH (Vs1 50 KIAS, Vr 55 KIAS, Vy 75 KIAS, Vno 128 KIAS), as the PX4 airframe uses them.
+AIRSPEED_MIN 28
+AIRSPEED_CRUISE 40
+AIRSPEED_MAX 60
+TKOFF_ROTATE_SPD 30
+# Down elevator until just below rotation, as ArduPilot's own note on TKOFF_TDRAG_ELEV suggests for a tricycle
+# whose nosewheel goes light: the flight model's engine swings the nose once the nosewheel unloads.
+TKOFF_TDRAG_ELEV -25
+TKOFF_TDRAG_SPD1 25
+TKOFF_THR_MAX 100
+TKOFF_ALT 80
+TKOFF_LVL_ALT 10
+TKOFF_LVL_PITCH 5
+# JSBSim c172x measured: full-throttle climb 3.5 m/s, idle sink about 4 m/s.
+TECS_CLMB_MAX 3.5
+TECS_SINK_MIN 3
+TECS_SINK_MAX 5
+PTCH_LIM_MAX_DEG 15
+PTCH_LIM_MIN_DEG -15
+ROLL_LIMIT_DEG 45
+TRIM_THROTTLE 60
