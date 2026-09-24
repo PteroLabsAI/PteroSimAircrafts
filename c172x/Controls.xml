@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. Channels come in the order each autopilot's output functions
+  put them. PX4 (firmwares/px4_c172x): PWM_MAIN_FUNC1..5 = motor, elevator, aileron, rudder, flaps.
+  ArduPlane's own defaults (Tools/autotest/models/plane.parm): SERVO1 aileron, SERVO2 elevator,
+  SERVO3 throttle, SERVO4 rudder, then flaps. A typed row takes the stack's sign convention: ArduPlane's
+  elevator and rudder servos above 1500 are nose up and yaw right, JSBSim's commands +1 are trailing
+  edge down and trailing edge left, so those two are inverted on the way in -- the same two servos
+  ArduPilot reverses for its own JSBSim frame (Tools/autotest/default_params/plane-jsbsim.parm).
+-->
+<control_bindings stack="PX4">
+  <binding stack="PX4" channel="0" type="Motor" index="0" in="0 1" out="0 1" label="io320"/>
+  <binding stack="PX4" channel="1" type="Elevator" in="-1 1" out="-1 1" label="elevator"/>
+  <binding stack="PX4" channel="2" type="Aileron" in="-1 1" out="-1 1" label="aileron"/>
+  <binding stack="PX4" channel="3" type="Rudder" in="-1 1" out="-1 1" label="rudder"/>
+  <binding stack="PX4" channel="4" type="Flaps" in="0 1" out="0 1" label="flaps"/>
+  <binding stack="ArduPilot" channel="0" type="Aileron" in="-1 1" out="-1 1" label="aileron"/>
+  <binding stack="ArduPilot" channel="1" type="Elevator" in="-1 1" out="-1 1" label="elevator"/>
+  <binding stack="ArduPilot" channel="2" type="Motor" index="0" in="0 1" out="0 1" label="io320"/>
+  <binding stack="ArduPilot" channel="3" type="Rudder" in="-1 1" out="-1 1" label="rudder"/>
+  <binding stack="ArduPilot" channel="4" type="Flaps" in="0 1" out="0 1" label="flaps"/>
+</control_bindings>

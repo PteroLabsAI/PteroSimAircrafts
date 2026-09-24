@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
+<fdm_config name="Cessna C-172 Skyhawk II"  version="2.0" release="BETA"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
+    <fileheader>
+        <author>Tony Peden</author>
+        <license
+          licenseName="GPL (General Public License)"
+          licenseURL="http://www.gnu.org/licenses/gpl.html"/>
+        <filecreationdate>1999-01-01</filecreationdate>
+        <version>$Revision: 1.91 $</version>
+        <description>Models a 1982 Cessna 172P.</description>
+        <note>
+          This model was created using publicly available data, publicly available
+          technical reports, textbooks, and guesses. It contains no proprietary or
+          restricted data. It has been validated only to the extent that it seems
+          to "fly right", and possibly to comply to published, publicly known,
+          performance data (maximum speed, endurance, etc.). Thus, this model
+          is meant for educational and entertainment purposes only.
+
+          This simulation model is not endorsed by the manufacturer. This model
+          is not to be sold.
+        </note>
+      <reference
+        refID=  "1"
+        author= "Cessna Aircraft Company"
+        title=  "Information Manual Skyhawk Model 172P"
+        date=   "1982"/>
+      <reference
+        refID=  "2"
+        author= "FAA"
+        title=  "Type Certificate Data Sheet No. 3A12"
+        date=   "5 May 2011"/>
+    </fileheader>
+    <metrics file="Metrics.xml"/>
+    <mass_balance file="Mass.xml"/>
+    <ground_reactions file="Gear.xml"/>
+    <propulsion file="Propulsion.xml"/>
+
+    <system name="Navigation">
+      <channel name="Heading">
+        <sensor name="navigation/actual-heading-rad">
+          <input> attitude/heading-true-rad </input>
+<!--          <lag> 2500 </lag> -->
+<!--          <noise variation="PERCENT"> .02 </noise> -->
+          <bias> 0.003 </bias>
+        </sensor>
+      </channel>
+    </system>
+
+    <system name="Fuel content in volume">
+        <channel name="Fuel volume">
+            <fcs_function name="propulsion/tank[0]/contents-volume-gal">
+                <function>
+                    <quotient>
+                        <p> propulsion/tank[0]/contents-lbs </p>
+                        <p> propulsion/tank[0]/density-lbs_per_gal </p>
+                    </quotient>
+                </function>
+            </fcs_function>
+            <fcs_function name="propulsion/tank[1]/contents-volume-gal">
+                <function>
+                    <quotient>
+                        <p> propulsion/tank[1]/contents-lbs </p>
+                        <p> propulsion/tank[1]/density-lbs_per_gal </p>
+                    </quotient>
+                </function>
+            </fcs_function>
+        </channel>
+    </system>
+
+    <system name="Mixture control">
+      <!--
+      E = 1.3 * Mixture * P_std / P_amb
+
+      Mixture = (P_amb / P_std) / 1.3
+      -->
+      <channel name="Automatic Mixture Control">
+        <fcs_function name="systems/mixture-cmd-norm">
+          <function>
+            <quotient>
+              <table>
+                <independentVar lookup="row">atmosphere/P-psf</independentVar>
+                <tableData>
+                     0  0.0
+                  2117  1.0
+                </tableData>
+              </table>
+              <value>1.0</value>
+            </quotient>
+          </function>
+          <output>fcs/mixture-cmd-norm</output>
+        </fcs_function>
+      </channel>
+    </system>
+
+    <system file="GNCUtilities"/>
+
+    <system file="Autopilot">
+      <property value="0.523"> guidance/roll-angle-limit </property>
+      <property value="0.174"> guidance/roll-rate-limit </property>
+    </system>
+
+    <autopilot file="c172ap"/>
+
+    <flight_control file="FlightControl.xml"/>
+    <aerodynamics file="Aero.xml"/>
+</fdm_config>
