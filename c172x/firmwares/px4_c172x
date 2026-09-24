@@ -98,7 +98,9 @@ param set-default FW_R_LIM 35
 # ── Navigation ──────────────────────────────────────────────────────────
 
 param set-default NPFG_PERIOD 12
-param set-default NAV_ACC_RAD 15
+# A one-tonne aircraft turns on a 300 m radius at 38 m/s; 15 m / 50 m are RC-plane radii. Flown 2026-09-24.
+param set-default NAV_ACC_RAD 90
+param set-default NAV_LOITER_RAD 300
 param set-default NAV_DLL_ACT 2
 param set-default MIS_TAKEOFF_ALT 30
 
