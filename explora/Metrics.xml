@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!-- eXplora reference dimensions, measured on the STEP assembly.
+     Structural frame: origin nose tip, X aft, Y right, Z up, metres. Short tip caps (Wing_L5); Wing_L5_Long variant: span 1.5218, gross area 0.4295, MAC 0.2960. -->
+<metrics>
+  <wingarea unit="M2"> 0.4061 </wingarea>  <!-- gross planform: wing + fuselage carry-through, root chord extrapolated to the centreline (AVL convention); wing-only exposed 0.3229 -->
+  <wingspan unit="M"> 1.3682 </wingspan>  <!-- Wing_L4 outboard plane x=660 + Wing_L5 cap 24.1 mm, both sides -->
+  <chord unit="M"> 0.3032 </chord>  <!-- gross MAC, LE at x=0.2315; wing-only MAC 0.2920 at x=0.2426 -->
+  <wing_incidence unit="DEG"> 3.0 </wing_incidence>  <!-- LE-to-TE line 2.90..3.02 deg LE-up vs the fuselage axis, uniform (STEP stations); the body axis follows the fuselage, the incidence sits inside the Aero.xml alpha tables -->
+  <htailarea unit="M2"> 0 </htailarea>  <!-- tailless -->
+  <htailarm unit="M"> 0 </htailarm>
+  <vtailarea unit="M2"> 0.0266 </vtailarea>  <!-- both fins, streamwise slices y_cad 38..243 (up) and -21..-217 (down) integrated, exposed part only -->
+  <vtailarm unit="M"> 0.2042 </vtailarm>  <!-- fin mean quarter-chord x=0.4930 to the nominal CG x=0.2888 -->
+  <location name="AERORP" unit="M">  <!-- AVL neutral point (AVL run at alpha 6: Xnp 0.301458 m = 23.1 % gross MAC; 0.3008 at alpha 2, 0.3022 at alpha 10).
+                                          ATLAS convention: Aero.xml writes no Cm_alpha, JSBSim carries the lift across the AERORP-to-CG arm (12.7 mm at the nominal CG, static margin +4.2 % MAC).
+                                          All moment derivatives in Aero.xml are AVL's values about this point. z = AVL Zref, the chord line at the MAC station, where those moments were taken.
+                                          Fuselage not in AVL: Munk slender-body estimate would move the NP 5.6 mm forward, not applied. -->
+    <x> 0.3015 </x>
+    <y> 0.0000 </y>
+    <z> 0.0112 </z>
+  </location>
+  <location name="EYEPOINT" unit="M">  <!-- all-up 3.4 kg CG, battery centred, unaccounted lump on the belly side (Mass.xml) -->
+    <x> 0.2888 </x>
+    <y> 0.0000 </y>
+    <z> -0.0053 </z>
+  </location>
+  <location name="VRP" unit="M">  <!-- all-up CG, same as EYEPOINT -->
+    <x> 0.2888 </x>
+    <y> 0.0000 </y>
+    <z> -0.0053 </z>
+  </location>
+</metrics>

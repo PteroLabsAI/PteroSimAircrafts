@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!-- Thin FCS: ArduPlane does the mixing and sends one output per elevon (SERVO5_FUNCTION 77 ElevonLeft, SERVO6_FUNCTION 78
+     ElevonRight, param). Controls.xml lands them on fcs/servo-0/1-cmd-norm, the way standard_vtol binds its ArduPlane elevons.
+     This file turns the two servo commands into surface angles and then into the fcs/elevator-pos-rad and fcs/aileron-pos-rad
+     that Aero.xml consumes (ATLAS pattern; JSBSim has no native fcs/aileron-pos-rad, it is created by the output below).
+
+     Signs. ArduPlane's elevon mixer (ArduPlane/servos.cpp, Plane::channel_function_mixer, called with k_aileron, k_elevator,
+     k_elevon_left, k_elevon_right): left = elevator - aileron, right = elevator + aileron, and its comment says "the order is
+     setup so that non-reversed servos go 'up'", so +1 on a non-reversed elevon output = trailing edge UP.
+       servo-0 (SERVO5, left, SERVO5_REVERSED 0):  +1 = TE up   -> gain -1 (JSBSim positive = TE down)
+       servo-1 (SERVO6, right, SERVO6_REVERSED 1): the autopilot has already flipped it for the mirrored right-hand linkage,
+                                                   so +1 arrives = TE down -> gain +1
+     Aero.xml: elevator-pos-rad > 0 = both TE down = nose down; aileron-pos-rad > 0 = left TE down, right TE up = roll right.
+     Throw: +-30 deg (0.5236 rad) per side. The servo/linkage travel is in no source; 30 deg is the throw the hover-authority
+     numbers in README.md are computed with. The printed cove allows 63 deg TE down / 65.5 deg TE up
+     (STEP clash limit). See README open questions.
+     SERVO5_TRIM 1552 / SERVO6_TRIM 1495 (param) compensate the real linkage; a simulator param set should carry 1500. -->
+<flight_control name="explora">
+  <property value="0">fcs/servo-0-cmd-norm</property>
+  <property value="0">fcs/servo-1-cmd-norm</property>
+
+  <channel name="elevon_left">
+    <aerosurface_scale name="fcs/elevon-left-scale">
+      <input>fcs/servo-0-cmd-norm</input>
+      <gain>-1.0</gain>
+      <domain>
+        <min>-1</min>
+        <max>1</max>
+      </domain>
+      <range>
+        <min>-0.5236</min>
+        <max>0.5236</max>
+      </range>
+      <zero_centered>1</zero_centered>
+      <output>fcs/elevon-left-pos-rad</output>
+      <output>fcs/left-aileron-pos-rad</output>  <!-- the reported surface (JSBSim: positive = trailing edge down; -deg follows); Visual.xml turns the mesh by it -->
+    </aerosurface_scale>
+  </channel>
+
+  <channel name="elevon_right">
+    <aerosurface_scale name="fcs/elevon-right-scale">
+      <input>fcs/servo-1-cmd-norm</input>
+      <gain>1.0</gain>
+      <domain>
+        <min>-1</min>
+        <max>1</max>
+      </domain>
+      <range>
+        <min>-0.5236</min>
+        <max>0.5236</max>
+      </range>
+      <zero_centered>1</zero_centered>
+      <output>fcs/elevon-right-pos-rad</output>
+      <output>fcs/right-aileron-pos-rad</output>
+    </aerosurface_scale>
+  </channel>
+
+  <!-- elevator = mean of the two (symmetric part), aileron = half the difference (antisymmetric part), TE down positive -->
+  <channel name="elevon_mix">
+    <fcs_function name="fcs/elevator-from-elevons">
+      <function>
+        <product>
+          <value>0.5</value>
+          <sum>
+            <property>fcs/elevon-left-pos-rad</property>
+            <property>fcs/elevon-right-pos-rad</property>
+          </sum>
+        </product>
+      </function>
+      <output>fcs/elevator-pos-rad</output>
+    </fcs_function>
+    <fcs_function name="fcs/aileron-from-elevons">
+      <function>
+        <product>
+          <value>0.5</value>
+          <difference>
+            <property>fcs/elevon-left-pos-rad</property>
+            <property>fcs/elevon-right-pos-rad</property>
+          </difference>
+        </product>
+      </function>
+      <output>fcs/aileron-pos-rad</output>
+    </fcs_function>
+  </channel>
+</flight_control>

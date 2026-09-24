@@ -32,6 +32,7 @@ so JSBSim loads the new definition.
 | --- | --- | --- |
 | `advanced_plane` | Fixed-wing aircraft | A pusher-prop aircraft with wheeled landing gear, elevons, rudder, and flaps. |
 | `c172x` | Cessna 172P Skyhawk | A four-seat single-piston trainer with tricycle gear, flaps, and PX4 and ArduPlane profiles; its meshes are FlightGear's c172p. |
+| `explora` | eXplora tailsitter VTOL | A dual-motor elevon tailsitter, 3D-printed, with an ArduPlane profile; upstream robustini/eXploraVTOL, GPL-3.0. |
 | `F450` | DJI F450 | A baseline quadcopter using an F450 frame, DJI E305 motors, and 9450 propellers. |
 | `quadtailsitter` | Quad tailsitter | A tailsitter VTOL: it takes off and lands vertically, then flies forward like a fixed-wing aircraft. |
 | `standard_vtol` | Standard VTOL | A fixed-wing VTOL with four lift rotors and a separate pusher propeller. |

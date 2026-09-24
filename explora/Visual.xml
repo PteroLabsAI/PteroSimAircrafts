@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. An axis is read
+  in the frame of whatever turns. Every mesh is baked in this frame from the placed STEP parts: the airframe and
+  the motor bells about the CG, each elevon about its hinge point (mid-span on the 10 mm hinge tube), each
+  propeller about its hub, which is the thruster location in Propulsion.xml, so its xyz is zero. A propeller is
+  built with its disc normal on the mesh's own Z, as c172x's, and rpy pitches that onto +X.
+  Signs, derived from the runtime and not yet seen in the editor: a reported surface angle (positive = trailing
+  edge down) turns the mesh about its axis by FQuat(axis, angle); about -Y that puts the trailing edge down. A
+  propeller turns the same way with its unsigned rpm: about +X the right-hand blade rises, anticlockwise seen
+  from behind, which is JSBSim sense -1 (motor_right); motor_left, sense +1, turns about -X.
+  The motor bells (44.7 x 32.5 mm, T-Motor MN4012 page), the propeller hub (28 x 16 mm) and the blade section
+  (cambered plate on the QPROP chord and blade angle) are visual approximations. The chase block is
+  quadtailsitter's, the other tail-sitting vehicle.
+-->
+<visual>
+  <fixture file="meshes/airframe.glb" xyz="0 0 0" rpy="0 0 0"/>
+  <fixture file="meshes/motor_left.glb" xyz="0 0 0" rpy="0 0 0"/>
+  <fixture file="meshes/motor_right.glb" xyz="0 0 0" rpy="0 0 0"/>
+  <propeller file="meshes/prop_left.glb" xyz="0 0 0" rpy="0 -90 0" motor="motor_left" axis="-1 0 0"/>
+  <propeller file="meshes/prop_right.glb" xyz="0 0 0" rpy="0 -90 0" motor="motor_right" axis="1 0 0"/>
+  <surface file="meshes/elevon_left.glb" xyz="0 0 0" rpy="0 0 0" source="left-aileron" axis="0 -1 0" hinge="-0.13599 -0.33004 0.01283" limit="30"/>
+  <surface file="meshes/elevon_right.glb" xyz="0 0 0" rpy="0 0 0" source="right-aileron" axis="0 -1 0" hinge="-0.13599 0.32996 0.01283" limit="30"/>
+
+  <chase xyz="0 0 0" rpy="0 -90 0" length="3"/>
+</visual>

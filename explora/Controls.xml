@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. Which ArduPlane output drives what, from the real aircraft's parameter file
+  (upstream parameters/Ardupilot/2022-10-17_Pixhawk1.param). channel = SERVOn - 1, the numbering c172x uses for
+  its ArduPilot rows.
+
+    SERVO9_FUNCTION  73 ThrottleLeft   -> channel 8, Motor index 0 (Propulsion.xml motor_left)
+    SERVO10_FUNCTION 74 ThrottleRight  -> channel 9, Motor index 1 (motor_right)
+    SERVO5_FUNCTION  77 ElevonLeft     -> channel 4, fcs/servo-0-cmd-norm   (+1 = trailing edge up, ArduPlane's elevon sign)
+    SERVO6_FUNCTION  78 ElevonRight    -> channel 5, fcs/servo-1-cmd-norm   (SERVO6_REVERSED 1: +1 arrives = trailing edge down)
+    SERVO3/4_FUNCTION 76/75 TiltMotorRight/Left are assigned in the param but Q_TAILSIT_VFGAIN = VHGAIN = 0, so they only
+    ever output trim; not bound. SERVO1/2/7/8 are 0 (disabled).
+
+  The elevons are bound per surface, not as Elevator/Aileron, because ArduPlane emits the mixed elevon outputs (functions 77/78)
+  and the sim must take what the real servos take; standard_vtol binds its ArduPlane ailerons the same way (property rows,
+  SERVO6_REVERSED handled by the autopilot). FlightControl.xml carries the sign convention and the throw.
+  Throttle 0..1 = PWM 1000..2000 (SERVO9/10 MIN/MAX 1000/2000, TRIM 1000, param).
+-->
+<control_bindings stack="ArduPilot">
+  <binding channel="4" property="fcs/servo-0-cmd-norm" in="-1 1" out="-1 1" label="elevon_left"/>
+  <binding channel="5" property="fcs/servo-1-cmd-norm" in="-1 1" out="-1 1" label="elevon_right"/>
+  <binding channel="8" type="Motor" index="0" in="0 1" out="0 1" label="motor_left"/>
+  <binding channel="9" type="Motor" index="1" in="0 1" out="0 1" label="motor_right"/>
+</control_bindings>

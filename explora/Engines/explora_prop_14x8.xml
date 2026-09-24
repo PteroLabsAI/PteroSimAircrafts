@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!-- eXplora 14x8 beech propeller. Xoar 14x8 (photo resources/explora_vtol_001.jpg shows the Xoar logo and the "14X8" stamp).
+     C_THRUST / C_POWER: QPROP 1.22 velocity sweep at 6000 rpm,
+     Ct = T/(rho n^2 D^4), Cp = Pshaft/(rho n^3 D^5), rho 1.225. Blade geometry:
+     beta = atan(8 in / (2 pi r)) from the nominal pitch; chord = UIUC apce_14x12 c/R (no measured beech 14 in planform found);
+     section polar = QPROP documentation set (CL0 0.5, CLmax 1.2), anchored on the UIUC apce_14x12 measured static Ct/Cp
+     (-2.4 % / -7 %) and 3507 rpm sweep (-2.5 % / +8 %) with measured geometry, and on the T-Motor 14x4.8 bench (-8 % thrust).
+     REGIME: at static / hover (J < 0.1) the blade sits at the CLmax clamp over its whole span (alpha ~7 deg at 0.75R), so
+     Ct0 = 0.090 is set by CLmax x chord and is insensitive to pitch; CLmax 1.0 / 1.4 would move Ct0 -16 % / +9 %
+     (polar sensitivity sweep). Validation vs the T-Motor MN4012 bench (CF 14x4.8 / 15x5): thrust -5..-12 %,
+     electrical power -10..-23 %, so expect this table to be LOW by that order; see README.md. -->
+<propeller name="explora_prop_14x8" version="1.1">
+  <ixx unit="KG*M2"> 2.634e-04 </ixx>   <!-- (1/12)*0.025*(14*0.0254)^2, rod; 25 g = Xoar PJN 14 in average net weight, xoarintl.com -->
+  <diameter unit="IN"> 14.0 </diameter>  <!-- BOM "14x8", photo stamp -->
+  <numblades> 2 </numblades>             <!-- photo -->
+  <constspeed> 0 </constspeed>
+
+  <!-- J vs Ct, QPROP 6000 rpm run, zero thrust at J = 0.759 (P/D = 0.571) -->
+  <table name="C_THRUST" type="internal">
+    <tableData>
+      0.0000    0.08985
+      0.0281    0.08934
+      0.0562    0.08847
+      0.0844    0.08730
+      0.1125    0.08582
+      0.1406    0.08403
+      0.1687    0.08199
+      0.1969    0.07969
+      0.2250    0.07719
+      0.2531    0.07443
+      0.2812    0.07142
+      0.3093    0.06821
+      0.3375    0.06479
+      0.3656    0.06116
+      0.3937    0.05738
+      0.4218    0.05345
+      0.4499    0.04942
+      0.4781    0.04531
+      0.5062    0.04111
+      0.5343    0.03681
+      0.5624    0.03244
+      0.5906    0.02799
+      0.6187    0.02346
+      0.6468    0.01886
+      0.6749    0.01419
+      0.7030    0.00944
+      0.7312    0.00463
+      0.7593   -0.00025
+      0.7874   -0.00527
+      0.8155   -0.00998
+      0.8436   -0.01443
+      0.8718   -0.01846
+      0.8999   -0.02204
+      0.9280   -0.02512
+      0.9561   -0.02772
+      0.9843   -0.02973
+      1.0124   -0.03130
+      1.0405   -0.03251
+      1.0686   -0.03349
+      1.0967   -0.03437
+      1.1249   -0.03531
+    </tableData>
+  </table>
+
+  <!-- J vs Cp, same run; negative past J ~0.81 = windmilling -->
+  <table name="C_POWER" type="internal">
+    <tableData>
+      0.0000    0.03704
+      0.0281    0.03671
+      0.0562    0.03664
+      0.0844    0.03657
+      0.1125    0.03652
+      0.1406    0.03661
+      0.1687    0.03664
+      0.1969    0.03660
+      0.2250    0.03647
+      0.2531    0.03624
+      0.2812    0.03583
+      0.3093    0.03536
+      0.3375    0.03476
+      0.3656    0.03398
+      0.3937    0.03305
+      0.4218    0.03197
+      0.4499    0.03077
+      0.4781    0.02940
+      0.5062    0.02790
+      0.5343    0.02620
+      0.5624    0.02432
+      0.5906    0.02224
+      0.6187    0.01996
+      0.6468    0.01747
+      0.6749    0.01476
+      0.7030    0.01183
+      0.7312    0.00868
+      0.7593    0.00529
+      0.7874    0.00181
+      0.8155   -0.00154
+      0.8436   -0.00444
+      0.8718   -0.00704
+      0.8999   -0.00911
+      0.9280   -0.01052
+      0.9561   -0.01074
+      0.9843   -0.01068
+      1.0124   -0.01000
+      1.0405   -0.00885
+      1.0686   -0.00788
+      1.0967   -0.00710
+      1.1249   -0.00625
+    </tableData>
+  </table>
+</propeller>

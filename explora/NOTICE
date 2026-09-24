@@ -1,0 +1,36 @@
+This aircraft is derived from the eXplora Tailsitter VTOL, an open-hardware 3D-printed tailsitter by
+Marco Robustini, Davide Silimbani, Roberto Casoni, Lorenzo Franco, Edoardo Nunzi, Antonios Antzoulatos and
+Brandon MacDougall (robustini/eXploraVTOL, commit 1da97a4172505b71aa9e709a2d7ab6e27e3a97a8, 2026-06-07). It
+carries geometry measured on that project's STEP files, masses derived from its 3MF slicer projects and bill
+of materials, the control layout of its ArduPlane parameter file (parameters/Ardupilot/2022-10-17_Pixhawk1.param),
+and a visual mesh built from the same STEP files. Photographs in that repository (resources/explora_vtol_000.jpg,
+explora_vtol_001.jpg) were used to identify the propeller and the resting posture.
+
+The eXplora Tailsitter VTOL project is distributed under the GNU General Public License v3.0; see LICENSE in
+this folder for its text.
+
+  https://github.com/robustini/eXploraVTOL
+
+The all-up mass comes from the designer's post in the ArduPilot Discuss thread 92341 (marco3dr, 2024-04-27).
+
+Motor electrical data are T-Motor's published specification for the MN4012 KV480.
+
+  https://store.tmotor.com/product/mn4012-kv480-motor-navigator-type.html
+
+The propeller thrust and power tables were computed with QPROP 1.22 (Mark Drela, MIT, GPL) on a blade whose
+chord distribution is the UIUC Propeller Data Site's APC 14x12E geometry (Brandt, Deters, Ananda, Dantsker and
+Selig), and anchored on that site's wind-tunnel measurements of the same propeller.
+
+  https://web.mit.edu/drela/Public/web/qprop/
+  https://m-selig.ae.illinois.edu/props/propDB.html
+
+The aerodynamic derivatives were computed with AVL 3.52 (Mark Drela and Harold Youngren, MIT, GPL) on the
+measured planform.
+
+  https://web.mit.edu/drela/Public/web/avl/
+
+The elevon output sign convention follows ArduPilot's ArduPlane/servos.cpp (GPL-3.0), and the sensor frame
+follows the ArduPilot tailsitter guide.
+
+  https://github.com/ArduPilot/ardupilot
+  https://ardupilot.org/plane/docs/guide-tailsitter.html

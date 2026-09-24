@@ -1,0 +1,1331 @@
+<?xml version="1.0"?>
+<!-- eXplora tailsitter aerodynamics. Every number names its source; a number with none is marked chosen (README.md).
+     AVL 3.52 on the STEP geometry (4 surfaces, 1128 vortices, no fuselage body), Sref 0.4061 m2 = gross planform,
+     Cref 0.3032 m, Bref 1.3682 m, alpha measured from the fuselage axis = body X (the 3 deg wing incidence is inside the tables).
+     Body-axis forces (X, Y, Z) because the hover terms below act along body Z where wind axes are undefined at V = 0.
+
+     AERORP = AVL neutral point (Metrics.xml, x 0.3015 m aft of the nose, 23.1 % gross MAC). Cm_alpha is therefore NOT written:
+     JSBSim carries the lift across the AERORP-to-CG arm (12.7 mm at the nominal CG, static margin 4.2 % MAC)
+     and reproduces AVL's Cma at any CG. Every moment derivative below is AVL's value ABOUT THE NEUTRAL POINT (run f, OPER > M > X 0.30146),
+     never the value about the MAC quarter chord, or the arm would be counted twice (ATLAS README).
+     Derivatives are AVL body axes (SB, x fwd z down = JSBSim body) at alpha 6 deg, the closest run to the 16 m/s cruise alpha (4.7 deg).
+
+     Controls: fcs/elevator-pos-rad > 0 = both elevons trailing edge down (nose down). fcs/aileron-pos-rad > 0 = left elevon TE down,
+     right TE up = positive roll (JSBSim convention). AVL's aileron was the mirror image, so the three aileron derivatives are sign-flipped.
+
+     Wing partition (the segmented-wing slipstream model of Khan & Nahon, ICUAS 2015, "Real-time modeling of agile fixed-wing
+     UAV aerodynamics", as read in its abstract and section on the propeller-wing model): the planform is three parts, each with its
+     own flow and the SAME coefficient tables. The two washed strips span the contracted wake of their own propeller,
+     y = 0.325 +- 0.1297 m (S_strip 0.0794 m2 each, c 0.3063 m), the free-stream remainder is the centre section and the
+     outboard wing (0.2474 m2, c 0.3012 m); areas sum to Sref, S c to Sref Cref. A strip sees u_s = u + k v_i (its engine's
+     momentum-theory induced velocity, k = 1.88 at 1.84 R behind the disc, vortex tube 1 + x/sqrt(x^2+R^2), McCormick, Aerodynamics
+     of V/STOL Flight), alpha_s = atan2(w, u_s), q_s = 1/2 rho (u_s^2 + w^2); the contracted radius R/sqrt(k) = 130 mm goes with k v_i by
+     continuity. Its X, Z come from the CX/CZ tables at alpha_s, its pitch moment about the AERORP is Cm(alpha_s) q_s S_s c_s plus
+     Z_s times its quarter-chord arm from the planform's area-mean quarter chord, roll is +-y_s Z_s and yaw -+y_s X_s (zero for equal
+     thrust). With the props stopped the three parts add up to the whole-wing AVL model exactly; at hover the strips see
+     alpha_s = 0 body = 3 deg incidence and produce the wash normal force 4.94 N (15 % of the weight) plus Cm0.
+     Elevons: each elevon is 0.623 inside its strip by area (strip / elevon-span area), the rest in the free stream; the AVL elevon
+     derivatives act on the dynamic-pressure-weighted deflections explora/elevon/sym-psf-rad and asym-psf-rad, on the chordwise
+     1/2 rho max(u, 0)^2 of each part. The wash increment of a strip's elevon q is capped at C T of its engine: in still
+     air a flap in a jet cannot push harder than the jet momentum it turns, T sin delta, and the linear derivative on the full wash q
+     gave 2.0x that at hover; with the cap the washed elevon force per side is eta T delta (eta 1.0, the momentum ceiling), so the
+     hover authority is -0.0453 N m/deg about the CG (linear law 2.01x more). The wash rate damping
+     (quadtailsitter pattern, k v_i of each engine on its strip's share) carries Cmq, CZq and Clp.
+
+     Sideslip: a tailsitter hovering in wind sees any beta. The alpha tables and the q-rate terms act on
+     explora/qbar-xz-psf = 1/2 rho (u^2 + w^2) = qbar cos^2 beta, the flow in the symmetry plane they were built on, so they vanish in
+     pure spanwise flow. The AVL v-derivatives (Y_beta, Roll_beta, Yaw_beta, fin-dominated) act on sin beta cos beta: the slope at small
+     beta is unchanged and a fin at beta 90 is a broadside plate, whose drag is the crossflow term (fuselage side projection 0.0428 m2
+     from the STEP fuselage stations + fins 0.0291 m2, CD 1.2 chosen, Hoerner ch. III) on v|v| with its yaw moment at
+     57 mm aft of the AERORP (70 mm aft of the CG once JSBSim adds the 12.7 mm AERORP-to-CG arm to every axis
+     moment; the arm must not be written from the CG or it is counted twice). The lateral rate terms (p, r) keep the full qbar. -->
+<aerodynamics>
+  <alphalimits unit="DEG">  <!-- a tailsitter sees every alpha; tables run the full circle -->
+    <min> -180.0 </min>
+    <max>  180.0 </max>
+  </alphalimits>
+
+  <!-- ==================== free-stream elevon dynamic pressure (first: the strip functions below read it) ==================== -->
+  <function name="explora/free/q-elevon-psf">
+    <description>Chordwise dynamic pressure of the free-stream elevon fraction, 1/2 rho max(u, 0)^2 (crossflow through the wing gives a flap nothing)</description>
+    <product>
+      <value> 0.5 </value>  <!-- dynamic pressure 1/2 rho v^2 -->
+      <property>atmosphere/rho-slugs_ft3</property>
+      <pow>
+        <max>
+          <property>velocities/u-aero-fps</property>
+          <value> 0.0 </value>  <!-- floor: reversed chordwise flow gives the flap nothing -->
+        </max>
+        <value> 2.0 </value>  <!-- squared -->
+      </pow>
+    </product>
+  </function>
+
+  <!-- ==================== washed strips: local flow, forces and moment about the AERORP ==================== -->
+  <function name="explora/strip/left/u-fps">
+    <description>Chordwise (body X) velocity in the left slipstream: u + k v_i of engine 0 (left, Propulsion.xml y -0.325)</description>
+    <sum>
+      <property>velocities/u-aero-fps</property>
+      <product>
+        <value> 1.8784 </value>  <!-- k = 1 + x/sqrt(x^2+R^2) at x = 0.327 m = 1.84 R behind the disc (prop plane X -0.153, elevon mid-chord X -0.4798) -->
+        <property>propulsion/engine[0]/prop-induced-velocity_fps</property>
+      </product>
+    </sum>
+  </function>
+  <function name="explora/strip/left/alpha-rad">
+    <description>Local angle of attack of the left washed strip, atan2(w, u + k v_i): 0 at hover, where the tables return the 3 deg incidence lift</description>
+    <atan2>
+      <property>velocities/w-aero-fps</property>
+      <property>explora/strip/left/u-fps</property>
+    </atan2>
+  </function>
+  <function name="explora/strip/left/q-psf">
+    <description>1/2 rho ((u + k v_i)^2 + w^2): the strip's dynamic pressure in its symmetry plane (the partner of explora/qbar-xz-psf)</description>
+    <product>
+      <value> 0.5 </value>  <!-- dynamic pressure 1/2 rho v^2 -->
+      <property>atmosphere/rho-slugs_ft3</property>
+      <sum>
+        <pow>
+          <property>explora/strip/left/u-fps</property>
+          <value> 2.0 </value>  <!-- squared -->
+        </pow>
+        <pow>
+          <property>velocities/w-aero-fps</property>
+          <value> 2.0 </value>  <!-- squared -->
+        </pow>
+      </sum>
+    </product>
+  </function>
+  <function name="explora/strip/left/q-elevon-psf">
+    <description>Chordwise dynamic pressure the washed part of the left elevon sees: q_free + min(1/2 rho max(u + k v_i, 0)^2 - q_free, C T_0), the wash increment capped at the jet's momentum flux (a flap in still air cannot push harder than T sin delta); a flap in reversed flow is not modelled</description>
+    <sum>
+      <property>explora/free/q-elevon-psf</property>
+      <min>
+        <difference>
+          <product>
+            <value> 0.5 </value>  <!-- dynamic pressure 1/2 rho v^2 -->
+            <property>atmosphere/rho-slugs_ft3</property>
+            <pow>
+              <max>
+                <property>explora/strip/left/u-fps</property>
+                <value> 0.0 </value>  <!-- floor: reversed chordwise flow gives the flap nothing -->
+              </max>
+              <value> 2.0 </value>  <!-- squared -->
+            </pow>
+          </product>
+          <property>explora/free/q-elevon-psf</property>
+        </difference>
+        <product>
+          <value> 0.4113 </value>  <!-- C = eta / (|CZ_elevator| S phi/2) = 1.0 / (1.7852 x 4.371 ft2 x 0.3116) psf per lbf: the washed elevon force per side |CZ_de| S phi/2 q delta stays <= eta T delta, eta 1.0 = the momentum-theory ceiling (chosen; NACA TN 3307 is reported to give ~0.6 for a 90 %-chord double flap, unverified, not this flap) -->
+          <max>
+            <property>propulsion/engine[0]/thrust-lbs</property>
+            <value> 0.0 </value>  <!-- floor: a braking propeller caps nothing, its smaller v_i already lowers the increment -->
+          </max>
+        </product>
+      </min>
+    </sum>
+  </function>
+  <function name="explora/strip/left/X-lbs">
+    <description>Body-X force of the left strip: q_s S_s (CX(alpha_s) - CD0 cos alpha_s), the free-stream tables at the strip's own alpha</description>
+    <product>
+      <property>explora/strip/left/q-psf</property>
+      <value> 0.85427 </value>  <!-- S_strip 0.0794 m2: chord stations integrated over y 0.1953..0.4547 m (motor axis 0.325 +- contracted wake radius 0.1297) -->
+      <sum>
+        <table>
+          <independentVar lookup="row">explora/strip/left/alpha-rad</independentVar>
+          <tableData>
+             -3.14159  -0.00000
+             -2.96706  -0.00084
+             -2.79253  -0.00310
+             -2.61799  -0.00611
+             -2.44346  -0.00893
+             -2.26893  -0.01064
+             -2.09440  -0.01058
+             -1.91986  -0.00852
+             -1.74533  -0.00475
+             -1.57080   0.00000
+             -1.39626   0.00714
+             -1.22173   0.01834
+             -1.04720   0.03268
+             -0.95993   0.04062
+             -0.87266   0.04883
+             -0.78540   0.05710
+             -0.69813   0.06521
+             -0.61087   0.07297
+             -0.52360   0.08016
+             -0.43633   0.08660
+             -0.34907   0.09212
+             -0.31416   0.09404
+             -0.27925   0.09578
+             -0.26180   0.09658
+             -0.24435   0.09733
+             -0.20944   0.09869
+             -0.17453   0.06532
+             -0.13963   0.03837
+             -0.10472   0.01794
+             -0.08727   0.01021
+             -0.06981   0.00414
+             -0.03491  -0.00296
+              0.00000  -0.00334
+              0.03491   0.00302
+              0.06981   0.01610
+              0.08727   0.02515
+              0.10472   0.03586
+              0.13963   0.06222
+              0.17453   0.09507
+              0.20944   0.13427
+              0.24435   0.13234
+              0.26180   0.13127
+              0.27925   0.13014
+              0.31416   0.12768
+              0.34907   0.12496
+              0.43633   0.11715
+              0.52360   0.10805
+              0.61087   0.09792
+              0.69813   0.08704
+              0.78540   0.07569
+              0.87266   0.06420
+              0.95993   0.05286
+              1.04720   0.04198
+              1.22173   0.02269
+              1.39626   0.00826
+              1.57080   0.00000
+              1.74533  -0.00475
+              1.91986  -0.00852
+              2.09440  -0.01058
+              2.26893  -0.01064
+              2.44346  -0.00893
+              2.61799  -0.00611
+              2.79253  -0.00310
+              2.96706  -0.00084
+              3.14159  -0.00000
+          </tableData>
+        </table>
+        <product>
+          <value> -0.0282 </value>  <!-- -CD0 per unit reference area (uniform over the partition; the motors and nacelles are in this jet) -->
+          <cos><property>explora/strip/left/alpha-rad</property></cos>
+        </product>
+      </sum>
+    </product>
+  </function>
+  <function name="explora/strip/left/Z-lbs">
+    <description>Body-Z force of the left strip: q_s S_s (CZ(alpha_s) - CD0 sin alpha_s); at hover -CL0 q_s S_s, the wash normal force</description>
+    <product>
+      <property>explora/strip/left/q-psf</property>
+      <value> 0.85427 </value>  <!-- S_strip, as X-lbs -->
+      <sum>
+        <table>
+          <independentVar lookup="row">explora/strip/left/alpha-rad</independentVar>
+          <tableData>
+             -3.14159   0.00000
+             -2.96706   0.20701
+             -2.79253   0.40689
+             -2.61799   0.59296
+             -2.44346   0.75934
+             -2.26893   0.90119
+             -2.09440   1.01483
+             -1.91986   1.09763
+             -1.74533   1.14791
+             -1.57080   1.16477
+             -1.39626   1.14824
+             -1.22173   1.09928
+             -1.04720   1.02197
+             -0.95993   0.97430
+             -0.87266   0.92169
+             -0.78540   0.86514
+             -0.69813   0.80587
+             -0.61087   0.74553
+             -0.52360   0.68648
+             -0.43633   0.63252
+             -0.34907   0.59066
+             -0.31416   0.58024
+             -0.27925   0.57575
+             -0.26180   0.57652
+             -0.24435   0.57990
+             -0.20944   0.59721
+             -0.17453   0.46720
+             -0.13963   0.33453
+             -0.10472   0.19980
+             -0.08727   0.13180
+             -0.06981   0.06367
+             -0.03491  -0.07324
+              0.00000  -0.21026
+              0.03491  -0.34676
+              0.06981  -0.48207
+              0.08727  -0.54888
+              0.10472  -0.61556
+              0.13963  -0.74660
+              0.17453  -0.87454
+              0.20944  -0.99878
+              0.24435  -0.91997
+              0.26180  -0.89178
+              0.27925  -0.86917
+              0.31416  -0.83696
+              0.34907  -0.81764
+              0.43633  -0.80477
+              0.52360  -0.82100
+              0.61087  -0.85226
+              0.69813  -0.89120
+              0.78540  -0.93351
+              0.87266  -0.97635
+              0.95993  -1.01772
+              1.04720  -1.05607
+              1.22173  -1.11898
+              1.39626  -1.15722
+              1.57080  -1.16477
+              1.74533  -1.14791
+              1.91986  -1.09763
+              2.09440  -1.01483
+              2.26893  -0.90119
+              2.44346  -0.75934
+              2.61799  -0.59296
+              2.79253  -0.40689
+              2.96706  -0.20701
+              3.14159  -0.00000
+          </tableData>
+        </table>
+        <product>
+          <value> -0.0282 </value>  <!-- -CD0, as X-lbs -->
+          <sin><property>explora/strip/left/alpha-rad</property></sin>
+        </product>
+      </sum>
+    </product>
+  </function>
+  <function name="explora/strip/left/Pitch-lbsft">
+    <description>Moment of the left strip about the AERORP: Cm(alpha_s) q_s S_s c_s + Z_s x arm, arm = strip quarter chord aft of the wing's area-mean quarter chord</description>
+    <sum>
+      <product>
+        <property>explora/strip/left/q-psf</property>
+        <value> 0.85427 </value>  <!-- S_strip, as X-lbs -->
+        <value> 1.00501 </value>  <!-- c_strip 0.3063 m = int c^2 dy / S_strip over the strip (stations); the parts' S c sum to Sref Cref -->
+        <table>
+          <independentVar lookup="row">explora/strip/left/alpha-rad</independentVar>
+          <tableData>
+             -3.14159   0.00000
+             -2.96706   0.10923
+             -2.79253   0.21001
+             -2.61799   0.29488
+             -2.44346   0.35823
+             -2.26893   0.39675
+             -2.09440   0.40973
+             -1.91986   0.39879
+             -1.74533   0.36759
+             -1.57080   0.32121
+             -1.39626   0.26559
+             -1.22173   0.20686
+             -1.04720   0.15094
+             -0.95993   0.12553
+             -0.87266   0.10240
+             -0.78540   0.08185
+             -0.69813   0.06406
+             -0.61087   0.04910
+             -0.52360   0.03695
+             -0.43633   0.02750
+             -0.34907   0.01746
+             -0.31416   0.01485
+             -0.27925   0.01306
+             -0.26180   0.01242
+             -0.24435   0.01190
+             -0.20944   0.01115
+             -0.17453   0.01216
+             -0.13963   0.01307
+             -0.10472   0.01388
+             -0.08727   0.01423
+             -0.06981   0.01459
+             -0.03491   0.01518
+              0.00000   0.01565
+              0.03491   0.01600
+              0.06981   0.01621
+              0.08727   0.01625
+              0.10472   0.01628
+              0.13963   0.01621
+              0.17453   0.01599
+              0.20944   0.01562
+              0.24435   0.00890
+              0.26180   0.00548
+              0.27925   0.00196
+              0.31416  -0.00550
+              0.34907  -0.01372
+              0.43633  -0.03485
+              0.52360  -0.04405
+              0.61087  -0.05598
+              0.69813  -0.07069
+              0.78540  -0.08817
+              0.87266  -0.10833
+              0.95993  -0.13099
+              1.04720  -0.15586
+              1.22173  -0.21048
+              1.39626  -0.26762
+              1.57080  -0.32121
+              1.74533  -0.36759
+              1.91986  -0.39879
+              2.09440  -0.40973
+              2.26893  -0.39675
+              2.44346  -0.35823
+              2.61799  -0.29488
+              2.79253  -0.21001
+              2.96706  -0.10923
+              3.14159  -0.00000
+          </tableData>
+        </table>
+      </product>
+      <product>
+        <value> -0.00567 </value>  <!-- arm -1.7 mm: strip quarter chord x 0.3055 minus the planform's area-mean quarter chord 0.3072 m (AVL Xref 0.3073); the parts' S x arm sum to zero -->
+        <property>explora/strip/left/Z-lbs</property>
+      </product>
+    </sum>
+  </function>
+  <function name="explora/strip/right/u-fps">
+    <description>Chordwise (body X) velocity in the right slipstream: u + k v_i of engine 1 (right, Propulsion.xml y +0.325)</description>
+    <sum>
+      <property>velocities/u-aero-fps</property>
+      <product>
+        <value> 1.8784 </value>  <!-- k = 1 + x/sqrt(x^2+R^2) at x = 0.327 m = 1.84 R behind the disc (prop plane X -0.153, elevon mid-chord X -0.4798) -->
+        <property>propulsion/engine[1]/prop-induced-velocity_fps</property>
+      </product>
+    </sum>
+  </function>
+  <function name="explora/strip/right/alpha-rad">
+    <description>Local angle of attack of the right washed strip, atan2(w, u + k v_i): 0 at hover, where the tables return the 3 deg incidence lift</description>
+    <atan2>
+      <property>velocities/w-aero-fps</property>
+      <property>explora/strip/right/u-fps</property>
+    </atan2>
+  </function>
+  <function name="explora/strip/right/q-psf">
+    <description>1/2 rho ((u + k v_i)^2 + w^2): the strip's dynamic pressure in its symmetry plane (the partner of explora/qbar-xz-psf)</description>
+    <product>
+      <value> 0.5 </value>  <!-- dynamic pressure 1/2 rho v^2 -->
+      <property>atmosphere/rho-slugs_ft3</property>
+      <sum>
+        <pow>
+          <property>explora/strip/right/u-fps</property>
+          <value> 2.0 </value>  <!-- squared -->
+        </pow>
+        <pow>
+          <property>velocities/w-aero-fps</property>
+          <value> 2.0 </value>  <!-- squared -->
+        </pow>
+      </sum>
+    </product>
+  </function>
+  <function name="explora/strip/right/q-elevon-psf">
+    <description>Chordwise dynamic pressure the washed part of the right elevon sees: q_free + min(1/2 rho max(u + k v_i, 0)^2 - q_free, C T_1), the wash increment capped at the jet's momentum flux (a flap in still air cannot push harder than T sin delta); a flap in reversed flow is not modelled</description>
+    <sum>
+      <property>explora/free/q-elevon-psf</property>
+      <min>
+        <difference>
+          <product>
+            <value> 0.5 </value>  <!-- dynamic pressure 1/2 rho v^2 -->
+            <property>atmosphere/rho-slugs_ft3</property>
+            <pow>
+              <max>
+                <property>explora/strip/right/u-fps</property>
+                <value> 0.0 </value>  <!-- floor: reversed chordwise flow gives the flap nothing -->
+              </max>
+              <value> 2.0 </value>  <!-- squared -->
+            </pow>
+          </product>
+          <property>explora/free/q-elevon-psf</property>
+        </difference>
+        <product>
+          <value> 0.4113 </value>  <!-- C = eta / (|CZ_elevator| S phi/2) = 1.0 / (1.7852 x 4.371 ft2 x 0.3116) psf per lbf: the washed elevon force per side |CZ_de| S phi/2 q delta stays <= eta T delta, eta 1.0 = the momentum-theory ceiling (chosen; NACA TN 3307 is reported to give ~0.6 for a 90 %-chord double flap, unverified, not this flap) -->
+          <max>
+            <property>propulsion/engine[1]/thrust-lbs</property>
+            <value> 0.0 </value>  <!-- floor: a braking propeller caps nothing, its smaller v_i already lowers the increment -->
+          </max>
+        </product>
+      </min>
+    </sum>
+  </function>
+  <function name="explora/strip/right/X-lbs">
+    <description>Body-X force of the right strip: q_s S_s (CX(alpha_s) - CD0 cos alpha_s), the free-stream tables at the strip's own alpha</description>
+    <product>
+      <property>explora/strip/right/q-psf</property>
+      <value> 0.85427 </value>  <!-- S_strip 0.0794 m2: chord stations integrated over y 0.1953..0.4547 m (motor axis 0.325 +- contracted wake radius 0.1297) -->
+      <sum>
+        <table>
+          <independentVar lookup="row">explora/strip/right/alpha-rad</independentVar>
+          <tableData>
+             -3.14159  -0.00000
+             -2.96706  -0.00084
+             -2.79253  -0.00310
+             -2.61799  -0.00611
+             -2.44346  -0.00893
+             -2.26893  -0.01064
+             -2.09440  -0.01058
+             -1.91986  -0.00852
+             -1.74533  -0.00475
+             -1.57080   0.00000
+             -1.39626   0.00714
+             -1.22173   0.01834
+             -1.04720   0.03268
+             -0.95993   0.04062
+             -0.87266   0.04883
+             -0.78540   0.05710
+             -0.69813   0.06521
+             -0.61087   0.07297
+             -0.52360   0.08016
+             -0.43633   0.08660
+             -0.34907   0.09212
+             -0.31416   0.09404
+             -0.27925   0.09578
+             -0.26180   0.09658
+             -0.24435   0.09733
+             -0.20944   0.09869
+             -0.17453   0.06532
+             -0.13963   0.03837
+             -0.10472   0.01794
+             -0.08727   0.01021
+             -0.06981   0.00414
+             -0.03491  -0.00296
+              0.00000  -0.00334
+              0.03491   0.00302
+              0.06981   0.01610
+              0.08727   0.02515
+              0.10472   0.03586
+              0.13963   0.06222
+              0.17453   0.09507
+              0.20944   0.13427
+              0.24435   0.13234
+              0.26180   0.13127
+              0.27925   0.13014
+              0.31416   0.12768
+              0.34907   0.12496
+              0.43633   0.11715
+              0.52360   0.10805
+              0.61087   0.09792
+              0.69813   0.08704
+              0.78540   0.07569
+              0.87266   0.06420
+              0.95993   0.05286
+              1.04720   0.04198
+              1.22173   0.02269
+              1.39626   0.00826
+              1.57080   0.00000
+              1.74533  -0.00475
+              1.91986  -0.00852
+              2.09440  -0.01058
+              2.26893  -0.01064
+              2.44346  -0.00893
+              2.61799  -0.00611
+              2.79253  -0.00310
+              2.96706  -0.00084
+              3.14159  -0.00000
+          </tableData>
+        </table>
+        <product>
+          <value> -0.0282 </value>  <!-- -CD0 per unit reference area (uniform over the partition; the motors and nacelles are in this jet) -->
+          <cos><property>explora/strip/right/alpha-rad</property></cos>
+        </product>
+      </sum>
+    </product>
+  </function>
+  <function name="explora/strip/right/Z-lbs">
+    <description>Body-Z force of the right strip: q_s S_s (CZ(alpha_s) - CD0 sin alpha_s); at hover -CL0 q_s S_s, the wash normal force</description>
+    <product>
+      <property>explora/strip/right/q-psf</property>
+      <value> 0.85427 </value>  <!-- S_strip, as X-lbs -->
+      <sum>
+        <table>
+          <independentVar lookup="row">explora/strip/right/alpha-rad</independentVar>
+          <tableData>
+             -3.14159   0.00000
+             -2.96706   0.20701
+             -2.79253   0.40689
+             -2.61799   0.59296
+             -2.44346   0.75934
+             -2.26893   0.90119
+             -2.09440   1.01483
+             -1.91986   1.09763
+             -1.74533   1.14791
+             -1.57080   1.16477
+             -1.39626   1.14824
+             -1.22173   1.09928
+             -1.04720   1.02197
+             -0.95993   0.97430
+             -0.87266   0.92169
+             -0.78540   0.86514
+             -0.69813   0.80587
+             -0.61087   0.74553
+             -0.52360   0.68648
+             -0.43633   0.63252
+             -0.34907   0.59066
+             -0.31416   0.58024
+             -0.27925   0.57575
+             -0.26180   0.57652
+             -0.24435   0.57990
+             -0.20944   0.59721
+             -0.17453   0.46720
+             -0.13963   0.33453
+             -0.10472   0.19980
+             -0.08727   0.13180
+             -0.06981   0.06367
+             -0.03491  -0.07324
+              0.00000  -0.21026
+              0.03491  -0.34676
+              0.06981  -0.48207
+              0.08727  -0.54888
+              0.10472  -0.61556
+              0.13963  -0.74660
+              0.17453  -0.87454
+              0.20944  -0.99878
+              0.24435  -0.91997
+              0.26180  -0.89178
+              0.27925  -0.86917
+              0.31416  -0.83696
+              0.34907  -0.81764
+              0.43633  -0.80477
+              0.52360  -0.82100
+              0.61087  -0.85226
+              0.69813  -0.89120
+              0.78540  -0.93351
+              0.87266  -0.97635
+              0.95993  -1.01772
+              1.04720  -1.05607
+              1.22173  -1.11898
+              1.39626  -1.15722
+              1.57080  -1.16477
+              1.74533  -1.14791
+              1.91986  -1.09763
+              2.09440  -1.01483
+              2.26893  -0.90119
+              2.44346  -0.75934
+              2.61799  -0.59296
+              2.79253  -0.40689
+              2.96706  -0.20701
+              3.14159  -0.00000
+          </tableData>
+        </table>
+        <product>
+          <value> -0.0282 </value>  <!-- -CD0, as X-lbs -->
+          <sin><property>explora/strip/right/alpha-rad</property></sin>
+        </product>
+      </sum>
+    </product>
+  </function>
+  <function name="explora/strip/right/Pitch-lbsft">
+    <description>Moment of the right strip about the AERORP: Cm(alpha_s) q_s S_s c_s + Z_s x arm, arm = strip quarter chord aft of the wing's area-mean quarter chord</description>
+    <sum>
+      <product>
+        <property>explora/strip/right/q-psf</property>
+        <value> 0.85427 </value>  <!-- S_strip, as X-lbs -->
+        <value> 1.00501 </value>  <!-- c_strip 0.3063 m = int c^2 dy / S_strip over the strip (stations); the parts' S c sum to Sref Cref -->
+        <table>
+          <independentVar lookup="row">explora/strip/right/alpha-rad</independentVar>
+          <tableData>
+             -3.14159   0.00000
+             -2.96706   0.10923
+             -2.79253   0.21001
+             -2.61799   0.29488
+             -2.44346   0.35823
+             -2.26893   0.39675
+             -2.09440   0.40973
+             -1.91986   0.39879
+             -1.74533   0.36759
+             -1.57080   0.32121
+             -1.39626   0.26559
+             -1.22173   0.20686
+             -1.04720   0.15094
+             -0.95993   0.12553
+             -0.87266   0.10240
+             -0.78540   0.08185
+             -0.69813   0.06406
+             -0.61087   0.04910
+             -0.52360   0.03695
+             -0.43633   0.02750
+             -0.34907   0.01746
+             -0.31416   0.01485
+             -0.27925   0.01306
+             -0.26180   0.01242
+             -0.24435   0.01190
+             -0.20944   0.01115
+             -0.17453   0.01216
+             -0.13963   0.01307
+             -0.10472   0.01388
+             -0.08727   0.01423
+             -0.06981   0.01459
+             -0.03491   0.01518
+              0.00000   0.01565
+              0.03491   0.01600
+              0.06981   0.01621
+              0.08727   0.01625
+              0.10472   0.01628
+              0.13963   0.01621
+              0.17453   0.01599
+              0.20944   0.01562
+              0.24435   0.00890
+              0.26180   0.00548
+              0.27925   0.00196
+              0.31416  -0.00550
+              0.34907  -0.01372
+              0.43633  -0.03485
+              0.52360  -0.04405
+              0.61087  -0.05598
+              0.69813  -0.07069
+              0.78540  -0.08817
+              0.87266  -0.10833
+              0.95993  -0.13099
+              1.04720  -0.15586
+              1.22173  -0.21048
+              1.39626  -0.26762
+              1.57080  -0.32121
+              1.74533  -0.36759
+              1.91986  -0.39879
+              2.09440  -0.40973
+              2.26893  -0.39675
+              2.44346  -0.35823
+              2.61799  -0.29488
+              2.79253  -0.21001
+              2.96706  -0.10923
+              3.14159  -0.00000
+          </tableData>
+        </table>
+      </product>
+      <product>
+        <value> -0.00567 </value>  <!-- arm -1.7 mm: strip quarter chord x 0.3055 minus the planform's area-mean quarter chord 0.3072 m (AVL Xref 0.3073); the parts' S x arm sum to zero -->
+        <property>explora/strip/right/Z-lbs</property>
+      </product>
+    </sum>
+  </function>
+
+  <!-- ==================== elevons: dynamic-pressure-weighted deflections ==================== -->
+  <function name="explora/elevon/sym-psf-rad">
+    <description>Symmetric elevon input weighted by the dynamic pressure each part of the elevon span sees: (1 - phi) q_free e + phi/2 (q_L (e + a) + q_R (e - a)), phi = share of one elevon inside its strip</description>
+    <sum>
+      <product>
+        <value> 0.3768 </value>  <!-- 1 - phi -->
+        <property>explora/free/q-elevon-psf</property>
+        <property>fcs/elevator-pos-rad</property>
+      </product>
+      <product>
+        <value> 0.3116 </value>  <!-- phi/2, phi = 0.623 = S_strip / (elevon-span area per side 0.1274 m2, y 0.121..0.539) -->
+        <sum>
+          <product>
+            <property>explora/strip/left/q-elevon-psf</property>
+            <sum>  <!-- left elevon = elevator + aileron (FlightControl.xml: elevator = (L + R)/2, aileron = (L - R)/2) -->
+              <property>fcs/elevator-pos-rad</property>
+              <property>fcs/aileron-pos-rad</property>
+            </sum>
+          </product>
+          <product>
+            <property>explora/strip/right/q-elevon-psf</property>
+            <difference>  <!-- right elevon = elevator - aileron -->
+              <property>fcs/elevator-pos-rad</property>
+              <property>fcs/aileron-pos-rad</property>
+            </difference>
+          </product>
+        </sum>
+      </product>
+    </sum>
+  </function>
+  <function name="explora/elevon/asym-psf-rad">
+    <description>Antisymmetric elevon input weighted the same way: (1 - phi) q_free a + phi/2 (q_L (e + a) - q_R (e - a)); with equal wash it is q_elevon x aileron</description>
+    <sum>
+      <product>
+        <value> 0.3768 </value>  <!-- 1 - phi -->
+        <property>explora/free/q-elevon-psf</property>
+        <property>fcs/aileron-pos-rad</property>
+      </product>
+      <product>
+        <value> 0.3116 </value>  <!-- phi/2, as sym-psf-rad -->
+        <difference>
+          <product>
+            <property>explora/strip/left/q-elevon-psf</property>
+            <sum>
+              <property>fcs/elevator-pos-rad</property>
+              <property>fcs/aileron-pos-rad</property>
+            </sum>
+          </product>
+          <product>
+            <property>explora/strip/right/q-elevon-psf</property>
+            <difference>
+              <property>fcs/elevator-pos-rad</property>
+              <property>fcs/aileron-pos-rad</property>
+            </difference>
+          </product>
+        </difference>
+      </product>
+    </sum>
+  </function>
+
+  <!-- ==================== sideslip terms ==================== -->
+  <function name="explora/qbar-xz-psf">
+    <description>1/2 rho (u^2 + w^2) = qbar cos^2 beta: dynamic pressure of the flow in the symmetry plane, what the alpha tables were built on; zero in pure spanwise flow</description>
+    <product>
+      <property>aero/qbar-psf</property>
+      <pow>
+        <cos><property>aero/beta-rad</property></cos>
+        <value> 2.0 </value>  <!-- squared -->
+      </pow>
+    </product>
+  </function>
+  <function name="explora/crossflow/side-force-lbs">
+    <description>Broadside drag of the fuselage side projection and the fins, -CD 1/2 rho v|v| A_side; the large-beta partner of the sin cos beta derivatives</description>
+    <product>
+      <value> -0.464671 </value>  <!-- -CD_side 1/2 A_side[ft2]: CD 1.2 (chosen, Hoerner ch. III flat plate / cylinder normal to the flow), A = fuselage 0.0428 m2 (STEP fuselage stations, hull height over X) + fins 0.0291 m2 (both fins, true area along the 24 deg raked axis, the CD0 buildup's S_FINS; Metrics.xml vtailarea 0.0266 is the streamwise-slice projection) -->
+      <property>atmosphere/rho-slugs_ft3</property>
+      <property>velocities/v-aero-fps</property>
+      <abs><property>velocities/v-aero-fps</property></abs>
+    </product>
+  </function>
+
+  <!-- ==================== alpha tables (wind-axis CL / CD built, then rotated to body X, Z) ====================
+       |alpha| <= 12 deg: AVL alpha sweep at beta 0, elevator 0, CL = 0.210 at alpha 0, CLa 3.81/rad,
+           lift-dependent drag k CL^2 with k = 1/(pi AR e), e = 0.914 (Raymer eq. 12.48, straight wing; AVL's inviscid k is 0.0708).
+       stall at +12 deg body, CL 1.005: Sheldahl & Klimas SAND80-2114, NACA 0012 at Re 3.6e5..7e5 stalls at 10..12 deg with CLmax 0.9..1.0;
+           wing Re at 16 m/s is 3.20e+05, the section is 11 % thick with 2 % camber (STEP sections), AVL is still linear there.
+       stall at -12 deg body, CL -0.605: chosen, no measurement of this section on the negative side.
+       12..90 deg: Viterna & Corrigan 1981 (NASA CP-2230): CL = A1 sin 2a + A2 cos^2 a / sin a, CD = B1 sin^2 a + B2 cos a,
+           CDmax = 1.11 + 0.018 AR = 1.193 (AR 4.61), A2/B2 chosen so the curves are continuous at stall.
+       90..180 deg (trailing edge first): flat plate CL = CDmax sin a cos a, CD = CDmax sin^2 a, no stall shoulder.
+       Cm about the NP: AVL to stall (Cm_ref - CL (Xref - Xnp)/c, mean +0.0146, no alpha slope by construction); beyond stall the
+           normal force acts at x_cp/c = 0.5 - 0.25 cos a (chosen: quarter chord at 0, mid chord at 90 by symmetry, quarter chord from the
+           other edge at 180), blended in over 12 deg. CD0 is NOT in these tables (see X_parasite / Z_parasite).
+       The washed strips look the same three tables up at their own alpha (explora/strip/*/alpha-rad). -->
+  <function name="aero/coefficient/CX_alpha">
+    <description>Body-X coefficient without CD0: -CDi cos a + CL sin a</description>
+    <table>
+      <independentVar lookup="row">aero/alpha-rad</independentVar>
+      <tableData>
+             -3.14159  -0.00000
+             -2.96706  -0.00084
+             -2.79253  -0.00310
+             -2.61799  -0.00611
+             -2.44346  -0.00893
+             -2.26893  -0.01064
+             -2.09440  -0.01058
+             -1.91986  -0.00852
+             -1.74533  -0.00475
+             -1.57080   0.00000
+             -1.39626   0.00714
+             -1.22173   0.01834
+             -1.04720   0.03268
+             -0.95993   0.04062
+             -0.87266   0.04883
+             -0.78540   0.05710
+             -0.69813   0.06521
+             -0.61087   0.07297
+             -0.52360   0.08016
+             -0.43633   0.08660
+             -0.34907   0.09212
+             -0.31416   0.09404
+             -0.27925   0.09578
+             -0.26180   0.09658
+             -0.24435   0.09733
+             -0.20944   0.09869
+             -0.17453   0.06532
+             -0.13963   0.03837
+             -0.10472   0.01794
+             -0.08727   0.01021
+             -0.06981   0.00414
+             -0.03491  -0.00296
+              0.00000  -0.00334
+              0.03491   0.00302
+              0.06981   0.01610
+              0.08727   0.02515
+              0.10472   0.03586
+              0.13963   0.06222
+              0.17453   0.09507
+              0.20944   0.13427
+              0.24435   0.13234
+              0.26180   0.13127
+              0.27925   0.13014
+              0.31416   0.12768
+              0.34907   0.12496
+              0.43633   0.11715
+              0.52360   0.10805
+              0.61087   0.09792
+              0.69813   0.08704
+              0.78540   0.07569
+              0.87266   0.06420
+              0.95993   0.05286
+              1.04720   0.04198
+              1.22173   0.02269
+              1.39626   0.00826
+              1.57080   0.00000
+              1.74533  -0.00475
+              1.91986  -0.00852
+              2.09440  -0.01058
+              2.26893  -0.01064
+              2.44346  -0.00893
+              2.61799  -0.00611
+              2.79253  -0.00310
+              2.96706  -0.00084
+              3.14159  -0.00000
+      </tableData>
+    </table>
+  </function>
+  <function name="aero/coefficient/CZ_alpha">
+    <description>Body-Z coefficient without CD0: -CL cos a - CDi sin a</description>
+    <table>
+      <independentVar lookup="row">aero/alpha-rad</independentVar>
+      <tableData>
+             -3.14159   0.00000
+             -2.96706   0.20701
+             -2.79253   0.40689
+             -2.61799   0.59296
+             -2.44346   0.75934
+             -2.26893   0.90119
+             -2.09440   1.01483
+             -1.91986   1.09763
+             -1.74533   1.14791
+             -1.57080   1.16477
+             -1.39626   1.14824
+             -1.22173   1.09928
+             -1.04720   1.02197
+             -0.95993   0.97430
+             -0.87266   0.92169
+             -0.78540   0.86514
+             -0.69813   0.80587
+             -0.61087   0.74553
+             -0.52360   0.68648
+             -0.43633   0.63252
+             -0.34907   0.59066
+             -0.31416   0.58024
+             -0.27925   0.57575
+             -0.26180   0.57652
+             -0.24435   0.57990
+             -0.20944   0.59721
+             -0.17453   0.46720
+             -0.13963   0.33453
+             -0.10472   0.19980
+             -0.08727   0.13180
+             -0.06981   0.06367
+             -0.03491  -0.07324
+              0.00000  -0.21026
+              0.03491  -0.34676
+              0.06981  -0.48207
+              0.08727  -0.54888
+              0.10472  -0.61556
+              0.13963  -0.74660
+              0.17453  -0.87454
+              0.20944  -0.99878
+              0.24435  -0.91997
+              0.26180  -0.89178
+              0.27925  -0.86917
+              0.31416  -0.83696
+              0.34907  -0.81764
+              0.43633  -0.80477
+              0.52360  -0.82100
+              0.61087  -0.85226
+              0.69813  -0.89120
+              0.78540  -0.93351
+              0.87266  -0.97635
+              0.95993  -1.01772
+              1.04720  -1.05607
+              1.22173  -1.11898
+              1.39626  -1.15722
+              1.57080  -1.16477
+              1.74533  -1.14791
+              1.91986  -1.09763
+              2.09440  -1.01483
+              2.26893  -0.90119
+              2.44346  -0.75934
+              2.61799  -0.59296
+              2.79253  -0.40689
+              2.96706  -0.20701
+              3.14159  -0.00000
+      </tableData>
+    </table>
+  </function>
+  <function name="aero/coefficient/Cm_alpha">
+    <description>Pitching moment about the neutral point: Cm0 to stall, flat-plate centre-of-pressure law beyond</description>
+    <table>
+      <independentVar lookup="row">aero/alpha-rad</independentVar>
+      <tableData>
+             -3.14159   0.00000
+             -2.96706   0.10923
+             -2.79253   0.21001
+             -2.61799   0.29488
+             -2.44346   0.35823
+             -2.26893   0.39675
+             -2.09440   0.40973
+             -1.91986   0.39879
+             -1.74533   0.36759
+             -1.57080   0.32121
+             -1.39626   0.26559
+             -1.22173   0.20686
+             -1.04720   0.15094
+             -0.95993   0.12553
+             -0.87266   0.10240
+             -0.78540   0.08185
+             -0.69813   0.06406
+             -0.61087   0.04910
+             -0.52360   0.03695
+             -0.43633   0.02750
+             -0.34907   0.01746
+             -0.31416   0.01485
+             -0.27925   0.01306
+             -0.26180   0.01242
+             -0.24435   0.01190
+             -0.20944   0.01115
+             -0.17453   0.01216
+             -0.13963   0.01307
+             -0.10472   0.01388
+             -0.08727   0.01423
+             -0.06981   0.01459
+             -0.03491   0.01518
+              0.00000   0.01565
+              0.03491   0.01600
+              0.06981   0.01621
+              0.08727   0.01625
+              0.10472   0.01628
+              0.13963   0.01621
+              0.17453   0.01599
+              0.20944   0.01562
+              0.24435   0.00890
+              0.26180   0.00548
+              0.27925   0.00196
+              0.31416  -0.00550
+              0.34907  -0.01372
+              0.43633  -0.03485
+              0.52360  -0.04405
+              0.61087  -0.05598
+              0.69813  -0.07069
+              0.78540  -0.08817
+              0.87266  -0.10833
+              0.95993  -0.13099
+              1.04720  -0.15586
+              1.22173  -0.21048
+              1.39626  -0.26762
+              1.57080  -0.32121
+              1.74533  -0.36759
+              1.91986  -0.39879
+              2.09440  -0.40973
+              2.26893  -0.39675
+              2.44346  -0.35823
+              2.61799  -0.29488
+              2.79253  -0.21001
+              2.96706  -0.10923
+              3.14159  -0.00000
+      </tableData>
+    </table>
+  </function>
+
+  <!-- ==================== X (body, forward) ==================== -->
+  <axis name="X">
+    <function name="aero/force/X_alpha">
+      <description>Free-stream part of the planform (centre section + outboard wing) at the aircraft alpha</description>
+      <product>
+        <property>explora/qbar-xz-psf</property>
+        <value> 2.66275 </value>  <!-- S_free 0.2474 m2 = Sref - 2 S_strip -->
+        <property>aero/coefficient/CX_alpha</property>
+      </product>
+    </function>
+    <function name="aero/force/X_parasite">
+      <description>CD0 along the wind, X component, free-stream part. Buildup at 16 m/s: wing 0.0112, fuselage 0.0034, fins 0.0014, motors 0.0062, fin tube ends 0.0019, ball caps 0.0005, +15 % misc (chosen)</description>
+      <product>
+        <value> -0.0282 </value>  <!-- -CD0, wetted-area build-up (README.md) -->
+        <property>explora/qbar-xz-psf</property>
+        <value> 2.66275 </value>  <!-- S_free, as X_alpha -->
+        <cos><property>aero/alpha-rad</property></cos>
+      </product>
+    </function>
+    <function name="aero/force/X_strips">
+      <description>The two washed strips (shared functions above)</description>
+      <sum>
+        <property>explora/strip/left/X-lbs</property>
+        <property>explora/strip/right/X-lbs</property>
+      </sum>
+    </function>
+    <function name="aero/force/X_pitchrate">
+      <product>
+        <value> 0.039901 </value>  <!-- AVL CXq body about NP, alpha 6 -->
+        <property>explora/qbar-xz-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>aero/ci2vel</property>
+        <property>velocities/q-aero-rad_sec</property>
+      </product>
+    </function>
+  </axis>
+
+  <!-- ==================== Y (body, right) ==================== -->
+  <axis name="Y">
+    <function name="aero/force/Y_beta">
+      <product>
+        <value> -0.206758 </value>  <!-- AVL CYv body, alpha 6; the two fins supply all of it -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <sin><property>aero/beta-rad</property></sin>  <!-- v/Vt, the variable the AVL v-derivative is defined on -->
+        <cos><property>aero/beta-rad</property></cos>  <!-- the linear fin lift ends at beta 90; the broadside drag is Y_crossflow -->
+      </product>
+    </function>
+    <function name="aero/force/Y_crossflow">
+      <description>Broadside drag of fuselage and fins, -CD 1/2 rho v|v| A_side (shared function above)</description>
+      <property>explora/crossflow/side-force-lbs</property>
+    </function>
+    <function name="aero/force/Y_rollrate">
+      <product>
+        <value> 0.084249 </value>  <!-- AVL CYp body about NP, alpha 6 -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>aero/bi2vel</property>
+        <property>velocities/p-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/force/Y_yawrate">
+      <product>
+        <value> 0.063095 </value>  <!-- AVL CYr body about NP, alpha 6 -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>aero/bi2vel</property>
+        <property>velocities/r-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/force/Y_aileron">
+      <product>
+        <value> -0.025325 </value>  <!-- AVL CY_aileron body, alpha 6, sign flipped to the JSBSim aileron convention -->
+        <property>metrics/Sw-sqft</property>
+        <property>explora/elevon/asym-psf-rad</property>
+      </product>
+    </function>
+  </axis>
+
+  <!-- ==================== Z (body, down) ==================== -->
+  <axis name="Z">
+    <function name="aero/force/Z_alpha">
+      <description>Free-stream part of the planform at the aircraft alpha</description>
+      <product>
+        <property>explora/qbar-xz-psf</property>
+        <value> 2.66275 </value>  <!-- S_free, as X_alpha -->
+        <property>aero/coefficient/CZ_alpha</property>
+      </product>
+    </function>
+    <function name="aero/force/Z_parasite">
+      <description>CD0 along the wind, Z component, free-stream part</description>
+      <product>
+        <value> -0.0282 </value>  <!-- -CD0, same constant as X_parasite -->
+        <property>explora/qbar-xz-psf</property>
+        <value> 2.66275 </value>  <!-- S_free, as X_alpha -->
+        <sin><property>aero/alpha-rad</property></sin>
+      </product>
+    </function>
+    <function name="aero/force/Z_strips">
+      <description>The two washed strips: the wash normal force in hover (4.94 N up at 3.4 kg hover thrust), the blown-wing lift in flight</description>
+      <sum>
+        <property>explora/strip/left/Z-lbs</property>
+        <property>explora/strip/right/Z-lbs</property>
+      </sum>
+    </function>
+    <function name="aero/force/Z_pitchrate">
+      <product>
+        <value> -4.105746 </value>  <!-- AVL CZq body about NP, alpha 6 (CLq 4.09 about NP vs 3.94 about the MAC quarter chord) -->
+        <property>explora/qbar-xz-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>aero/ci2vel</property>
+        <property>velocities/q-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/force/Z_propwash_pitchrate">
+      <description>Pitch-rate lift of the washed strips in hover: 1/4 rho S c CZq f_strip x (k v_i) x q per strip, wash increment only (the force partner of Pitch_propwash_damp)</description>
+      <product>
+        <value> -0.872279 </value>  <!-- 1/4 S[ft2] c[ft] CZq f_strip, f_strip = 0.1954 = S_strip / Sref -->
+        <property>atmosphere/rho-slugs_ft3</property>
+        <value> 1.8784 </value>  <!-- k, slipstream acceleration at the wing -->
+        <sum>
+          <property>propulsion/engine[0]/prop-induced-velocity_fps</property>  <!-- left strip -->
+          <property>propulsion/engine[1]/prop-induced-velocity_fps</property>  <!-- right strip -->
+        </sum>
+        <property>velocities/q-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/force/Z_elevator">
+      <description>Elevon lift (symmetric), body Z, on the dynamic-pressure-weighted deflection so it exists in hover</description>
+      <product>
+        <value> -1.785165 </value>  <!-- AVL CZ_elevator body, alpha 6 (stability-axis CL_elevator 1.7787); AVL prints per degree, x 57.2958 -->
+        <property>metrics/Sw-sqft</property>
+        <property>explora/elevon/sym-psf-rad</property>
+      </product>
+    </function>
+  </axis>
+
+  <!-- ==================== ROLL ==================== -->
+  <axis name="ROLL">
+    <function name="aero/moment/Roll_beta">
+      <product>
+        <value> -0.017028 </value>  <!-- AVL Clv body, alpha 6: sweep only, no dihedral; grows with CL -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <sin><property>aero/beta-rad</property></sin>  <!-- sin beta cos beta: AVL slope at small beta, zero at 90 (see header) -->
+        <cos><property>aero/beta-rad</property></cos>
+      </product>
+    </function>
+    <function name="aero/moment/Roll_damp">
+      <product>
+        <value> -0.362232 </value>  <!-- AVL Clp body about NP, alpha 6 -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <property>aero/bi2vel</property>
+        <property>velocities/p-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/moment/Roll_yawrate">
+      <product>
+        <value> 0.093448 </value>  <!-- AVL Clr body about NP, alpha 6 -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <property>aero/bi2vel</property>
+        <property>velocities/r-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/moment/Roll_aileron">
+      <description>Differential elevon on the dynamic-pressure-weighted deflection: this is the hover heading control</description>
+      <product>
+        <value> 0.316502 </value>  <!-- AVL Cl_aileron body about NP, alpha 6, sign flipped to the JSBSim aileron convention -->
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <property>explora/elevon/asym-psf-rad</property>
+      </product>
+    </function>
+    <function name="aero/moment/Roll_strips">
+      <description>Normal forces of the two strips at +-y_strip: zero for equal thrust, the differential-thrust roll coupling otherwise</description>
+      <product>
+        <value> 1.05695 </value>  <!-- y_strip 0.3222 m, area centroid of the strip (right positive; roll = y_R Z_R + y_L Z_L = y (Z_R - Z_L)) -->
+        <difference>
+          <property>explora/strip/right/Z-lbs</property>
+          <property>explora/strip/left/Z-lbs</property>
+        </difference>
+      </product>
+    </function>
+    <function name="aero/moment/Roll_propwash_damp">
+      <description>Roll damping of the washed strips in hover: 1/4 rho S b^2 Clp f_roll x (k v_i) x p per strip, the wash increment only so cruise Clp is not double-counted</description>
+      <product>
+        <value> -1.248354 </value>  <!-- 1/4 S[ft2] b[ft]^2 Clp f_roll, f_roll = 0.1565 = one strip's share of the integral y^2 c dy (stations, contracted wake y 0.195..0.455 m) -->
+        <property>atmosphere/rho-slugs_ft3</property>
+        <value> 1.8784 </value>  <!-- k, slipstream acceleration at the wing -->
+        <sum>
+          <property>propulsion/engine[0]/prop-induced-velocity_fps</property>  <!-- left strip -->
+          <property>propulsion/engine[1]/prop-induced-velocity_fps</property>  <!-- right strip -->
+        </sum>
+        <property>velocities/p-rad_sec</property>
+      </product>
+    </function>
+  </axis>
+
+  <!-- ==================== PITCH ==================== -->
+  <axis name="PITCH">
+    <function name="aero/moment/Pitch_alpha">
+      <description>Free-stream part: Cm0 about the neutral point (+0.0146, nose up at zero lift) and the post-stall moment; NO Cm_alpha, the AERORP-to-CG arm supplies it</description>
+      <product>
+        <property>explora/qbar-xz-psf</property>
+        <value> 2.66275 </value>  <!-- S_free, as X_alpha -->
+        <value> 0.98822 </value>  <!-- c_free 0.3012 m = (Sref Cref - 2 S_strip c_strip) / S_free -->
+        <property>aero/coefficient/Cm_alpha</property>
+      </product>
+    </function>
+    <function name="aero/moment/Pitch_free_arm">
+      <description>Free-stream normal force times its quarter-chord arm from the area-mean quarter chord (the strips' arms and this one sum to zero over the planform)</description>
+      <product>
+        <value> 0.00364 </value>  <!-- arm +1.1 mm = -2 S_strip arm_strip / S_free -->
+        <sum>
+          <property>aero/force/Z_alpha</property>
+          <property>aero/force/Z_parasite</property>
+        </sum>
+      </product>
+    </function>
+    <function name="aero/moment/Pitch_strips">
+      <description>The two washed strips about the AERORP (Cm0 + quarter-chord arm; at hover +0.121 N m nose up)</description>
+      <sum>
+        <property>explora/strip/left/Pitch-lbsft</property>
+        <property>explora/strip/right/Pitch-lbsft</property>
+      </sum>
+    </function>
+    <function name="aero/moment/Pitch_damp">
+      <product>
+        <value> -0.766279 </value>  <!-- AVL Cmq about NP, alpha 6 (about the MAC quarter chord it is -0.690; JSBSim adds CZq x arm) -->
+        <property>explora/qbar-xz-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/cbarw-ft</property>
+        <property>aero/ci2vel</property>
+        <property>velocities/q-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/moment/Pitch_elevator">
+      <description>Symmetric elevon about the neutral point on the dynamic-pressure-weighted deflection: at hover -0.045 N m per degree about the CG</description>
+      <product>
+        <value> -0.383366 </value>  <!-- AVL Cm_elevator about NP, alpha 6; about the MAC quarter chord it is -0.3490, JSBSim adds CZ_elevator x arm -->
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/cbarw-ft</property>
+        <property>explora/elevon/sym-psf-rad</property>
+      </product>
+    </function>
+    <function name="aero/moment/Pitch_propwash_damp">
+      <description>Pitch damping of the washed strips in hover: 1/4 rho S c^2 Cmq f_strip x (k v_i) x q per strip, wash increment only (quadtailsitter pattern)</description>
+      <product>
+        <value> -0.161949 </value>  <!-- 1/4 S[ft2] c[ft]^2 Cmq f_strip, f_strip = 0.1954 = S_strip / Sref -->
+        <property>atmosphere/rho-slugs_ft3</property>
+        <value> 1.8784 </value>  <!-- k, slipstream acceleration at the wing -->
+        <sum>
+          <property>propulsion/engine[0]/prop-induced-velocity_fps</property>  <!-- left strip -->
+          <property>propulsion/engine[1]/prop-induced-velocity_fps</property>  <!-- right strip -->
+        </sum>
+        <property>velocities/q-rad_sec</property>
+      </product>
+    </function>
+  </axis>
+
+  <!-- ==================== YAW ==================== -->
+  <axis name="YAW">
+    <function name="aero/moment/Yaw_beta">
+      <product>
+        <value> 0.029784 </value>  <!-- AVL Cnv body about NP, alpha 6; fins 89 % of it; fuselage (Munk -0.0155) not included, see report -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <sin><property>aero/beta-rad</property></sin>  <!-- sin beta cos beta: AVL slope at small beta, zero at 90 (see header) -->
+        <cos><property>aero/beta-rad</property></cos>
+      </product>
+    </function>
+    <function name="aero/moment/Yaw_crossflow">
+      <description>Weathercock moment of the broadside drag about the AERORP: -x_cp x Y_crossflow, the force centre 57 mm aft of the AERORP; JSBSim adds the AERORP-to-CG arm (12.7 mm) itself, giving 70 mm aft of the CG</description>
+      <product>
+        <value> -0.188424 </value>  <!-- -(arm aft of the AERORP)[ft]: area-weighted centre 70 mm aft of the CG (fuselage side area 0.0428 m2 at -21 mm, fins 0.0291 m2 at the vtailarm 204 mm) minus the 12.7 mm the AERORP sits aft of the CG -->
+        <property>explora/crossflow/side-force-lbs</property>
+      </product>
+    </function>
+    <function name="aero/moment/Yaw_rollrate">
+      <product>
+        <value> -0.070610 </value>  <!-- AVL Cnp body about NP, alpha 6 (strongly alpha dependent: -0.031 at 2, -0.110 at 10) -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <property>aero/bi2vel</property>
+        <property>velocities/p-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/moment/Yaw_damp">
+      <product>
+        <value> -0.009864 </value>  <!-- AVL Cnr body about NP, alpha 6: short fin arm, weak -->
+        <property>aero/qbar-psf</property>
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <property>aero/bi2vel</property>
+        <property>velocities/r-aero-rad_sec</property>
+      </product>
+    </function>
+    <function name="aero/moment/Yaw_aileron">
+      <product>
+        <value> -0.002349 </value>  <!-- AVL Cn_aileron body about NP, alpha 6, sign flipped: the stability-axis adverse yaw (+0.0355) is almost all roll-vector tilt in body axes -->
+        <property>metrics/Sw-sqft</property>
+        <property>metrics/bw-ft</property>
+        <property>explora/elevon/asym-psf-rad</property>
+      </product>
+    </function>
+    <function name="aero/moment/Yaw_strips">
+      <description>Axial forces of the two strips at +-y_strip: yaw = -y_L X_L - y_R X_R = y (X_L - X_R), zero for equal thrust</description>
+      <product>
+        <value> 1.05695 </value>  <!-- y_strip, as Roll_strips -->
+        <difference>
+          <property>explora/strip/left/X-lbs</property>
+          <property>explora/strip/right/X-lbs</property>
+        </difference>
+      </product>
+    </function>
+    <!-- No prop-wash yaw damping: the fins sit on the centreline (y = 0) and the contracted wakes start at |y| = 0.195 m,
+         so no surface that resists body yaw is in the slipstream. Body yaw in hover is differential thrust (Propulsion). -->
+  </axis>
+</aerodynamics>

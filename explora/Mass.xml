@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!-- eXplora Tailsitter VTOL mass properties, 3.4 kg all-up without payload (forum: marco3dr, ArduPilot Discuss 92341, 2024-04-27).
+     Structural frame: origin nose tip, X aft, Y right, Z up, metres. Mass budget:
+     printed parts = STEP solids x 3MF slicer settings (1 perimeter 0.4 mm, gyroid 2..5 %, PLA 1.25 g/cm3, NOT scaled),
+     datasheet masses for motors/servos/avionics, pultruded CF tubes, battery as a point mass below.
+     The slicer model + datasheets + tubes sum to 2.714 kg; the 0.686 kg to 3.4 kg is carried as the explicit
+     "Unaccounted" point mass (wiring, connectors, screws, RC receiver, LEDs: none of it is in the BOM), 60 mm on the belly side of
+     the nominal CG so the all-up CG (z -0.0053) sits inside the tail-sitting tripod the photo shows (chosen).
+     emptywt = everything modelled except the battery. Inertia = empty aircraft about the empty CG, body axes, from surface (shell)
+     and volume (infill) property matrices of the placed STEP solids (OpenCASCADE BRepGProp) plus point masses and rods, then
+     x 1.337: the unaccounted mass assumed distributed like the modelled airframe (chosen); the pointmass itself adds only its parallel-axis term.
+     negated_crossproduct_inertia="false": ixz below is the plain integral of x*z*dm (JSBSim FGMassBalance docs recommend this). -->
+<mass_balance negated_crossproduct_inertia="false">
+  <emptywt unit="KG"> 2.0339 </emptywt>  <!-- modelled airframe without battery: printed 1.254 + tubes 0.144 + motors/props 0.360 + avionics/servos/ESC 0.276 kg -->
+  <location name="CG" unit="M">  <!-- empty CG; 26.3 % of the wing-only MAC (LE at x=0.2426, MAC 0.2920) -->
+    <x> 0.3195 </x>
+    <y> 0.0001 </y>
+    <z> 0.0120 </z>
+  </location>
+  <ixx unit="KG*M2"> 0.24327 </ixx>  <!-- roll: wing shells/infill (STEP), motors at y=+-0.325, spar and hinge tubes as rods (0.18193) x 1.337: the 0.686 kg unaccounted mass assumed distributed like the modelled airframe (wiring to the wing ESCs, LEDs, screws, slicer shortfall), chosen -->
+  <iyy unit="KG*M2"> 0.04319 </iyy>  <!-- pitch, 0.03230 x 1.337 -->
+  <izz unit="KG*M2"> 0.28042 </izz>  <!-- yaw, 0.20972 x 1.337 -->
+  <ixy unit="KG*M2"> -0.000044 </ixy>  <!-- left/right mirror symmetry (README: right wing = mirrored left) -->
+  <ixz unit="KG*M2"> -0.000936 </ixz>  <!-- integral x*z*dm: fins up/down nearly cancel, GPS/canopy above, battery bay floor below -->
+  <iyz unit="KG*M2"> -0.000003 </iyz>
+  <pointmass name="Battery 6S 5000 mAh">  <!-- Turnigy 5000mAh 6S 25C 680.4 g (hobbyking.com); param BATT_CAPACITY 5000; Fuselage_2 bay under the hatch, on the floor (STEP cavity floor y_cad -29), centred; fwd/aft limits x 0.1898..0.2043 -->
+    <weight unit="KG"> 0.6804 </weight>
+    <location unit="M">
+      <x> 0.1970 </x>
+      <y> 0.0000 </y>
+      <z> -0.0089 </z>
+    </location>
+  </pointmass>
+  <pointmass name="Unaccounted hardware">  <!-- 3.4 kg (forum) minus everything modelled; wiring/connectors/screws/inserts/RC receiver/LEDs/pushrods/paint, none in the BOM; 60 mm on the belly side of the nominal CG: chosen, the only evidence is the standing photo, which needs the CG on the belly side of the wing-cap line (z -0.001) -->
+    <weight unit="KG"> 0.6857 </weight>
+    <location unit="M">
+      <x> 0.2888 </x>
+      <y> 0.0000 </y>
+      <z> -0.0532 </z>
+    </location>
+  </pointmass>
+</mass_balance>
