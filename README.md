@@ -31,7 +31,7 @@ so JSBSim loads the new definition.
 | Preview | Directory | Model | Summary |
 | --- | --- | --- | --- |
 | <img src="docs/previews/advanced_plane.jpg" width="160" alt="Fixed-wing aircraft"> | `advanced_plane` | Fixed-wing aircraft | A pusher-prop aircraft with wheeled landing gear, elevons, rudder, and flaps. |
-| <img src="docs/previews/c172x.jpg" width="160" alt="Cessna 172P Skyhawk"> | `c172x` | Cessna 172P Skyhawk | A four-seat single-piston trainer with tricycle gear, flaps, and PX4 and ArduPlane profiles; its meshes are FlightGear's c172p. |
+| <img src="docs/previews/c172p.jpg" width="160" alt="Cessna 172P Skyhawk"> | `c172p` | Cessna 172P Skyhawk | A four-seat single-piston trainer with tricycle gear, flaps, and PX4 and ArduPlane profiles; its meshes are FlightGear's c172p. |
 | <img src="docs/previews/explora.jpg" width="160" alt="eXplora Tailsitter VTOL"> | `explora` | eXplora Tailsitter VTOL | A 3D-printed dual-motor tailsitter flying wing with two elevons, built from the open-source eXplora design files, with ArduPlane and PX4 profiles. |
 | <img src="docs/previews/F450.jpg" width="160" alt="DJI F450"> | `F450` | DJI F450 | A baseline quadcopter using an F450 frame, DJI E305 motors, and 9450 propellers. |
 | <img src="docs/previews/quadtailsitter.jpg" width="160" alt="Quad tailsitter"> | `quadtailsitter` | Quad tailsitter | A tailsitter VTOL: it takes off and lands vertically, then flies forward like a fixed-wing aircraft. |
@@ -56,5 +56,5 @@ Third-party licences and notices remain in the directories of the relevant aircr
   Edoardo Nunzi, Lorenzo Franco, Antonios Antzoulatos and Brandon MacDougall, licensed under the GNU GPL v3.0.
   Its geometry and meshes come from that project's STEP files, its masses from the 3MF projects and bill of
   materials, and its ArduPlane setup from the published parameter file. `explora/NOTICE` lists every source.
-- `c172x` joins JSBSim's c172x flight model by Tony Peden and FlightGear's c172p meshes by David Megginson and
-  the c172p team, both under the GNU GPL. `c172x/NOTICE` lists every source.
+- `c172p` joins JSBSim's c172p flight model (GNU LGPL) and FlightGear's c172p meshes by David Megginson and
+  the c172p team (GNU GPL). `c172p/NOTICE` lists every source.

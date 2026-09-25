@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   A sidecar: JSBSim never reads this file. Which ArduPlane output drives what, from the real aircraft's parameter file
-  (upstream parameters/Ardupilot/2022-10-17_Pixhawk1.param). channel = SERVOn - 1, the numbering c172x uses for
+  (upstream parameters/Ardupilot/2022-10-17_Pixhawk1.param). channel = SERVOn - 1, the numbering c172p uses for
   its ArduPilot rows.
 
     SERVO9_FUNCTION  73 ThrottleLeft   -> channel 8, Motor index 0 (Propulsion.xml motor_left)

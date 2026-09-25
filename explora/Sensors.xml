@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  A sidecar: JSBSim never reads this file. The sensor set every ArduPilot vehicle in PteroSimAircrafts declares (c172x,
+  A sidecar: JSBSim never reads this file. The sensor set every ArduPilot vehicle in PteroSimAircrafts declares (c172p,
   standard_vtol Sensors.xml): imu, barometer, gps, airspeed; the magnetometer rides inside the imu sensor, as on those vehicles.
   The names are theirs; the rates are this aircraft's:
     imu 300 Hz        SCHED_LOOP_RATE 300 (param): the loop rate ArduPlane consumes IMU samples at

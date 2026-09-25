@@ -19,10 +19,11 @@ param set-default SENS_EN_ARSPDSIM 1
 
 # ── Airspeed (full-size C172, NOT RC model) ────────────────────────────
 # PX4 defaults (10/15/20 m/s) are for RC planes. C172: Vs1=25, Vy=38, Vno=66 m/s
-# CRITICAL: PX4 scales rate controller gains by (trim/actual)^2.
-# With default trim=15 and actual=30+, gains were reduced 75% → spiral divergence.
+# PX4 scales the rate-loop gains by (FW_AIRSPD_TRIM / airspeed)^2, so the trim speed is the 172's cruise,
+# not an RC plane's 15 m/s.
 
-param set-default FW_AIRSPD_STALL 22
+# model: clean level trim fails below 24.5 m/s
+param set-default FW_AIRSPD_STALL 24
 param set-default FW_AIRSPD_MIN 28
 param set-default FW_AIRSPD_TRIM 38
 param set-default FW_AIRSPD_MAX 60
@@ -91,14 +92,15 @@ param set-default FW_P_LIM_MIN -15
 param set-default FW_T_CLMB_MAX 3
 param set-default FW_T_SINK_MAX 3.5
 param set-default FW_T_SINK_MIN 4
-# JSBSim c172x measured: idle sink ~4 m/s, full-throttle climb 3.5 m/s; SINK_MIN=2 pinned TECS throttle FF at 0 -> idle-dive crash
-# FW_THR_MIN stays 0: 0.10 made the plane roll 3 km after touchdown (thr never idles); dive fix is SINK_MIN/CLMB_MAX+geometry
+# JSBSim c172p at 1000 m: idle sink 3.7 m/s at 30 m/s, full-throttle climb 5.1 m/s at 35 m/s. SINK_MIN below the idle sink
+# pins the TECS throttle feed-forward at 0 and the aircraft dives at idle.
+# FW_THR_MIN stays 0: a throttle floor holds power on after touchdown, and the simulator applies no wheel brakes.
 param set-default FW_R_LIM 35
 
 # ── Navigation ──────────────────────────────────────────────────────────
 
 param set-default NPFG_PERIOD 12
-# A one-tonne aircraft turns on a 300 m radius at 38 m/s; 15 m / 50 m are RC-plane radii. Flown 2026-09-24.
+# A one-tonne aircraft turns on a 300 m radius at 38 m/s; 15 m / 50 m are RC-plane radii.
 param set-default NAV_ACC_RAD 90
 param set-default NAV_LOITER_RAD 300
 param set-default NAV_DLL_ACT 2
@@ -119,10 +121,10 @@ param set-default FW_W_EN 1
 param set-default FD_ESCS_EN 0
 
 # ── Ground Steering ─────────────────────────────────────────────────────
-# JSBSim c172x nosewheel is mechanically linked to rudder.
+# Controls.xml drives the nosewheel (fcs/steer-cmd-norm) from the rudder channel (ch3).
 # PX4 wheel controller (func 401) is NOT mapped — conflicts with yaw rate controller.
 # Ground steering is handled by yaw rate controller via rudder (ch3).
-# Increase yaw rate P to counter p_factor=10 during ground roll.
+# Yaw rate P raised to hold the runway heading against the propeller's p-factor during the ground roll.
 
 param set-default FW_YR_P 8.0
 
