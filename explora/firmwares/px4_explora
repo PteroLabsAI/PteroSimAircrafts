@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# @name PteroSim eXplora
+#
+# @type VTOL Duo Tailsitter
+# @class VTOL
+#
+# @output Motor1 motor left
+# @output Motor2 motor right
+# @output Servo1 elevon left
+# @output Servo2 elevon right
+#
+# Base: PX4's generic dual-motor elevon tailsitter (init.d/airframes/13200_generic_vtol_tailsitter) and the SIH duo
+# tailsitter (1102_tailsitter_duo_sih.hil). Geometry and trim from the JSBSim model in PteroSimAircrafts/explora.
+# The author publishes no PX4 parameters (the eXplora README says it was tested with PX4; only an ArduPlane file exists).
+
+. ${R}etc/init.d/rc.vtol_defaults
+
+param set-default MAV_TYPE 19                 # VTOL duo tailsitter (1102)
+param set-default VT_TYPE 0                   # tailsitter (13200, 1102)
+param set-default VT_MOT_COUNT 2              # 1102
+param set-default VT_ELEV_MC_LOCK 0           # 1102: the elevons are the hover pitch and yaw actuators, they must move in hover
+param set-default EKF2_FUSE_BETA 0            # 13200: side slip fusion is not supported for tailsitters
+# The simulator reports the IMU in the aircraft's plane frame (ArduPlane flies a tailsitter in it); PX4 flies it in the hover
+# frame (x toward the belly, z toward the tail): v_hover = Ry(+90 deg) v_plane, PX4's ROTATION_PITCH_90.
+param set-default SENS_BOARD_ROT 24
+
+param set-default CA_AIRFRAME 4               # VTOL tailsitter (13200)
+param set-default CA_ROTOR_COUNT 2
+# Rotor 0 = left motor (Propulsion.xml engine 0, y -0.325 m), rotor 1 = right motor (engine 1, y +0.325 m).
+# KM = torque/thrust = C_P D / (2 pi C_T) = 0.0364 x 0.3556 / (2 pi x 0.0899) = 0.023 m (explora_prop_14x8.xml static values).
+# Sign: PX4 KM > 0 = counter-clockwise seen from the thrust side (quad X rotor 1, front right, CCW, KM +0.05); JSBSim
+# sense +1 = clockwise seen from behind = counter-clockwise seen from the front, so the left motor (sense +1) is KM +.
+param set-default CA_ROTOR0_PY -0.325
+param set-default CA_ROTOR0_KM 0.023
+param set-default CA_ROTOR1_PY 0.325
+param set-default CA_ROTOR1_KM -0.023
+
+# Elevons. Torques are in PX4's hover frame (x toward the belly, z toward the tail), where hover yaw is aircraft roll.
+# With 13200's signs, +1 on each surface is trailing edge UP: +pitch on both, +yaw on the left, -yaw on the right.
+# Controls.xml turns that into the model's properties (left +1 = TE up as is, right inverted).
+param set-default CA_SV_CS_COUNT 2
+param set-default CA_SV_CS0_TYPE 5            # left elevon
+param set-default CA_SV_CS0_TRQ_P 0.5         # 13200
+param set-default CA_SV_CS0_TRQ_Y 0.5         # 13200
+param set-default CA_SV_CS1_TYPE 6            # right elevon
+param set-default CA_SV_CS1_TRQ_P 0.5         # 13200
+param set-default CA_SV_CS1_TRQ_Y -0.5        # 13200
+
+# Simulator outputs, in the order Controls.xml binds them (channels 0..3).
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 201
+param set-default PWM_MAIN_FUNC4 202
+
+# Hover.
+param set-default MPC_THR_HOVER 0.6           # model: hover throttle 0.60 in the offline check, PWM 1625 under ArduPlane
+param set-default MIS_TAKEOFF_ALT 15          # the harness's hover altitude
+param set-default MC_ROLL_P 3                 # 22002 (SwanK1 quad tailsitter, validated hover)
+param set-default MC_ROLLRATE_P 0.3           # 22002
+param set-default MC_PITCH_P 3                # the author's Q_A_ANG_PIT_P 3
+# In hover PX4 drives a tailsitter's elevons from the FIXED-WING rate controller (tailsitter.cpp: torque_setpoint_1 =
+# vehicle_torque_setpoint_virtual_fw when VT_ELEV_MC_LOCK is 0), fed with the hover rate setpoint; MC_*RATE_* reach only
+# the motors. Its defaults (FW_PR_FF 0.5, FW_PR_P 0.08) are near-pure attitude feedback with little rate damping and
+# limit-cycle at about 1.6 Hz in hover. The allocator maps one unit of FW torque to full travel of each elevon
+# (servo = pitch +- yaw), as ArduPlane's elevon output does, so the author's ArduPlane rate
+# gains carry over converted from deg/s-per-45-deg to rad/s-per-unit (x 57.3/45 = 1.273):
+#   PTCH_RATE_P/I/D/FF 0.06/0.1/0.003/0.09, RLL_RATE_P/I/D/FF 0.17/0.13/0.0022/0.092 (2022-10-17 param file).
+param set-default FW_PR_P 0.076
+param set-default FW_PR_I 0.127
+param set-default FW_PR_D 0.0038
+param set-default FW_PR_FF 0.115
+param set-default FW_RR_P 0.216
+param set-default FW_RR_I 0.166
+param set-default FW_RR_D 0.0028
+param set-default FW_RR_FF 0.117
+param set-default WV_EN 0                     # weathervaning chases the model's steady ~10 deg hover lean
+
+# Transition and fixed wing: the author's ArduPlane envelope (AIRSPEED_MIN/CRUISE/MAX 12/16/20, THR_MAX 90,
+# PTCH_LIM -30/+40, ROLL_LIMIT 50, Q_TRANSITION_MS 2000).
+param set-default FW_AIRSPD_STALL 11          # model: Vs 11.55 m/s at 3.4 kg
+param set-default FW_AIRSPD_MIN 12
+param set-default FW_AIRSPD_TRIM 16
+param set-default FW_AIRSPD_MAX 20
+param set-default VT_ARSP_TRANS 12
+param set-default VT_F_TRANS_DUR 2
+param set-default FW_THR_TRIM 0.4             # model: cruise throttle 0.40 at 16 m/s
+param set-default FW_THR_MAX 0.9
+param set-default FW_THR_MIN 0
+param set-default FW_P_LIM_MAX 40
+param set-default FW_P_LIM_MIN -30
+param set-default FW_R_LIM 50
+param set-default VT_FW_DIFTHR_EN 1           # 1102: yaw in forward flight by differential thrust
+param set-default VT_FW_DIFTHR_S_Y 0.3        # 1102
+
+# Simulator without a radio or a battery model (22002).
+param set-default COM_RC_IN_MODE 4
+param set-default COM_LOW_BAT_ACT 0
+param set-default CBRK_SUPPLY_CHK 894281
+param set-default NAV_DLL_ACT 0

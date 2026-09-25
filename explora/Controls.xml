@@ -15,10 +15,18 @@
   and the sim must take what the real servos take; standard_vtol binds its ArduPlane ailerons the same way (property rows,
   SERVO6_REVERSED handled by the autopilot). FlightControl.xml carries the sign convention and the throw.
   Throttle 0..1 = PWM 1000..2000 (SERVO9/10 MIN/MAX 1000/2000, TRIM 1000, param).
+
+  PX4 (firmwares/px4_explora, airframe 22006): PWM_MAIN_FUNC1..4 = Motor1 (left), Motor2 (right), Servo1 (left elevon),
+  Servo2 (right elevon) on channels 0..3. With the airframe's control-surface torques +1 is trailing edge up on both
+  elevons, so the left one lands on servo-0 as is and the right one is inverted (servo-1: +1 = trailing edge down).
 -->
 <control_bindings stack="ArduPilot">
-  <binding channel="4" property="fcs/servo-0-cmd-norm" in="-1 1" out="-1 1" label="elevon_left"/>
-  <binding channel="5" property="fcs/servo-1-cmd-norm" in="-1 1" out="-1 1" label="elevon_right"/>
-  <binding channel="8" type="Motor" index="0" in="0 1" out="0 1" label="motor_left"/>
-  <binding channel="9" type="Motor" index="1" in="0 1" out="0 1" label="motor_right"/>
+  <binding stack="ArduPilot" channel="4" property="fcs/servo-0-cmd-norm" in="-1 1" out="-1 1" label="elevon_left"/>
+  <binding stack="ArduPilot" channel="5" property="fcs/servo-1-cmd-norm" in="-1 1" out="-1 1" label="elevon_right"/>
+  <binding stack="ArduPilot" channel="8" type="Motor" index="0" in="0 1" out="0 1" label="motor_left"/>
+  <binding stack="ArduPilot" channel="9" type="Motor" index="1" in="0 1" out="0 1" label="motor_right"/>
+  <binding stack="PX4" channel="0" type="Motor" index="0" in="0 1" out="0 1" label="motor_left"/>
+  <binding stack="PX4" channel="1" type="Motor" index="1" in="0 1" out="0 1" label="motor_right"/>
+  <binding stack="PX4" channel="2" property="fcs/servo-0-cmd-norm" in="-1 1" out="-1 1" label="elevon_left"/>
+  <binding stack="PX4" channel="3" property="fcs/servo-1-cmd-norm" in="-1 1" out="-1 1" invert="1" label="elevon_right"/>
 </control_bindings>
