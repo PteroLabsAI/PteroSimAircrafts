@@ -55,7 +55,7 @@ param set-default PWM_MAIN_FUNC4 202
 
 # Hover.
 param set-default MPC_THR_HOVER 0.61          # model: hover throttle 0.612 in the offline check, PWM 1622 under ArduPlane
-param set-default MIS_TAKEOFF_ALT 15          # the harness's hover altitude
+param set-default MIS_TAKEOFF_ALT 15          # chosen
 param set-default MC_ROLL_P 3                 # 22002 (SwanK1 quad tailsitter, validated hover)
 param set-default MC_ROLLRATE_P 0.3           # 22002
 param set-default MC_PITCH_P 3                # the author's Q_A_ANG_PIT_P 3

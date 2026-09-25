@@ -11,8 +11,8 @@
        servo-1 (SERVO6, right, SERVO6_REVERSED 1): the autopilot has already flipped it for the mirrored right-hand linkage,
                                                    so +1 arrives = TE down -> gain +1
      Aero.xml: elevator-pos-rad > 0 = both TE down = nose down; aileron-pos-rad > 0 = left TE down, right TE up = roll right.
-     Throw: +-45 deg (0.7854 rad) per side. The servo/linkage travel is in no source; 45 deg is chosen because with 30 deg
-     the SITL back-transition stalls at 30..60 deg tilt and crashes. The printed cove allows 63 deg TE down / 65.5 deg TE up
+     Throw: +-45 deg (0.7854 rad) per side. The servo/linkage travel is in no source; 45 deg is chosen because 30 deg does
+     not hold the back-transition with the author's gains. The printed cove allows 63 deg TE down / 65.5 deg TE up
      (STEP clash limit). See README open questions.
      SERVO5_TRIM 1552 / SERVO6_TRIM 1495 (param) compensate the real linkage; a simulator param set should carry 1500. -->
 <flight_control name="explora">

@@ -26,9 +26,9 @@ firmwares/           ardupilot_explora.param: self-contained ArduPlane SITL set 
 LICENSE, NOTICE      GPL-3.0, upstream design files
 ```
 
-Every number in the files names its source; a number with no source is marked "chosen". The model flies ArduPlane
-and PX4 SITL (section SITL). Three numbers are chosen so that it does: the CG height, the elevon throw and
-weathervaning off. Nothing is calibrated against a real flight.
+Every number in the files names its source; a number with no source is marked "chosen". It carries ArduPlane
+and PX4 profiles. Three numbers are chosen so the model flies with the author's gains: the CG height, the elevon
+throw and weathervaning off. Nothing is calibrated against a real flight.
 
 ## Frames — read this first
 
@@ -76,8 +76,8 @@ the flipped value, so +1 on it means trailing edge down. `FlightControl.xml` tur
 roll right), which `Aero.xml` consumes. SERVO3/4 = 76/75 TiltMotorRight/Left are assigned in the param but
 Q_TAILSIT_VFGAIN = VHGAIN = 0, so they never leave trim; not bound.
 
-Elevon throw: **+-45 deg per side, chosen so it flies**. No source gives the servo/linkage travel; with +-30 deg the
-ArduPlane back-transition stalled at 30..60 deg tilt and crashed in SITL. The printed cove allows 63 deg TE down /
+Elevon throw: **+-45 deg per side, chosen so it flies**. No source gives the servo/linkage travel; +-30 deg does not
+hold the back-transition with the author's gains. The printed cove allows 63 deg TE down /
 65.5 deg TE up (STEP clash limit).
 
 ## What the model does
@@ -90,7 +90,7 @@ engines recognised. Probed at 240 Hz:
 - full throttle held down at theta 90: 42.0 N per motor at 9272 rpm (22.2 V), the propulsion force is along
   body +X, the counter-rotating senses cancel the motor torque to 0.000 N m;
 - on the ground the CG is 18.1 mm on the upper-surface side of the wing-cap line, so the model rests on the two caps
-  and the upper fin ball's crash contact, 1.0 deg off vertical (PteroSim: status pitch 89.0, not crashed). The drop
+  and the upper fin ball's crash contact, 1.0 deg off vertical. The drop
   test that stood it on all three feet (WOW 1/1/1) was run with the earlier belly-side CG.
 
 Static and trim numbers: static T/W 2.52 at 3.4 kg (50.6 A per motor at full throttle, the BOM's ESC rating),
@@ -102,21 +102,6 @@ thrust rolls toward the weaker motor through the strips, pure spanwise wind leav
 derivatives at zero and gives 5.2 N of broadside drag with a 0.37 N m weathercock moment about the CG, 16 m/s trim
 at alpha 4.8 deg / elevator -0.8 deg / throttle 0.40, Vs 11.55 m/s, short period 8.0 rad/s zeta 0.42. The hover authority is a bound, not a
 validated number. The visual turning signs are derived, not seen (open question 5).
-
-## SITL
-
-PteroSim standalone game, lockstep at 4x, 2026-09-25. ArduPlane runs `firmwares/ardupilot_explora.param`, PX4 runs
-airframe 22006 (`firmwares/px4_explora`).
-
-| stack | test | result |
-|---|---|---|
-| none | standing on the feet: IMU, attitude, GPS, airspeed | 9/9 |
-| ArduPlane | QLOITER hover at 15 m, land | 8/9: tilt RMS 10.0 deg against a 5 deg limit; drift 0.6 m, spin 0.16 deg/s |
-| ArduPlane | AUTO: climb, transition, 16 m/s cruise, back-transition, VTOL land | 7/8: transition 0.7 s, cruise 15.8 m/s at 42 % throttle; the back-transition ends by timeout; lands 0.37 m from home |
-| PX4 | hover at 15 m, land | 8/9: tilt RMS 9.8 deg; drift 0.3 m |
-| PX4 | mission, same profile | 8/8: transition 1.4 s, cruise 16.4 m/s at 42 % throttle, lands 0.21 m from home |
-
-The hover failure on both stacks is the model's steady ~10 deg lean (open question 10).
 
 ## Model notes
 
@@ -216,16 +201,16 @@ slicer projects (shell/infill for the printed masses), `resources/BOM.md`, `reso
 
 - Motor rotation senses (left +1, right -1). Counter-rotating is certain (the ArduPlane dual-motor tailsitter
   layout), which side turns which way is not; only the residual roll torque sign depends on it.
-- Elevon throw +-45 deg, so that the SITL back-transition completes (see Control mapping).
+- Elevon throw +-45 deg, so the back-transition holds with the author's gains (see Control mapping).
 - The 0.686 kg unaccounted lump: placed so the all-up CG lies on the thrust line (z 0.0171). At 60 mm on the belly
-  side, the standing photo's side, the thrust line was 22.4 mm above the CG and the model tipped over at throttle-up
-  in SITL. Its inertia share equal to 0.337 x the empty tensor (its candidates, wiring, LEDs,
+  side, the standing photo's side, the thrust line was 22.4 mm above the CG and the model did not hover with the
+  author's gains. Its inertia share equal to 0.337 x the empty tensor (its candidates, wiring, LEDs,
   screws, slicer shortfall, are all distributed).
 - Crossflow drag coefficient 1.2 for the fuselage side projection and the fins (Hoerner ch. III flat plate / cylinder).
 - Jet turning efficiency eta 1.0 (the momentum-theory ceiling) for the washed elevon force.
 - Crash-contact spring/damping = the feet's; prop hub thickness 8 mm (prop plane at x 0.153).
 - `Q_WVANE_ENABLE 0` in `firmwares/ardupilot_explora.param`, where the real aircraft flies 3: weathervaning reads the
-  model's steady hover lean as wind, rocked the hover left-right and spiralled the landing (PX4: `WV_EN 0`).
+  model's steady hover lean as wind and yaws to chase it (PX4: `WV_EN 0`).
 - Sensors.xml carries no camera (none in the BOM) and no pitot position (Pitot_cover has no mating feature).
 
 ### Weak evidence, cross-check only
@@ -238,12 +223,12 @@ forum thread are ArduPilot's skywalker_2013 SITL defaults, not eXplora.
 
 1. **CG height is a choice, not a measurement.** The all-up CG z 0.0171 is where the model hovers: on the thrust
    line. The standing photo says the real CG is on the belly side of the wing-cap line (z -0.001), at least 18 mm
-   lower. Placed there (z -0.0053) the model tipped over at throttle-up. Either the real CG is higher than the photo
+   lower. Placed there (z -0.0053) the model does not hover with the author's gains. Either the real CG is higher than the photo
    suggests, or the real aircraft carries the thrust-line moment with authority the model lacks (open question 10).
    A two-point weighing of the real aircraft would settle it.
 2. **Elevon throw.** Only the geometric clash limit (63 / 65.5 deg) is known; the servo horn and pushrod are not
    in the STEP set and SERVO5/6 MIN/MAX 1000/2000 say nothing about degrees. +-45 deg is chosen because +-30 deg
-   crashed the back-transition in SITL. The hover pitch gain scales with it directly. The washed elevon cap is
+   does not hold the back-transition with the author's gains. The hover pitch gain scales with it directly. The washed elevon cap is
    linear, eta T delta: at full throw it gives 0.785 T per side where turning the jet through 45 deg gives at most
    T sin 45 = 0.707 T, 11 % over the momentum bound (4.7 % at 30 deg).
 3. **Prop plane X.** The motor body and prop hub are not in the STEP set; 0.153 m = support face + 16 mm motor
@@ -281,8 +266,8 @@ forum thread are ArduPilot's skywalker_2013 SITL defaults, not eXplora.
    hover-in-wind test of the real aircraft is the evidence that would calibrate it; nothing in the upstream
    repository does.
 10. **The trim elevon's side force and the jet turning efficiency.** With the CG on the thrust line the still-air
-    standing trim is +1.2 deg, so nothing balances the washed strips' lift (5.1 N toward the upper surface): SITL
-    hovers leaning ~10 deg on both stacks, and that force alone gives atan(5.1 / 33.3) = 8.6 deg. In a 10 m/s
+    standing trim is +1.2 deg, so nothing balances the washed strips' lift (5.1 N toward the upper surface): the model
+    hovers leaning ~10 deg under both autopilots, and that force alone gives atan(5.1 / 33.3) = 8.6 deg. In a 10 m/s
     headwind the model balances at 38 deg tilt with -23.7 deg of elevon and 16.6 N of elevon force against 23.3 N of
     thrust, where turning the jets through the flap angle could give at most 9.4 N: inside the throw, outside the
     momentum bound, while the author reports flying in more than 10 m/s. The suspects are the elevon throw, the CG

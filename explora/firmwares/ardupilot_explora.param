@@ -45,7 +45,7 @@ Q_ASSIST_SPEED 0
 Q_ASSIST_ANGLE 30
 Q_ASSIST_DELAY 0.5
 # The real aircraft flies Q_WVANE_ENABLE 3. The model hovers leaning ~10 deg (the washed strips' normal force), which
-# weathervaning reads as wind and chases: in SITL it rocked the hover left-right and spiralled the landing. 0 here.
+# weathervaning reads as wind and chases. 0 here.
 Q_WVANE_ENABLE 0
 Q_WVANE_GAIN 2
 Q_WVANE_ANG_MIN 1

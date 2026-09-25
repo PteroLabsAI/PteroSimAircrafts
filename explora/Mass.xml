@@ -31,7 +31,7 @@
       <z> -0.0089 </z>
     </location>
   </pointmass>
-  <pointmass name="Unaccounted hardware">  <!-- 3.4 kg (forum) minus everything modelled; wiring/connectors/screws/inserts/RC receiver/LEDs/pushrods/paint, none in the BOM; z chosen so the all-up CG sits on the thrust line; 60 mm belly-side of the nominal CG (the standing photo's side) put the thrust line 22.4 mm above the CG and the model tipped over at throttle-up in SITL -->
+  <pointmass name="Unaccounted hardware">  <!-- 3.4 kg (forum) minus everything modelled; wiring/connectors/screws/inserts/RC receiver/LEDs/pushrods/paint, none in the BOM; z chosen so the all-up CG sits on the thrust line; 60 mm belly-side of the nominal CG (the standing photo's side) put the thrust line 22.4 mm above the CG, where the model does not hover with the author's gains -->
     <weight unit="KG"> 0.6857 </weight>
     <location unit="M">
       <x> 0.2888 </x>
