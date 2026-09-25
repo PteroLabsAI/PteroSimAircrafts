@@ -241,11 +241,11 @@ forum thread are ArduPilot's skywalker_2013 SITL defaults, not eXplora.
    `output_motor_mask`, no expo), so the gap is physical: the prop needs J < 0.759 (its zero-thrust advance ratio
    from an assumed chord/polar, a real 14x8 with more effective pitch would need less rpm) and TRIM_THROTTLE is
    only the TECS feed-forward (ArduPlane default 45, lowered by the builder).
-5. **Visual signs.** The mesh frame follows the loader's glTF basis and was checked against `c172x`'s meshes (file z
+5. **Visual signs.** The mesh frame follows the loader's glTF basis and was checked against `c172p`'s meshes (file z
    runs nose to tail, file x is the span), so the airframe cannot land tail-forward or mirrored. Derived from the
    runtime's quaternion convention and not yet seen in the editor: the elevon hinge axis sign (`0 -1 0`, positive
    reported angle = trailing edge down) and each propeller's spin axis (`motor_left`, sense +1, about `-1 0 0`).
-   `c172x` writes the opposite hinge sign, so one of the two files is wrong; a look in PIE settles it. The
+   `c172p` writes the opposite hinge sign, so one of the two files is wrong; a look in PIE settles it. The
    fuselage payload cut-out ahead of the canopy has no cover placed (`Fuselage_Payload_Holder` and `FC_Housing`
    have no mating feature) and shows as an opening.
 6. **Sideslip between the limits.** `Aero.xml` is exact at beta 0 (AVL) and beta 90 (broadside drag) and a smooth

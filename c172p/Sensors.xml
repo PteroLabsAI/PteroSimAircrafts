@@ -9,5 +9,5 @@
   <sensor type="barometer" name="air_pressure_sensor" hz="50"/>
   <sensor type="gps" name="navsat_sensor" hz="30"/>
   <sensor type="airspeed" name="airspeed"/>
-  <sensor type="camera" name="cockpit" xyz="-0.1496 -0.3174 0.2317"/>
+  <sensor type="camera" name="cockpit" xyz="-0.2352 -0.176 0.2884"/>
 </sensors>

@@ -6,7 +6,7 @@
   thrust line, so those fixtures sit at z -0.0224 and the hinges moved with them; each elevon about its hinge
   point (mid-span on the 10 mm hinge tube), each
   propeller about its hub, which is the thruster location in Propulsion.xml, so its xyz is zero. A propeller is
-  built with its disc normal on the mesh's own Z, as c172x's, and rpy pitches that onto +X.
+  built with its disc normal on the mesh's own Z, as c172p's, and rpy pitches that onto +X.
   Signs, derived from the runtime and not yet seen in the editor: a reported surface angle (positive = trailing
   edge down) turns the mesh about its axis by FQuat(axis, angle); about -Y that puts the trailing edge down. A
   propeller turns the same way with its unsigned rpm: about +X the right-hand blade rises, anticlockwise seen

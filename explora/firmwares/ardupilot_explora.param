@@ -2,14 +2,14 @@
 #   sim_vehicle.py -v ArduPlane --model JSON:<host> --add-param-file=<this file>
 # Self-contained: with --model JSON the binary loads no frame defaults (standard_vtol convention), so every Q_ value is here.
 # Source: the real aircraft's dump, upstream parameters/Ardupilot/2022-10-17_Pixhawk1.param (Plane 4.2 names),
-# translated to the current names the standard_vtol and c172x files use: ARSPD_FBW_MIN/MAX -> AIRSPEED_MIN/MAX,
+# translated to the current names the standard_vtol and c172p files use: ARSPD_FBW_MIN/MAX -> AIRSPEED_MIN/MAX,
 # TRIM_ARSPD_CM 1600 -> AIRSPEED_CRUISE 16, LIM_ROLL_CD 5000 -> ROLL_LIMIT_DEG 50, LIM_PITCH_MIN/MAX -3000/4000 ->
 # PTCH_LIM_MIN_DEG -30 / PTCH_LIM_MAX_DEG 40. Everything not listed is ArduPlane's own default.
 #
 # NOT copied from the dump, because it is the real board's hardware and calibration and would corrupt a body-aligned
 # simulated IMU: AHRS_ORIENTATION 2 (Yaw90 board mount) and COMPASS_ORIENT 4 are 0 here; INS_ACC*/INS_GYR* offsets, scales
 # and device ids; COMPASS_OFS/DIA/ODI; ARSPD_TYPE 2 with ARSPD_OFFSET 1997 / ARSPD_RATIO 2.53 (the real MS4525) is
-# ARSPD_TYPE 100 (SITL sensor, the JSON "airspeed" field, as c172x); BATT_* pins and multipliers; ARMING_CHECK 0;
+# ARSPD_TYPE 100 (SITL sensor, the JSON "airspeed" field, as c172p); BATT_* pins and multipliers; ARMING_CHECK 0;
 # SERVO5_TRIM 1552 / SERVO6_TRIM 1495 (the real linkage's standing offset, which would arrive as +0.10 / -0.01 on
 # fcs/servo-0/1-cmd-norm through PWMToServo) are 1500. SERVO6_REVERSED 1 stays: FlightControl.xml's right-elevon gain +1
 # assumes the autopilot has already flipped that channel.
