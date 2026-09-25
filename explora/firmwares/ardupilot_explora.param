@@ -44,7 +44,9 @@ Q_ANGLE_MAX 2000
 Q_ASSIST_SPEED 0
 Q_ASSIST_ANGLE 30
 Q_ASSIST_DELAY 0.5
-Q_WVANE_ENABLE 3
+# The real aircraft flies Q_WVANE_ENABLE 3. The model hovers leaning ~10 deg (the washed strips' normal force), which
+# weathervaning reads as wind and chases: in SITL it rocked the hover left-right and spiralled the landing. 0 here.
+Q_WVANE_ENABLE 0
 Q_WVANE_GAIN 2
 Q_WVANE_ANG_MIN 1
 Q_WVANE_LAND 3
@@ -74,14 +76,14 @@ MIXING_OFFSET 0
 
 # ---- VTOL motors. PWM 1000..2000 is what Controls.xml reads as throttle 0..1; PWM type left at the SITL default (the real
 # board uses DShot, Q_M_PWM_TYPE 4). Q_M_THST_HOVER: the real aircraft's learned 0.235 is inconsistent with 3.4 kg on two
-# 14x8 props (QPROP, README.md); 0.41 is what the JSBSim model needs (hover duty 0.604 -> x = (0.604 - 0.15) / 0.8 = 0.568 -> 0.35 x + 0.65 x^2 = 0.409), and Q_M_HOVER_LEARN 2 keeps learning it.
+# 14x8 props (QPROP, README.md); 0.42 is what the JSBSim model needs (hover duty 0.612 -> x = (0.612 - 0.15) / 0.8 = 0.578 -> 0.35 x + 0.65 x^2 = 0.419), and Q_M_HOVER_LEARN 2 keeps learning it.
 Q_M_PWM_MIN 1000
 Q_M_PWM_MAX 2000
 Q_M_SPIN_MIN 0.15
 Q_M_SPIN_MAX 0.95
 Q_M_SPIN_ARM 0
 Q_M_THST_EXPO 0.65
-Q_M_THST_HOVER 0.41
+Q_M_THST_HOVER 0.42
 Q_M_HOVER_LEARN 2
 Q_M_YAW_HEADROOM 200
 Q_M_SPOOL_TIME 0.25

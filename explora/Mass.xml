@@ -4,8 +4,8 @@
      printed parts = STEP solids x 3MF slicer settings (1 perimeter 0.4 mm, gyroid 2..5 %, PLA 1.25 g/cm3, NOT scaled),
      datasheet masses for motors/servos/avionics, pultruded CF tubes, battery as a point mass below.
      The slicer model + datasheets + tubes sum to 2.714 kg; the 0.686 kg to 3.4 kg is carried as the explicit
-     "Unaccounted" point mass (wiring, connectors, screws, RC receiver, LEDs: none of it is in the BOM), 60 mm on the belly side of
-     the nominal CG so the all-up CG (z -0.0053) sits inside the tail-sitting tripod the photo shows (chosen).
+     "Unaccounted" point mass (wiring, connectors, screws, RC receiver, LEDs: none of it is in the BOM), placed so the all-up CG
+     lies on the motor thrust line (z 0.0171, Propulsion.xml): chosen so the model hovers, not measured (README open question 1).
      emptywt = everything modelled except the battery. Inertia = empty aircraft about the empty CG, body axes, from surface (shell)
      and volume (infill) property matrices of the placed STEP solids (OpenCASCADE BRepGProp) plus point masses and rods, then
      x 1.337: the unaccounted mass assumed distributed like the modelled airframe (chosen); the pointmass itself adds only its parallel-axis term.
@@ -31,12 +31,12 @@
       <z> -0.0089 </z>
     </location>
   </pointmass>
-  <pointmass name="Unaccounted hardware">  <!-- 3.4 kg (forum) minus everything modelled; wiring/connectors/screws/inserts/RC receiver/LEDs/pushrods/paint, none in the BOM; 60 mm on the belly side of the nominal CG: chosen, the only evidence is the standing photo, which needs the CG on the belly side of the wing-cap line (z -0.001) -->
+  <pointmass name="Unaccounted hardware">  <!-- 3.4 kg (forum) minus everything modelled; wiring/connectors/screws/inserts/RC receiver/LEDs/pushrods/paint, none in the BOM; z chosen so the all-up CG sits on the thrust line; 60 mm belly-side of the nominal CG (the standing photo's side) put the thrust line 22.4 mm above the CG and the model tipped over at throttle-up in SITL -->
     <weight unit="KG"> 0.6857 </weight>
     <location unit="M">
       <x> 0.2888 </x>
       <y> 0.0000 </y>
-      <z> -0.0532 </z>
+      <z> 0.0580 </z>
     </location>
   </pointmass>
 </mass_balance>

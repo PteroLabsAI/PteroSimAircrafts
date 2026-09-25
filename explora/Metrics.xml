@@ -18,14 +18,14 @@
     <y> 0.0000 </y>
     <z> 0.0112 </z>
   </location>
-  <location name="EYEPOINT" unit="M">  <!-- all-up 3.4 kg CG, battery centred, unaccounted lump on the belly side (Mass.xml) -->
+  <location name="EYEPOINT" unit="M">  <!-- all-up 3.4 kg CG, battery centred, unaccounted lump placed to put the CG on the thrust line (Mass.xml) -->
     <x> 0.2888 </x>
     <y> 0.0000 </y>
-    <z> -0.0053 </z>
+    <z> 0.0171 </z>
   </location>
   <location name="VRP" unit="M">  <!-- all-up CG, same as EYEPOINT -->
     <x> 0.2888 </x>
     <y> 0.0000 </y>
-    <z> -0.0053 </z>
+    <z> 0.0171 </z>
   </location>
 </metrics>

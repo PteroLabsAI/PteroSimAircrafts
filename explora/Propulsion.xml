@@ -5,7 +5,7 @@
        x 0.153  prop plane: support front face at X_ac -0.1938 (STEP), motor body centre 16 mm ahead of it (MN4012 height 32.5 mm) and the
                 prop hub 8 mm further (hub half thickness chosen)
        y +-0.325  motor axis 325 mm from the centreline (STEP)
-       z 0.0171  axis 17.1 mm above the nose-tip plane (STEP, Z_ac -0.0171 down positive), 22.4 mm above the all-up CG (z -0.0053)
+       z 0.0171  axis 17.1 mm above the nose-tip plane (STEP, Z_ac -0.0171 down positive), the all-up CG height (Mass.xml places the CG on this line)
      Engine order = Controls.xml Motor index: 0 = left (ArduPlane ThrottleLeft, SERVO9), 1 = right (ThrottleRight, SERVO10).
      Rotation sense: chosen, no evidence. No source says which side turns which way; the pair is counter-rotating (left +1, right -1). ArduPlane dual-motor tailsitters steer with differential thrust and the elevons, not
      with motor torque (Q_TAILSIT_VFGAIN = VHGAIN = 0, param), so the choice only sets the sign of the residual roll torque. -->

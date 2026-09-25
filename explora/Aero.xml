@@ -29,7 +29,7 @@
      1/2 rho max(u, 0)^2 of each part. The wash increment of a strip's elevon q is capped at C T of its engine: in still
      air a flap in a jet cannot push harder than the jet momentum it turns, T sin delta, and the linear derivative on the full wash q
      gave 2.0x that at hover; with the cap the washed elevon force per side is eta T delta (eta 1.0, the momentum ceiling), so the
-     hover authority is -0.0453 N m/deg about the CG (linear law 2.01x more). The wash rate damping
+     hover authority is -0.0464 N m/deg about the CG (linear law 2.01x more). The wash rate damping
      (quadtailsitter pattern, k v_i of each engine on its strip's share) carries Cmq, CZq and Clp.
 
      Sideslip: a tailsitter hovering in wind sees any beta. The alpha tables and the q-rate terms act on

@@ -2,7 +2,9 @@
 <!--
   Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. An axis is read
   in the frame of whatever turns. Every mesh is baked in this frame from the placed STEP parts: the airframe and
-  the motor bells about the CG, each elevon about its hinge point (mid-span on the 10 mm hinge tube), each
+  the motor bells about the first mass budget's CG (z -0.0053), which Mass.xml has since moved 22.4 mm up onto the
+  thrust line, so those fixtures sit at z -0.0224 and the hinges moved with them; each elevon about its hinge
+  point (mid-span on the 10 mm hinge tube), each
   propeller about its hub, which is the thruster location in Propulsion.xml, so its xyz is zero. A propeller is
   built with its disc normal on the mesh's own Z, as c172x's, and rpy pitches that onto +X.
   Signs, derived from the runtime and not yet seen in the editor: a reported surface angle (positive = trailing
@@ -14,13 +16,13 @@
   quadtailsitter's, the other tail-sitting vehicle.
 -->
 <visual>
-  <fixture file="meshes/airframe.glb" xyz="0 0 0" rpy="0 0 0"/>
-  <fixture file="meshes/motor_left.glb" xyz="0 0 0" rpy="0 0 0"/>
-  <fixture file="meshes/motor_right.glb" xyz="0 0 0" rpy="0 0 0"/>
+  <fixture file="meshes/airframe.glb" xyz="0 0 -0.0224" rpy="0 0 0"/>
+  <fixture file="meshes/motor_left.glb" xyz="0 0 -0.0224" rpy="0 0 0"/>
+  <fixture file="meshes/motor_right.glb" xyz="0 0 -0.0224" rpy="0 0 0"/>
   <propeller file="meshes/prop_left.glb" xyz="0 0 0" rpy="0 -90 0" motor="motor_left" axis="-1 0 0"/>
   <propeller file="meshes/prop_right.glb" xyz="0 0 0" rpy="0 -90 0" motor="motor_right" axis="1 0 0"/>
-  <surface file="meshes/elevon_left.glb" xyz="0 0 0" rpy="0 0 0" source="left-aileron" axis="0 -1 0" hinge="-0.13599 -0.33004 0.01283" limit="30"/>
-  <surface file="meshes/elevon_right.glb" xyz="0 0 0" rpy="0 0 0" source="right-aileron" axis="0 -1 0" hinge="-0.13599 0.32996 0.01283" limit="30"/>
+  <surface file="meshes/elevon_left.glb" xyz="0 0 0" rpy="0 0 0" source="left-aileron" axis="0 -1 0" hinge="-0.13599 -0.33004 -0.00958" limit="45"/>
+  <surface file="meshes/elevon_right.glb" xyz="0 0 0" rpy="0 0 0" source="right-aileron" axis="0 -1 0" hinge="-0.13599 0.32996 -0.00958" limit="45"/>
 
   <chase xyz="0 0 0" rpy="0 -90 0" length="3"/>
 </visual>
