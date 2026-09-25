@@ -1,0 +1,5 @@
+The meshes in this folder are tessellated from the eXplora Tailsitter VTOL STEP files (robustini/eXploraVTOL,
+GPL-3.0; see ../NOTICE and ../LICENSE). The printed-skin texture inside airframe.glb, elevon_left.glb and
+elevon_right.glb is derived from the author's photograph resources/explora_vtol_001.jpg in that repository, and
+the material colours were measured on the same photograph. The propeller and motor meshes are visual
+approximations built from the QPROP blade file and the T-Motor MN4012 dimensions, not from any drawing.

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. The sensor set every ArduPilot vehicle in PteroSimAircrafts declares (c172x,
+  standard_vtol Sensors.xml): imu, barometer, gps, airspeed; the magnetometer rides inside the imu sensor, as on those vehicles.
+  The names are theirs; the rates are this aircraft's:
+    imu 300 Hz        SCHED_LOOP_RATE 300 (param): the loop rate ArduPlane consumes IMU samples at
+    barometer 80 Hz   MS5611 on the Pixhawk1 (BOM): the driver runs a 100 Hz timer and reads pressure in 4 of every 5 slots
+                      (ArduPilot libraries/AP_Baro/AP_Baro_MS5611.cpp, register_periodic_callback(10 * AP_USEC_PER_MSEC), _state % 5)
+    gps 5 Hz          GPS_RATE_MS 200 (param), M8N (BOM)
+    airspeed          MS4525 (ARSPD_TYPE 2, param; BOM "MS4525DO"), differential pitot along the fuselage axis = body X; rate left
+                      at the component's default as the other vehicles leave it. The pitot's position is not in the placed STEP set
+                      (Pitot_cover has no mating feature), so no xyz is given.
+  No camera: none in the BOM.
+-->
+<sensors>
+  <sensor type="imu" name="imu_sensor" hz="300"/>
+  <sensor type="barometer" name="air_pressure_sensor" hz="80"/>
+  <sensor type="gps" name="navsat_sensor" hz="5"/>
+  <sensor type="airspeed" name="airspeed"/>
+</sensors>
