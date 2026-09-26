@@ -5,7 +5,7 @@
      datasheet masses for motors/servos/avionics, pultruded CF tubes, battery as a point mass below.
      The slicer model + datasheets + tubes sum to 2.714 kg; the 0.686 kg to 3.4 kg is carried as the explicit
      "Unaccounted" point mass (wiring, connectors, screws, RC receiver, LEDs: none of it is in the BOM), placed so the all-up CG
-     lies on the motor thrust line (z 0.0171, Propulsion.xml): chosen so the model hovers, not measured (README open question 1).
+     lies on the motor thrust line (z 0.0171, Propulsion.xml): chosen, not measured.
      emptywt = everything modelled except the battery. Inertia = empty aircraft about the empty CG, body axes, from surface (shell)
      and volume (infill) property matrices of the placed STEP solids (OpenCASCADE BRepGProp) plus point masses and rods, then
      x 1.337: the unaccounted mass assumed distributed like the modelled airframe (chosen); the pointmass itself adds only its parallel-axis term.

@@ -11,8 +11,7 @@
      on its tail. Measured in the drop test: a BOGEY without the pitch-90 orientation goes NaN on the first contact at theta 90, and
      STRUCTURE feet need the CG 12 mm inside the tripod before all three touch, BOGEY pitch-90 needs 2 mm.
      The all-up CG z 0.0171 (Mass.xml, on the thrust line) is 18.1 mm on the upper-surface side of the wing-cap line
-     (z -0.001), so the model rests on the two caps and the upper fin ball's crash contact, 1 deg off vertical; the photo
-     shows it on the lower fin ball, which needs the CG on the belly side of that line (README open question 1).
+     (z -0.001), so the model rests on the two caps and the upper fin ball's crash contact, 1 deg off vertical.
      Crash contacts are STRUCTURE type as ATLAS writes them, with the same spring and damping as the feet (chosen). -->
 <ground_reactions>
   <!-- left wing-tip tube cap: CAD (664.5, -0.1, -17.0) mm -> X_ac -0.5518, Y -0.6645, Z_ac 0.0010 (down) -->

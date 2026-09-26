@@ -89,8 +89,7 @@ Q_M_YAW_HEADROOM 200
 Q_M_SPOOL_TIME 0.25
 Q_THROTTLE_EXPO 0.2
 
-# ---- VTOL attitude and rate loops (the tune flown on the real aircraft, unchanged; the model's hover authority is a
-# momentum-theory upper bound, README.md open questions)
+# ---- VTOL attitude and rate loops (the tune flown on the real aircraft, unchanged)
 Q_A_ANG_PIT_P 3
 Q_A_ANG_RLL_P 4
 Q_A_ANG_YAW_P 3.5

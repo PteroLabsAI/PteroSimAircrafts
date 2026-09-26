@@ -11,8 +11,7 @@ explora_vtol_001.jpg) were used to identify the propeller and the resting postur
 The eXplora Tailsitter VTOL project is distributed under the GNU General Public License v3.0; see LICENSE in
 this folder for its text. This folder is a modified work: PteroLabs converted the design into a JSBSim flight
 model and a PteroSim vehicle in September 2026. The centre-of-gravity height, the elevon throw and the ArduPlane
-weathervane setting are chosen so the model flies in simulation; they are not measured on the real aircraft
-(README.md, open questions).
+weathervane setting are chosen so the model flies in simulation; they are not measured on the real aircraft.
 
   https://github.com/robustini/eXploraVTOL
 
