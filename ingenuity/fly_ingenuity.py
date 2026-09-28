@@ -22,6 +22,7 @@ bring it back once it lifts.
 """
 
 import argparse
+import os
 import sys
 import time
 
@@ -183,6 +184,8 @@ PAD = [
 
 def fly_manual(sim, heli, input_mode):
     """Drive the already-running simulation from one selected input device."""
+    # Without this SDL keeps only a pad's initial state while no window of ours has focus (gamepad mode opens none).
+    os.environ.setdefault("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", "1")
     import pygame
 
     pygame.init()
