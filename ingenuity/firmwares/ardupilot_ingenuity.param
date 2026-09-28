@@ -5,14 +5,14 @@
 # default_params/copter-heli.parm then default_params/copter-heli-dual.parm, ArduPilot b7ba8bca02, 2025-08-09) with the
 # vehicle's own values last. Everything not listed is ArduCopter's own default.
 #
-# Vehicle values (the last block) are the PteroSim SITL set that flew the compiled-in Ingenuity in April 2026
-# (scripts/ardupilot/copter-heli-dual-ingenuity.parm): coaxial dual (FRAME_CLASS 11, H_DUAL_MODE 2), yaw by differential
-# collective only (H_YAW_SCALER 0, H_DCP_SCALER -0.25), no weathervaning, and rate gains chosen for the model. Not from
-# NASA: the real Ingenuity flies its own JPL flight software, not ArduPilot.
+# Vehicle values (the last block; it restates every copter-heli-dual.parm key) are PteroLabs' SITL set for this model:
+# coaxial dual (FRAME_CLASS 11, H_DUAL_MODE 2), yaw by differential collective only (H_YAW_SCALER 0, H_DCP_SCALER -0.25),
+# no weathervaning, and rate gains chosen for the model. Not from NASA: the real Ingenuity flies its own JPL flight
+# software, not ArduPilot.
 #
 # Collective: H_COL_ANG_MIN 0 / H_COL_ANG_MAX 15 are the pitch range ArduPilot assumes; Systems/rotor_control.xml maps the
-# same command to 0..25 deg of root pitch and puts zero thrust at 12.5 deg (0.75 x blade twist) -- the two disagree, see
-# README.md; H_COL_ZERO_THRST 13.2 is that JSBSim number, not a NASA one.
+# same command to 0..25 deg of root pitch (the two disagree, see README.md). H_COL_ZERO_THRST 13.2 is the model's zero
+# thrust, 0.75 x the blade twist, not a NASA number.
 #
 # Channel map (channel = SERVOn - 1), the functions heli-dual assigns by default, written out so Controls.xml can cite them:
 #   SERVO1..3 = Motor1..3 (33..35)  swashplate 1 (upper rotor)  -> channels 0..2 -> fcs/upper-swash-servo0..2
@@ -106,8 +106,6 @@ PSC_NE_VEL_D 0.5
 SERVO8_MIN 1000.000000
 SERVO8_MAX 2000.000000
 
-# ---- ArduPilot default_params/copter-heli-dual.parm
-
 # ---- explicit servo functions (heli-dual defaults)
 SERVO1_FUNCTION 33
 SERVO2_FUNCTION 34
@@ -117,7 +115,7 @@ SERVO5_FUNCTION 37
 SERVO6_FUNCTION 38
 SERVO8_FUNCTION 31
 
-# ---- ingenuity (PteroSim, April 2026 SITL set)
+# ---- ingenuity (every copter-heli-dual.parm key is restated here with the vehicle's value)
 FRAME_CLASS 11
 H_DUAL_MODE 2
 H_COL_ANG_MIN 0

@@ -9,12 +9,10 @@
   Rotors: the hub of each <propeller> is its thruster location in Propulsion.xml (engine 0 "upper" at structural
   z -0.0495, engine 1 "lower" at +0.0495: swapped and at the CG, see README.md), so the mesh offset along the spin
   axis reproduces the hubs measured on the glb, 0.4531 and 0.3541 m above the feet: 0.3231 - (-0.0495) = 0.3726 and
-  0.2241 - 0.0495 = 0.1746 (chosen: matches the retired Blueprint's 0.3326/0.2336 within 1 cm). They go to 0 once
-  Propulsion.xml carries the measured hubs.
+  0.2241 - 0.0495 = 0.1746. They go to 0 once Propulsion.xml carries the measured hubs.
   Spin: a propeller turns about +axis with its unsigned rpm, clockwise seen from the axis tip. The upper rotor is
   sense -1, clockwise from above (Propulsion.xml, FGRotor), so +Z; the lower is sense +1, anticlockwise, so -Z.
-  Derived from the runtime, to be checked in the editor.
-  Chase: the retired class's arm, 3 m and -20 deg (AttachCameras(300, -20)).
+  Chase: 3 m behind, 20 deg above.
 -->
 <visual>
   <fixture file="meshes/body.glb" xyz="0 0 -0.125" rpy="0 0 -90"/>

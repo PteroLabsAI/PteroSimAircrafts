@@ -3,10 +3,10 @@
   A sidecar: JSBSim never reads this file. The sensor set the ArduPilot vehicles in PteroSimAircrafts declare (c172p,
   explora): imu, barometer, gps; the magnetometer rides inside the imu sensor. The names are theirs; the rates:
     imu 400 Hz        SCHED_LOOP_RATE, ArduCopter's default loop rate (the param file leaves it at the default)
-    barometer 80 Hz   as explora (the MS5611 driver's rate); the real Ingenuity's sensors are JPL's, not documented for this
+    barometer 80 Hz   as explora (the MS5611 driver's rate)
     gps 5 Hz          GPS_RATE_MS 200, ArduPilot's default
-  No airspeed: a helicopter; ArduCopter reads none. No camera: the compiled-in class carried none. The real vehicle's
-  navigation camera, laser altimeter and inclinometer are not modelled.
+  No airspeed: a helicopter; ArduCopter reads none. The real vehicle's navigation camera, laser altimeter and
+  inclinometer are not modelled.
 -->
 <sensors>
   <sensor type="imu" name="imu_sensor" hz="400"/>

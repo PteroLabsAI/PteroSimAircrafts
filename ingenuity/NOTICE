@@ -1,5 +1,4 @@
-This aircraft is a JSBSim model of NASA's Ingenuity Mars Helicopter, written by PteroLabs in April 2026 for the
-compiled-in AIngenuityAircraft of PteroSim and moved into this folder unchanged in September 2026, with NASA's own
+This aircraft is a JSBSim model of NASA's Ingenuity Mars Helicopter, written by PteroLabs in 2026, with NASA's own
 3D model as its meshes.
 
 The flight model -- ingenuity.xml, the files it assembles, Engines/ and Systems/ -- is PteroLabs' work, distributed
@@ -12,8 +11,8 @@ under the GNU General Public License v3.0; see LICENSE in this folder for its te
     https://ntrs.nasa.gov/citations/20240001510
 
   Koning, Johnson and Grip, "Improved Mars Helicopter Aerodynamic Rotor Model for Comprehensive Analyses", AIAA
-  Journal Vol. 57 No. 9 (2019); open preprint from the 44th European Rotorcraft Forum (2018), a US Government work
-  not subject to copyright: the "Mars Condition 2" atmosphere (0.017 kg/m3, 223.2 K) the model was tuned against.
+  Journal Vol. 57 No. 9 (2019); open preprint from the 44th European Rotorcraft Forum (2018): the "Mars Condition 2"
+  atmosphere (0.017 kg/m3, 223.2 K) the model was tuned against.
     https://rotorcraft.arc.nasa.gov/Publications/files/Koning_Johnson_Grip_Improved_Mars_Helicopter.pdf
 
   Grip et al., "Flight Control System for NASA's Mars Helicopter", AIAA 2019-1289: the control layout (a coaxial

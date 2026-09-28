@@ -12,9 +12,9 @@
   <gearratio>                 1.0 </gearratio>
   <nominalrpm>             2600.0 </nominalrpm> <!-- NASA design RPM -->
   <maxrpm>                 2800.0 </maxrpm>    <!-- NASA tested max, prevents runaway -->
-  <chord unit="M">        0.14048 </chord>    <!-- derived from NASA solidity: c=sigma*pi*R/Nb -->
-  <liftcurveslope>            4.5 </liftcurveslope>
-  <twist>                 -0.3075 </twist>    <!-- scalar washout collapsed from NASA twist distribution -->
+  <chord unit="M">        0.14048 </chord>    <!-- from the TM's thrust-weighted solidity 0.14782: c = sigma*pi*R/Nb -->
+  <liftcurveslope>            4.5 </liftcurveslope> <!-- chosen, no source -->
+  <twist>                 -0.3075 </twist>    <!-- the TM's twist, 17.6 deg at 0.2R to 0 at the tip, as one linear washout -->
   <hingeoffset unit="M">   0.027 </hingeoffset>
   <tiplossfactor>            0.97 </tiplossfactor>
 

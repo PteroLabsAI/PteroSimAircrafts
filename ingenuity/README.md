@@ -2,9 +2,9 @@
 
 A JSBSim model of NASA's Ingenuity, the coaxial helicopter that flew on Mars, with NASA's own 3D model as its meshes
 (GPL-3.0 for the model files, NASA/JPL-Caltech for the meshes; `NOTICE` names every source). Two counter-rotating
-two-bladed rotors of 1.21 m on one mast, each with its own swashplate, four legs. Flies on ArduPilot (ArduCopter,
-dual-helicopter frame in coaxial mode). It is meant for a Mars scene; the planet is the scene's setting, not the
-vehicle's.
+two-bladed rotors of 1.21 m on one mast, each with its own swashplate, four legs. Set up for ArduPilot (ArduCopter,
+dual-helicopter frame in coaxial mode); as it stands it does not hold roll, see the limits below. It is meant for a
+Mars scene; the planet is the scene's setting, not the vehicle's.
 
 ```
 ingenuity.xml        main config, includes everything below
@@ -30,7 +30,7 @@ sim_vehicle.py -v ArduCopter -f heli-dual --model JSON:<host> --add-param-file=f
 
 ## Frames
 
-Body X is the direction the navigation cameras look (under the fuselage), Z up in the structural frame, the CG at the
+Body X is the direction the colour camera under the fuselage looks, Z up in the structural frame, the CG at the
 origin. The rotors sit on the mast above the CG; the feet stand 0.13 m below it.
 
 ## Control mapping (ArduCopter heli-dual, H_DUAL_MODE 2)
@@ -49,17 +49,14 @@ plate's three into collective, longitudinal and lateral cyclic for its rotor. Ya
 
 ## Known limits
 
-The model is the compiled-in one moved here as it was:
-
 - The lower rotor's lateral cyclic is inverted in `Systems/rotor_control.xml`. ArduPilot's coaxial mixer sends the
-  same roll to both swashplates, so the two rotors tilt against each other: a roll command gives a tenth of the
-  pitch moment, reversed, and roll cannot be held.
+  same roll to both swashplates, so the two rotors tilt against each other and roll cannot be held.
 - The rotor hubs are within 5 cm of the CG and the "upper" one below the "lower"; NASA's model has them 0.453 and
   0.354 m above the feet. Visual.xml draws them where NASA has them.
 - The 1 lb "fuel" tank makes the vehicle 2.25 kg; Ingenuity is 1.8 kg.
 - The collective ranges disagree: 0..25 deg of root pitch here against `H_COL_ANG_MAX 15` in the param file.
-- There is no rotor speed governor; the motor is 8x what hover at Mars density takes, and without a governor the
-  transmission's speed runs far past the 2,800 rpm the rotor reports.
-- The leg damping leaves a pitch-rate limit cycle on the ground at 240 Hz.
+- There is no rotor speed governor, and the motor is far more than hover at Mars density takes.
+- The leg damping is too high for the vehicle's inertia at the simulator's physics rate: a disturbance on the
+  ground leaves a standing pitch-rate oscillation.
 - Everything the NOTICE lists as chosen: inertias, CG height, blade moments, lift-curve slope, hinge offset, motor
   power, leg stiffness, drag.

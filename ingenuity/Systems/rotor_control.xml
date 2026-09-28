@@ -38,7 +38,7 @@
 
        offset 0.0 rad, range 25° = 0.4363 rad (chosen: no source gives the blade pitch travel). The ArduPilot file says
        H_COL_ANG_MAX 15, so the autopilot believes in 15° where the model gives 25° (README.md).
-       Zero thrust at theta_0 = 0.75 x twist = 12.5° (demix 0.50, measured in python-jsbsim 2026-09-28)
+       Zero thrust at theta_0 ≈ 0.75 x twist = 0.231 rad = 13.2° (demix ≈ 0.53)
        Idle (demix=0.46): theta_0 = 0.201 rad — slightly below zero thrust
 
        collective-ctrl-rad = 0.0 + 0.4363 * demix -->
@@ -225,9 +225,8 @@
       <output> propulsion/engine[1]/longitudinal-ctrl-rad </output>
     </pure_gain>
 
-    <!-- Counter-rotating rotor: lateral flipped.
-         JSBSim FGRotor uses Sense for torque sign only, so CW lower
-         rotor needs lateral control phase inverted. -->
+    <!-- Lateral gain -1 on the lower rotor: inherited. It works against ArduPilot's coaxial mixer, which sends
+         the same roll to both swashplates, so the two rotors tilt against each other (README.md, Known limits). -->
     <pure_gain name="fcs/lower/lateral-ctrl-rad">
       <input> fcs/lower/demix/lateral </input>
       <gain> -1.0 </gain>

@@ -1,8 +1,9 @@
 The meshes in this folder are NASA's Ingenuity Mars Helicopter 3D model (science.nasa.gov/resource/
 mars-ingenuity-helicopter-3d-model, mars.nasa.gov resource 25043, file 25043_Ingenuity_v3.glb, sha256
 d9ebff90d0475d0be0f9dc241e69bb1700d86c702a1f289578c35f4fefc9f19f; also mirrored in github.com/nasa/NASA-3D-Resources).
-Credit: NASA/JPL-Caltech. NASA's 3D resources are US Government work, free of copyright, under the NASA media usage
-guidelines (nasa.gov/nasa-brand-center/images-and-media): NASA is acknowledged here and does not endorse PteroSim.
+Credit: NASA/JPL-Caltech, used under the NASA media usage guidelines (nasa.gov/nasa-brand-center/images-and-media:
+NASA's 3D model files "generally are not subject to copyright in the United States"); NASA is acknowledged here and
+does not endorse PteroSim.
 
 Changes made here: the model is cut by node into body.glb (bus, solar panel, mast parts, the four legs, the cameras)
 in the glb's own frame, and rotor_upper.glb / rotor_lower.glb (nodes rotors_01 / rotors_02) each about its own hub,

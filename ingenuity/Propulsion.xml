@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <!-- NASA Ingenuity Mars Helicopter - Propulsion
-     Coaxial counter-rotating rotors driven by 2 brushed DC motors (maxon DCX)
-     4 additional swashplate motors handled by flight control system
+     Coaxial counter-rotating rotors, each driven by its own electric motor; the six swashplate servos are the
+     flight control system's (Systems/rotor_control.xml)
      Rotor spacing: 0.099 m (NASA/TM-20240001510 Table 1). The hub heights about the CG are NOT measured: both hubs sit
      within 5 cm of the CG and the "upper" one below the "lower" (structural Z is up); the NASA model puts them 0.453 and
      0.354 m above the feet (README.md). The engines are named so Visual.xml can bind a propeller mesh to each.

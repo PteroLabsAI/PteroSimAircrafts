@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <!--
   A sidecar: JSBSim never reads this file. Which ArduCopter heli-dual output drives what (channel = SERVOn - 1, the
-  numbering c172p and explora use for their ArduPilot rows). The functions are the ones heli-dual assigns by default and
-  firmwares/ardupilot_ingenuity.param writes out (libraries/AP_Motors/AP_MotorsHeli_Dual.cpp):
+  numbering c172p and explora use for their ArduPilot rows). The functions are the ones heli-dual assigns by default
+  (libraries/AP_Motors/AP_MotorsHeli_Dual.h: swashplate 1 on CH_1..3, swashplate 2 on CH_4..6; AP_MotorsHeli.h: RSC on
+  CH_8) and firmwares/ardupilot_ingenuity.param writes out:
 
     SERVO1..3 Motor1..3 (33..35)  swashplate 1, upper rotor  -> channels 0..2 -> fcs/upper-swash-servo0..2
     SERVO4..6 Motor4..6 (36..38)  swashplate 2, lower rotor  -> channels 3..5 -> fcs/lower-swash-servo0..2
@@ -10,10 +11,9 @@
 
   Each swashplate servo is bound to its own property: ArduPilot emits the mixed H3-120 servo positions (servos at -60,
   +60 and 180 deg, AP_MotorsHeli_Swash), and Systems/rotor_control.xml demixes the three of each plate back into
-  collective, longitudinal and lateral for its rotor. A servo arrives as -1..1 (PWM 1000..2000 through PWMToServo).
-  The one RSC channel feeds both electric motors (fan-out; one rotor speed control drives both rotors of a coaxial).
-  ArduPilot only, as the compiled-in AIngenuityAircraft was: no PX4 airframe exists for a coaxial dual-swashplate
-  helicopter.
+  collective, longitudinal and lateral for its rotor. A servo arrives as -1..1 (PWM 1000..2000). The one RSC channel
+  feeds both electric motors (fan-out; one rotor speed control drives both rotors of a coaxial). ArduPilot only: no
+  PX4 airframe exists for a coaxial dual-swashplate helicopter.
 -->
 <control_bindings stack="ArduPilot">
   <binding stack="ArduPilot" channel="0" property="fcs/upper-swash-servo0" in="-1 1" out="-1 1" label="upper_swash_servo0"/>

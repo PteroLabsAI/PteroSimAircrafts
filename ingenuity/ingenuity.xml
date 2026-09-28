@@ -3,7 +3,7 @@
 
 <!-- NASA Ingenuity Mars Helicopter, a JSBSim model by PteroLabs (GPL-3.0, see LICENSE and NOTICE). Read README.md
      before trusting any number. The planet is the scene's, not the vehicle's: this model is meant for a Mars scene
-     (rho ~0.015 kg/m3, g 3.72 m/s2). -->
+     (the rotor was tuned against the AIAA paper's Mars Condition 2, rho 0.017 kg/m3; g 3.72 m/s2). -->
 <fdm_config name="ingenuity" release="ALPHA" version="2.0"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
