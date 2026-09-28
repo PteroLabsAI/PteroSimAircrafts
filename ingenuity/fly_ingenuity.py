@@ -16,8 +16,9 @@ pitch angle, a yaw rate and the collective lever; the script sends those five ch
   rotors on (spool up) / off           Enter / Bksp  buttons 1 / 2
   stop                                 Esc           Start
 
-The lever holds where it is left; bank, pitch and yaw spring back to zero. Take off with the lever a little above
-where it hovers (about 0.6 on Earth, 0.9 on Mars) and bring it back once it lifts.
+The lever holds where it is left; bank, pitch and yaw spring back to zero. Its bottom is the rotor's idle, just
+under zero thrust. Take off with the lever a little above where it hovers (about 0.25 on Earth, 0.8 on Mars) and
+bring it back once it lifts.
 """
 
 import argparse
@@ -42,6 +43,10 @@ CHANNELS = 13
 RSC_ON = 0.7               # H_RSC_SETPOINT 70 in firmwares/ardupilot_ingenuity.param: the governor's full speed
 SPOOL_S = 3.0              # chosen: the RSC ramps over this, as ArduPilot's H_RSC_RUNUP_TIME would
 LEVER_RATE = 0.25          # chosen: keyboard lever travel per second, full range in four seconds
+LANDING_SINK = 0.7         # m/s, chosen: the --auto landing's descent rate
+# The lever's bottom is the rotor's idle collective, just under zero thrust (Systems/rotor_control.xml: demix 0.46),
+# not zero root pitch: with the blades' twist that would be a strong downward thrust that presses the legs in.
+LEVER_IDLE = 0.46
 
 
 def clamp(v, lo=-1.0, hi=1.0):
@@ -58,7 +63,7 @@ class Heli:
 
     def set(self, collective=None, roll=None, pitch=None, yaw=None, rotors=None):
         if collective is not None:
-            self.c[COLLECTIVE] = clamp(collective, 0.0, 1.0)
+            self.c[COLLECTIVE] = LEVER_IDLE + clamp(collective, 0.0, 1.0) * (1.0 - LEVER_IDLE)
         if roll is not None:
             self.c[ROLL] = clamp(roll)
         if pitch is not None:
@@ -123,15 +128,15 @@ def fly_auto(sim, heli, height, hold_for):
             if t > SPOOL_S + 1.0:
                 phase, mark = "climb", now
         elif phase == "climb":
-            lever += 0.15 / RATE_HZ                     # a slow pull until it lifts
-            if agl > height - 1.0:
+            lever += 0.15 / RATE_HZ                     # a slow pull until it lifts; the height loop takes it from there
+            if agl > 1.0:
                 phase, mark = "hold", now
         elif phase == "land":
             if agl < 0.15 and abs(vs) < 0.3:
                 heli.set(rotors=False); lever = 0.0
                 phase, mark = "down", now
             else:
-                lever += (0.05 * clamp(-0.5 - agl, -3.0, 3.0) - 0.05 * (vs + 0.5)) / RATE_HZ
+                lever += -0.05 * (vs + LANDING_SINK) / RATE_HZ   # a steady sink, whatever the height
         elif phase == "down":
             if now - mark > SPOOL_S + 1.0:
                 phase = "done"

@@ -51,8 +51,8 @@ python fly_ingenuity.py --auto          # rotors up, climbs, holds, lands, rotor
 | stop | `Esc` | Start |
 
 The lever holds where it is left; bank, pitch and yaw spring back. The model's stability system holds the commanded
-attitude (up to 20 deg of bank or pitch, 90 deg/s of yaw), so the sticks fly angles, not servos. It lifts off with
-the lever a little above 0.6 on Earth and 0.9 on Mars.
+attitude (up to 20 deg of bank or pitch, 90 deg/s of yaw), so the sticks fly angles, not servos. The lever's bottom
+is the rotor's idle, just under zero thrust; it lifts off with the lever a little above 0.25 on Earth and 0.8 on Mars.
 
 ## Frames
 
