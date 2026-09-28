@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Upper Rotor
+     Source: NASA/TM-20240001510 (Koning, Dominguez 2024)
+     Source: Koning, Johnson, Grip - AIAA Journal Vol.57 No.9 (2019)
+-->
+
+<rotor name="ingenuity_upper_rotor">
+
+  <diameter unit="M">       1.21 </diameter>
+  <numblades>                   2 </numblades>
+  <gearratio>                 1.0 </gearratio>
+  <nominalrpm>             2600.0 </nominalrpm> <!-- NASA design RPM -->
+  <maxrpm>                 2800.0 </maxrpm>    <!-- NASA tested max, prevents runaway -->
+  <chord unit="M">        0.14048 </chord>    <!-- from the TM's thrust-weighted solidity 0.14782: c = sigma*pi*R/Nb -->
+  <liftcurveslope>            4.5 </liftcurveslope> <!-- chosen, no source (FGRotor's default is 6.0) -->
+  <twist>                 -0.3075 </twist>    <!-- the TM's twist, 17.6 deg at 0.2R to 0 at the tip, as one linear washout -->
+  <hingeoffset unit="M">   0.027 </hingeoffset> <!-- chosen: an equivalent hinge for the hingeless hub the TM describes -->
+  <tiplossfactor>            0.97 </tiplossfactor> <!-- chosen -->
+
+  <flappingmoment unit="SLUG*FT2">  0.0011 </flappingmoment> <!-- chosen: no blade mass or inertia is published -->
+  <!-- Derived from the explicit flapping moment using FGRotor's own estimate:
+       massmoment ~= (3*I_flap/R^2) * (0.45*R). -->
+  <massmoment>                     0.00075 </massmoment>
+  <polarmoment unit="SLUG*FT2">     0.0022 </polarmoment> <!-- chosen: 2 x the flapping moment -->
+
+  <inflowlag>                0.15 </inflowlag> <!-- chosen: FGRotor's own estimate 16/(gamma*Omega) at the JSBSim Mars density -->
+
+  <groundeffectexp>          0.0 </groundeffectexp> <!-- ground effect off -->
+
+
+</rotor>

@@ -1,0 +1,240 @@
+<system name="rotor control">
+
+  <!--
+    Ingenuity coaxial helicopter rotor control.
+    Clean passthrough: demix → scale to radians → apply to rotor.
+
+    ArduPilot H3-120 swashplate output:
+      output[i] = rollF*roll + pitchF*pitch + collF*coll    (in [0,1])
+      servo[i]  = 2 * output[i] - 1                         (in [-1,1])
+
+    Servo input s in [-1,1]. Inverse demix (undoing 2x-1 transform):
+      coll  = (s0 + s1 + s2 + 3) / 6       range [0, 1]
+      pitch = (s0 + s1 - 2*s2) / 6          range ~ [-0.45, 0.45]
+      roll  = (-s0 + s1) / 3.464            range ~ [-0.39, 0.39]
+
+    Collective demix [0,1] maps to blade root pitch (collective-offset-rad + collective-range-rad * demix, below).
+
+    FGRotor adds 0.75*BladeTwist internally (t075 = theta_0 + 0.75*twist),
+    so collective-ctrl-rad is root pitch only — no twist compensation needed.
+  -->
+
+  <!-- Declare servo input properties (Controls.xml binds the autopilot channels to these) -->
+  <property value="0.0"> fcs/upper-swash-servo0 </property>
+  <property value="0.0"> fcs/upper-swash-servo1 </property>
+  <property value="0.0"> fcs/upper-swash-servo2 </property>
+  <property value="0.0"> fcs/lower-swash-servo0 </property>
+  <property value="0.0"> fcs/lower-swash-servo1 </property>
+  <property value="0.0"> fcs/lower-swash-servo2 </property>
+
+  <!-- The rpm the simulator places both rotors at when the engines are armed (both rotor files: nominalrpm 2600).
+       There is no rpm governor in this model: rotor speed follows the RSC throttle against the motor's power. -->
+  <property value="2600.0"> fcs/nominal-rpm </property>
+
+  <!-- Collective scaling:
+       ArduPilot H_COL_ANG = measured blade pitch (root/grip angle).
+       FGRotor collective-ctrl-rad = root pitch (theta_0), same thing.
+       No twist compensation needed — FGRotor adds twist internally.
+
+       offset 0.0 rad, range 25° = 0.4363 rad (chosen: no source gives the blade pitch travel). The ArduPilot file says
+       H_COL_ANG_MAX 15, so the autopilot believes in 15° where the model gives 25° (README.md).
+       Zero thrust at theta_0 = 0.75 x twist = 12.5° (demix 0.50, measured in python-jsbsim 2026-09-28)
+       Idle (demix=0.46): theta_0 = 0.201 rad — slightly below zero thrust
+
+       collective-ctrl-rad = 0.0 + 0.4363 * demix -->
+  <property value="0.0">    fcs/adj/collective-offset-rad </property>
+  <property value="0.4363"> fcs/adj/collective-range-rad </property>
+
+
+  <!-- ==================================
+         Upper Rotor Demix (engine[0])
+       ================================== -->
+
+  <channel name="upper-swash-demix">
+
+    <!-- Collective = (s0 + s1 + s2 + 3) / 6  →  [0, 1] -->
+    <fcs_function name="fcs/upper/demix/collective">
+      <function>
+        <quotient>
+          <sum>
+            <property> fcs/upper-swash-servo0 </property>
+            <property> fcs/upper-swash-servo1 </property>
+            <property> fcs/upper-swash-servo2 </property>
+            <value> 3.0 </value>
+          </sum>
+          <value> 6.0 </value>
+        </quotient>
+      </function>
+    </fcs_function>
+
+    <!-- Longitudinal (pitch) = (s0 + s1 - 2*s2) / 6 -->
+    <fcs_function name="fcs/upper/demix/longitudinal">
+      <function>
+        <quotient>
+          <sum>
+            <property> fcs/upper-swash-servo0 </property>
+            <property> fcs/upper-swash-servo1 </property>
+            <product>
+              <value> -2.0 </value>
+              <property> fcs/upper-swash-servo2 </property>
+            </product>
+          </sum>
+          <value> 6.0 </value>
+        </quotient>
+      </function>
+    </fcs_function>
+
+    <!-- Lateral (roll) = (-s0 + s1) / 3.464 -->
+    <fcs_function name="fcs/upper/demix/lateral">
+      <function>
+        <quotient>
+          <sum>
+            <product>
+              <value> -1.0 </value>
+              <property> fcs/upper-swash-servo0 </property>
+            </product>
+            <property> fcs/upper-swash-servo1 </property>
+          </sum>
+          <value> 3.46410 </value>
+        </quotient>
+      </function>
+    </fcs_function>
+
+  </channel>
+
+
+  <!-- ==================================
+         Upper Rotor Apply (engine[0])
+       ================================== -->
+
+  <channel name="upper-rotor-apply">
+
+    <!-- Collective: offset + range * demix -->
+    <fcs_function name="fcs/upper/collective-ctrl-rad">
+      <function>
+        <sum>
+          <property> fcs/adj/collective-offset-rad </property>
+          <product>
+            <property> fcs/adj/collective-range-rad </property>
+            <property> fcs/upper/demix/collective </property>
+          </product>
+        </sum>
+      </function>
+      <clipto><min> 0.0 </min><max> 0.5 </max></clipto>
+      <output> propulsion/engine[0]/collective-ctrl-rad </output>
+    </fcs_function>
+
+    <!-- Longitudinal: sign inversion only -->
+    <pure_gain name="fcs/upper/longitudinal-ctrl-rad">
+      <input> fcs/upper/demix/longitudinal </input>
+      <gain> -1.0 </gain>
+      <clipto><min> -0.20 </min><max> 0.20 </max></clipto>
+      <output> propulsion/engine[0]/longitudinal-ctrl-rad </output>
+    </pure_gain>
+
+    <!-- Lateral: direct passthrough -->
+    <pure_gain name="fcs/upper/lateral-ctrl-rad">
+      <input> fcs/upper/demix/lateral </input>
+      <gain> 1.0 </gain>
+      <clipto><min> -0.20 </min><max> 0.20 </max></clipto>
+      <output> propulsion/engine[0]/lateral-ctrl-rad </output>
+    </pure_gain>
+
+  </channel>
+
+
+  <!-- ==================================
+         Lower Rotor Demix (engine[1])
+       ================================== -->
+
+  <channel name="lower-swash-demix">
+
+    <fcs_function name="fcs/lower/demix/collective">
+      <function>
+        <quotient>
+          <sum>
+            <property> fcs/lower-swash-servo0 </property>
+            <property> fcs/lower-swash-servo1 </property>
+            <property> fcs/lower-swash-servo2 </property>
+            <value> 3.0 </value>
+          </sum>
+          <value> 6.0 </value>
+        </quotient>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/lower/demix/longitudinal">
+      <function>
+        <quotient>
+          <sum>
+            <property> fcs/lower-swash-servo0 </property>
+            <property> fcs/lower-swash-servo1 </property>
+            <product>
+              <value> -2.0 </value>
+              <property> fcs/lower-swash-servo2 </property>
+            </product>
+          </sum>
+          <value> 6.0 </value>
+        </quotient>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/lower/demix/lateral">
+      <function>
+        <quotient>
+          <sum>
+            <product>
+              <value> -1.0 </value>
+              <property> fcs/lower-swash-servo0 </property>
+            </product>
+            <property> fcs/lower-swash-servo1 </property>
+          </sum>
+          <value> 3.46410 </value>
+        </quotient>
+      </function>
+    </fcs_function>
+
+  </channel>
+
+
+  <!-- ==================================
+         Lower Rotor Apply (engine[1])
+       ================================== -->
+
+  <channel name="lower-rotor-apply">
+
+    <fcs_function name="fcs/lower/collective-ctrl-rad">
+      <function>
+        <sum>
+          <property> fcs/adj/collective-offset-rad </property>
+          <product>
+            <property> fcs/adj/collective-range-rad </property>
+            <property> fcs/lower/demix/collective </property>
+          </product>
+        </sum>
+      </function>
+      <clipto><min> 0.0 </min><max> 0.5 </max></clipto>
+      <output> propulsion/engine[1]/collective-ctrl-rad </output>
+    </fcs_function>
+
+    <!-- Longitudinal: sign inversion only -->
+    <pure_gain name="fcs/lower/longitudinal-ctrl-rad">
+      <input> fcs/lower/demix/longitudinal </input>
+      <gain> -1.0 </gain>
+      <clipto><min> -0.20 </min><max> 0.20 </max></clipto>
+      <output> propulsion/engine[1]/longitudinal-ctrl-rad </output>
+    </pure_gain>
+
+    <!-- Counter-rotating rotor: lateral flipped.
+         JSBSim FGRotor uses Sense for torque sign only, so CW lower
+         rotor needs lateral control phase inverted. -->
+    <pure_gain name="fcs/lower/lateral-ctrl-rad">
+      <input> fcs/lower/demix/lateral </input>
+      <gain> -1.0 </gain>
+      <clipto><min> -0.20 </min><max> 0.20 </max></clipto>
+      <output> propulsion/engine[1]/lateral-ctrl-rad </output>
+    </pure_gain>
+
+  </channel>
+
+</system>

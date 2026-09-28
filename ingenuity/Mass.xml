@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Mass Properties
+     Total mass: 1.8 kg (3.97 lbs) (NASA/TM-20240001510 Table 1; JPL fact sheet "4 pounds")
+     Fuselage: 136 x 195 x 163 mm (chosen: not in the NASA sources; the NASA model's bus is 181 x 144 x 198 mm)
+     Inertias: chosen. A 1.8 kg box of those dimensions gives 0.0097 / 0.0068 / 0.0085; no rotor, mast or leg term is
+     shown and no NASA inertia is published. The CG height above the feet is chosen too: Gear.xml puts the feet 0.13 m
+     below it (README.md).
+-->
+
+<mass_balance>
+
+  <ixx unit="KG*M2"> 0.010 </ixx>
+  <iyy unit="KG*M2"> 0.010 </iyy>
+  <izz unit="KG*M2"> 0.012 </izz>
+
+  <emptywt unit="KG"> 1.8 </emptywt>
+
+  <location name="CG" unit="M">
+    <x> 0.0 </x>
+    <y> 0.0 </y>
+    <z> 0.0 </z>
+  </location>
+
+</mass_balance>

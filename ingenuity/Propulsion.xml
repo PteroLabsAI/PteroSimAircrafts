@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Propulsion
+     Coaxial counter-rotating rotors driven by 2 brushed DC motors (maxon DCX)
+     4 additional swashplate motors handled by flight control system
+     Rotor spacing: 0.099 m (NASA/TM-20240001510 Table 1). The hub heights about the CG are NOT measured: both hubs sit
+     within 5 cm of the CG and the "upper" one below the "lower" (structural Z is up); the NASA model puts them 0.453 and
+     0.354 m above the feet (README.md). The engines are named so Visual.xml can bind a propeller mesh to each.
+-->
+
+<propulsion>
+
+  <!-- Upper rotor motor - CW from above -->
+  <engine file="ingenuity_motor" name="rotor_upper">
+    <feed> 0 </feed>
+    <thruster file="ingenuity_upper_rotor">
+      <location unit="M">
+        <x> 0.0 </x>
+        <y> 0.0 </y>
+        <z> -0.0495 </z>
+      </location>
+      <orient unit="DEG">
+        <roll>   0.0 </roll>
+        <pitch> 90.0 </pitch>
+        <yaw>    0.0 </yaw>
+      </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+
+  <!-- Lower rotor motor - CCW from above -->
+  <engine file="ingenuity_motor" name="rotor_lower">
+    <feed> 0 </feed>
+    <thruster file="ingenuity_lower_rotor">
+      <location unit="M">
+        <x> 0.0 </x>
+        <y> 0.0 </y>
+        <z> 0.0495 </z>
+      </location>
+      <orient unit="DEG">
+        <roll>   0.0 </roll>
+        <pitch> 90.0 </pitch>
+        <yaw>    0.0 </yaw>
+      </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+
+  <!-- Battery: 6x Sony VTC4 Li-ion, 35-40 Wh. A placeholder "fuel" tank: its 1 lb is counted by JSBSim on top of
+       Mass.xml's 1.8 kg, so the model masses 2.25 kg (README.md). -->
+
+  <tank number="0" type="FUEL">
+    <location unit="M">
+      <x> 0.0 </x>
+      <y> 0.0 </y>
+      <z> 0.0 </z>
+    </location>
+    <capacity unit="LBS"> 1.0 </capacity>
+    <contents unit="LBS"> 1.0 </contents>
+  </tank>
+
+</propulsion>

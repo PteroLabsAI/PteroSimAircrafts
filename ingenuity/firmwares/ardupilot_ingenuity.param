@@ -1,0 +1,149 @@
+# ArduPilot (ArduCopter heli-dual) SITL parameters for ingenuity (NASA Ingenuity coaxial helicopter):
+#   sim_vehicle.py -v ArduCopter -f heli-dual --model JSON:<host> --add-param-file=<this file>
+# Self-contained: with --model JSON the binary loads no frame defaults (standard_vtol / explora convention), so this file
+# carries the two files sim_vehicle would otherwise layer for -f heli-dual (Tools/autotest/pysim/vehicleinfo.json:
+# default_params/copter-heli.parm then default_params/copter-heli-dual.parm, ArduPilot b7ba8bca02, 2025-08-09) with the
+# vehicle's own values last. Everything not listed is ArduCopter's own default.
+#
+# Vehicle values (the last block) are the PteroSim SITL set that flew the compiled-in Ingenuity in April 2026
+# (scripts/ardupilot/copter-heli-dual-ingenuity.parm): coaxial dual (FRAME_CLASS 11, H_DUAL_MODE 2), yaw by differential
+# collective only (H_YAW_SCALER 0, H_DCP_SCALER -0.25), no weathervaning, and rate gains chosen for the model. Not from
+# NASA: the real Ingenuity flies its own JPL flight software, not ArduPilot.
+#
+# Collective: H_COL_ANG_MIN 0 / H_COL_ANG_MAX 15 are the pitch range ArduPilot assumes; Systems/rotor_control.xml maps the
+# same command to 0..25 deg of root pitch and puts zero thrust at 12.5 deg (0.75 x blade twist) -- the two disagree, see
+# README.md; H_COL_ZERO_THRST 13.2 is that JSBSim number, not a NASA one.
+#
+# Channel map (channel = SERVOn - 1), the functions heli-dual assigns by default, written out so Controls.xml can cite them:
+#   SERVO1..3 = Motor1..3 (33..35)  swashplate 1 (upper rotor)  -> channels 0..2 -> fcs/upper-swash-servo0..2
+#   SERVO4..6 = Motor4..6 (36..38)  swashplate 2 (lower rotor)  -> channels 3..5 -> fcs/lower-swash-servo0..2
+#   SERVO8    = HeliRSC (31)        rotor speed control         -> channel 7   -> both motors
+
+# ---- ArduPilot default_params/copter-heli.parm (SITL heli defaults; INS offsets make SITL treat the IMU as calibrated)
+BATT_MONITOR 4.0000
+COMPASS_OFS2_X 5.0000
+COMPASS_OFS2_Y 13.0000
+COMPASS_OFS2_Z -18.0000
+COMPASS_OFS3_X 1.0000
+COMPASS_OFS3_Y 1.0000
+COMPASS_OFS3_Z 1.0000
+COMPASS_OFS_X 2.8749
+COMPASS_OFS_Y -21.8262
+COMPASS_OFS_Z -21.8422
+FLTMODE1 7.0000
+FLTMODE2 9.0000
+FLTMODE3 6.0000
+FLTMODE4 3.0000
+FLTMODE5 5.0000
+INS_ACCOFFS_X 0.001
+INS_ACCOFFS_Y 0.001
+INS_ACCOFFS_Z 0.001
+INS_ACCSCAL_X 1.001
+INS_ACCSCAL_Y 1.001
+INS_ACCSCAL_Z 1.001
+INS_ACC2OFFS_X 0.001
+INS_ACC2OFFS_Y 0.001
+INS_ACC2OFFS_Z 0.001
+INS_ACC2SCAL_X 1.001
+INS_ACC2SCAL_Y 1.001
+INS_ACC2SCAL_Z 1.001
+INS_ACC3OFFS_X 0.000
+INS_ACC3OFFS_Y 0.000
+INS_ACC3OFFS_Z 0.000
+INS_ACC3SCAL_X 1.000
+INS_ACC3SCAL_Y 1.000
+INS_ACC3SCAL_Z 1.000
+ATC_INPUT_TC 0.20
+ATC_ANG_RLL_P 4
+ATC_RAT_PIT_FLTD 0
+ATC_RAT_PIT_FLTE 20
+ATC_RAT_PIT_FLTT 20
+ATC_RAT_PIT_ILMI 0.1
+ATC_RAT_PIT_IMAX 0.4
+ATC_RAT_RLL_FLTD 0
+ATC_RAT_RLL_FLTE 20
+ATC_RAT_RLL_FLTT 20
+ATC_RAT_RLL_ILMI 0.1
+ATC_RAT_RLL_IMAX 0.4
+ATC_RAT_YAW_FLTD 0
+ATC_RAT_YAW_FLTE 0
+ATC_RAT_YAW_FLTT 20
+ATC_RAT_YAW_ILMI 0
+ATC_RAT_YAW_IMAX 1
+ATC_ACC_P_MAX 600
+ATC_ACC_R_MAX 600
+ATC_ACC_Y_MAX 600
+H_COL_MAX 1740
+H_COL_MIN 1460
+H_RSC_MODE 2
+RC1_MAX 2000.000000
+RC1_MIN 1000.000000
+RC1_TRIM 1500.000000
+RC2_MAX 2000.000000
+RC2_MIN 1000.000000
+RC2_TRIM 1500.000000
+RC3_MAX 2000.000000
+RC3_MIN 1000.000000
+RC3_TRIM 1500.000000
+RC4_MAX 2000.000000
+RC4_MIN 1000.000000
+RC4_TRIM 1500.000000
+RC5_MAX 2000.000000
+RC5_MIN 1000.000000
+RC5_TRIM 1500.000000
+RC6_MAX 2000.000000
+RC6_MIN 1000.000000
+RC6_TRIM 1500.000000
+RC7_MAX 2000.000000
+RC7_MIN 1000.000000
+RC7_TRIM 1500.000000
+RC8_MAX 2000.000000
+RC8_MIN 1000.000000
+RC8_TRIM 1500.000000
+RPM1_TYPE 10
+IM_ACRO_COL_EXP 0.2
+PSC_NE_VEL_D 0.5
+SERVO8_MIN 1000.000000
+SERVO8_MAX 2000.000000
+
+# ---- ArduPilot default_params/copter-heli-dual.parm
+
+# ---- explicit servo functions (heli-dual defaults)
+SERVO1_FUNCTION 33
+SERVO2_FUNCTION 34
+SERVO3_FUNCTION 35
+SERVO4_FUNCTION 36
+SERVO5_FUNCTION 37
+SERVO6_FUNCTION 38
+SERVO8_FUNCTION 31
+
+# ---- ingenuity (PteroSim, April 2026 SITL set)
+FRAME_CLASS 11
+H_DUAL_MODE 2
+H_COL_ANG_MIN 0
+H_COL_ANG_MAX 15
+H_COL_ZERO_THRST 13.2
+H_COL2_MAX 1740
+H_COL2_MIN 1460
+H_DCP_SCALER -0.25
+H_YAW_SCALER 0
+H_CYC_MAX 1000
+ATC_RAT_RLL_FF 0.15
+ATC_RAT_RLL_P 0.06
+ATC_RAT_RLL_D 0.005
+ATC_RAT_RLL_I 0.15
+ATC_RAT_PIT_FF 0.15
+ATC_RAT_PIT_P 0.06
+ATC_RAT_PIT_D 0.005
+ATC_RAT_PIT_I 0.15
+ATC_ANG_PIT_P 4.5
+ATC_ANG_YAW_P 4.5
+ATC_RAT_YAW_D 0.0015
+ATC_RAT_YAW_P 0.5
+ATC_HOVR_ROL_TRM 0
+PILOT_Y_RATE_TC 0.08
+PILOT_Y_RATE 120
+ATC_RAT_YAW_FF 0.1
+ATC_RAT_YAW_I 0.1
+H_RSC_SETPOINT 70
+

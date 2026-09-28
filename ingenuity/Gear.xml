@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Landing Gear
+     4 legs in X pattern, adjacent feet 0.61 m apart (the NASA model: +-0.289 m, 0.58 m). The feet 0.13 m below the CG
+     is a chosen CG height (the NASA model has the feet ~0.20 m below the bus centre). Spring, damping and friction are
+     chosen, no source. Damping 15 N/m/s with Iyy 0.010 kg m2 at 240 Hz leaves a two-step pitch-rate limit cycle after
+     any disturbance on the ground (python-jsbsim 2026-09-28; 10 does not): README.md.
+-->
+
+<ground_reactions>
+
+  <contact name="FRONT_LEFT" type="BOGEY">
+    <location unit="M">
+      <x> -0.305 </x>
+      <y> -0.305 </y>
+      <z> -0.13 </z>
+    </location>
+    <static_friction>  1.5 </static_friction>
+    <dynamic_friction> 1.0 </dynamic_friction>
+    <rolling_friction> 0.05 </rolling_friction>
+    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 15 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <retractable> 0 </retractable>
+  </contact>
+
+  <contact name="FRONT_RIGHT" type="BOGEY">
+    <location unit="M">
+      <x> -0.305 </x>
+      <y>  0.305 </y>
+      <z> -0.13 </z>
+    </location>
+    <static_friction>  1.5 </static_friction>
+    <dynamic_friction> 1.0 </dynamic_friction>
+    <rolling_friction> 0.05 </rolling_friction>
+    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 15 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <retractable> 0 </retractable>
+  </contact>
+
+  <contact name="AFT_LEFT" type="BOGEY">
+    <location unit="M">
+      <x>  0.305 </x>
+      <y> -0.305 </y>
+      <z> -0.13 </z>
+    </location>
+    <static_friction>  1.5 </static_friction>
+    <dynamic_friction> 1.0 </dynamic_friction>
+    <rolling_friction> 0.05 </rolling_friction>
+    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 15 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <retractable> 0 </retractable>
+  </contact>
+
+  <contact name="AFT_RIGHT" type="BOGEY">
+    <location unit="M">
+      <x>  0.305 </x>
+      <y>  0.305 </y>
+      <z> -0.13 </z>
+    </location>
+    <static_friction>  1.5 </static_friction>
+    <dynamic_friction> 1.0 </dynamic_friction>
+    <rolling_friction> 0.05 </rolling_friction>
+    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 15 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <retractable> 0 </retractable>
+  </contact>
+
+</ground_reactions>
