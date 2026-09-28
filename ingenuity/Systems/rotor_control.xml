@@ -19,13 +19,8 @@
     so collective-ctrl-rad is root pitch only — no twist compensation needed.
   -->
 
-  <!-- Declare servo input properties (Controls.xml binds the autopilot channels to these) -->
-  <property value="0.0"> fcs/upper-swash-servo0 </property>
-  <property value="0.0"> fcs/upper-swash-servo1 </property>
-  <property value="0.0"> fcs/upper-swash-servo2 </property>
-  <property value="0.0"> fcs/lower-swash-servo0 </property>
-  <property value="0.0"> fcs/lower-swash-servo1 </property>
-  <property value="0.0"> fcs/lower-swash-servo2 </property>
+  <!-- The six servo inputs fcs/upper-swash-servo0..2 and fcs/lower-swash-servo0..2 are declared in
+       Systems/ingenuity_manual.xml, which runs before this system; Controls.xml binds the autopilot channels to them. -->
 
   <!-- The rpm the simulator places both rotors at when the engines are armed (both rotor files: nominalrpm 2600) and
        the governor's target (Systems/ingenuity_governor.xml). -->

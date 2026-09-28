@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!-- Hand flying without an autopilot: a stability system that turns attitude and yaw-rate commands into the six
+     swashplate servos, the way a flybarless helicopter's FBL unit does. A hingeless coaxial rotor of this size is
+     not flyable by hand from a 30-50 Hz link, so the loop runs here at the physics rate and the pilot sends only
+     what a stick sends: roll and pitch angles, a yaw rate, the collective lever and the rotor switch.
+
+     Inputs (fcs/manual/*, written by Controls.xml rows on channels 8..12; they rest at 0 when an autopilot flies):
+       enable            > 0.75 takes the servos over (an autopilot's unassigned channel at trim reads 0.5), anything
+                         else leaves them to the autopilot
+       roll-cmd-deg      bank to hold, right positive
+       pitch-cmd-deg     pitch to hold, nose up positive
+       yaw-rate-cmd-dps  yaw rate, nose right positive
+       collective-norm   0..1, the demixed collective (0..25 deg of root pitch through Systems/rotor_control.xml)
+     Loop: cyclic = K_RATE * (K_ANG * (angle_cmd - angle) - rate), the gains chosen for a 0.010 kg m2 body under
+     this rotor's hub moments; yaw by differential collective (upper - lower), the sign that ArduPilot's negative
+     H_DCP_SCALER stands for on this pair of senses. The cyclic is limited as rotor_control.xml limits it.
+     Servos: the inverse of rotor_control.xml's demix, coll (s0+s1+s2+3)/6, pitch (s0+s1-2 s2)/6, roll (-s0+s1)/3.464. -->
+<system name="ingenuity manual stability">
+
+  <!-- The swashplate servo inputs, declared here because this system runs first; Controls.xml writes them, the
+       demixer in rotor_control.xml reads them, and this system rewrites them when it is on. -->
+  <property value="0.0"> fcs/upper-swash-servo0 </property>
+  <property value="0.0"> fcs/upper-swash-servo1 </property>
+  <property value="0.0"> fcs/upper-swash-servo2 </property>
+  <property value="0.0"> fcs/lower-swash-servo0 </property>
+  <property value="0.0"> fcs/lower-swash-servo1 </property>
+  <property value="0.0"> fcs/lower-swash-servo2 </property>
+
+  <property value="0.0"> fcs/manual/enable </property>
+  <property value="0.0"> fcs/manual/roll-cmd-deg </property>
+  <property value="0.0"> fcs/manual/pitch-cmd-deg </property>
+  <property value="0.0"> fcs/manual/yaw-rate-cmd-dps </property>
+  <property value="0.0"> fcs/manual/collective-norm </property>
+  <property value="4.0">   fcs/manual/k-angle </property>        <!-- chosen: rad/s of rate per rad of error -->
+  <property value="0.06">  fcs/manual/k-rate </property>         <!-- chosen: rad of cyclic per rad/s of rate error -->
+  <property value="0.05">  fcs/manual/k-yaw </property>          <!-- chosen: collective difference per rad/s of yaw-rate error -->
+  <property value="0.20">  fcs/manual/cyclic-limit-rad </property>   <!-- rotor_control.xml's clip -->
+  <property value="0.15">  fcs/manual/yaw-limit-norm </property>     <!-- chosen: a fifth of the collective range -->
+  <property value="0.0174533"> fcs/manual/deg-to-rad </property>
+
+  <channel name="manual-sas">
+
+    <switch name="fcs/manual/on">
+      <default value="0.0"/>
+      <test value="1.0"> fcs/manual/enable GT 0.75 </test>
+    </switch>
+
+    <fcs_function name="fcs/manual/roll-cyclic-rad">
+      <function>
+        <product>
+          <property> fcs/manual/k-rate </property>
+          <difference>
+            <product>
+              <property> fcs/manual/k-angle </property>
+              <difference>
+                <product><property> fcs/manual/roll-cmd-deg </property><property> fcs/manual/deg-to-rad </property></product>
+                <property> attitude/phi-rad </property>
+              </difference>
+            </product>
+            <property> velocities/p-rad_sec </property>
+          </difference>
+        </product>
+      </function>
+      <clipto><min> -fcs/manual/cyclic-limit-rad </min><max> fcs/manual/cyclic-limit-rad </max></clipto>
+    </fcs_function>
+
+    <fcs_function name="fcs/manual/pitch-cyclic-rad">
+      <function>
+        <product>
+          <property> fcs/manual/k-rate </property>
+          <difference>
+            <product>
+              <property> fcs/manual/k-angle </property>
+              <difference>
+                <product><property> fcs/manual/pitch-cmd-deg </property><property> fcs/manual/deg-to-rad </property></product>
+                <property> attitude/theta-rad </property>
+              </difference>
+            </product>
+            <property> velocities/q-rad_sec </property>
+          </difference>
+        </product>
+      </function>
+      <clipto><min> -fcs/manual/cyclic-limit-rad </min><max> fcs/manual/cyclic-limit-rad </max></clipto>
+    </fcs_function>
+
+    <!-- upper gets collective + diff, lower collective - diff; positive diff yaws nose left, so the error is r - r_cmd -->
+    <fcs_function name="fcs/manual/yaw-diff-norm">
+      <function>
+        <product>
+          <property> fcs/manual/k-yaw </property>
+          <difference>
+            <property> velocities/r-rad_sec </property>
+            <product><property> fcs/manual/yaw-rate-cmd-dps </property><property> fcs/manual/deg-to-rad </property></product>
+          </difference>
+        </product>
+      </function>
+      <clipto><min> -fcs/manual/yaw-limit-norm </min><max> fcs/manual/yaw-limit-norm </max></clipto>
+    </fcs_function>
+
+    <!-- servo = 2 coll - 1 + pitch -/+ 1.732 roll  |  2 coll - 1 - 2 pitch -->
+    <fcs_function name="fcs/manual/upper-base">
+      <function>
+        <sum>
+          <product><value> 2.0 </value><sum><property> fcs/manual/collective-norm </property><property> fcs/manual/yaw-diff-norm </property></sum></product>
+          <value> -1.0 </value>
+        </sum>
+      </function>
+    </fcs_function>
+    <fcs_function name="fcs/manual/lower-base">
+      <function>
+        <sum>
+          <product><value> 2.0 </value><difference><property> fcs/manual/collective-norm </property><property> fcs/manual/yaw-diff-norm </property></difference></product>
+          <value> -1.0 </value>
+        </sum>
+      </function>
+    </fcs_function>
+    <fcs_function name="fcs/manual/roll-term">
+      <function><product><value> 1.732 </value><property> fcs/manual/roll-cyclic-rad </property></product></function>
+    </fcs_function>
+
+    <fcs_function name="fcs/manual/upper-servo0">
+      <function><sum><property> fcs/manual/upper-base </property><property> fcs/manual/pitch-cyclic-rad </property><product><value> -1.0 </value><property> fcs/manual/roll-term </property></product></sum></function>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+    <fcs_function name="fcs/manual/upper-servo1">
+      <function><sum><property> fcs/manual/upper-base </property><property> fcs/manual/pitch-cyclic-rad </property><property> fcs/manual/roll-term </property></sum></function>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+    <fcs_function name="fcs/manual/upper-servo2">
+      <function><sum><property> fcs/manual/upper-base </property><product><value> -2.0 </value><property> fcs/manual/pitch-cyclic-rad </property></product></sum></function>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+    <fcs_function name="fcs/manual/lower-servo0">
+      <function><sum><property> fcs/manual/lower-base </property><property> fcs/manual/pitch-cyclic-rad </property><product><value> -1.0 </value><property> fcs/manual/roll-term </property></product></sum></function>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+    <fcs_function name="fcs/manual/lower-servo1">
+      <function><sum><property> fcs/manual/lower-base </property><property> fcs/manual/pitch-cyclic-rad </property><property> fcs/manual/roll-term </property></sum></function>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+    <fcs_function name="fcs/manual/lower-servo2">
+      <function><sum><property> fcs/manual/lower-base </property><product><value> -2.0 </value><property> fcs/manual/pitch-cyclic-rad </property></product></sum></function>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+
+    <!-- take the servos over when on: servo = (1 - on) * servo + on * manual; rotor_control.xml demixes them next -->
+    <fcs_function name="fcs/manual/out-upper-servo0">
+      <function><sum><product><difference><value> 1.0 </value><property> fcs/manual/on </property></difference><property> fcs/upper-swash-servo0 </property></product><product><property> fcs/manual/on </property><property> fcs/manual/upper-servo0 </property></product></sum></function>
+      <output> fcs/upper-swash-servo0 </output>
+    </fcs_function>
+    <fcs_function name="fcs/manual/out-upper-servo1">
+      <function><sum><product><difference><value> 1.0 </value><property> fcs/manual/on </property></difference><property> fcs/upper-swash-servo1 </property></product><product><property> fcs/manual/on </property><property> fcs/manual/upper-servo1 </property></product></sum></function>
+      <output> fcs/upper-swash-servo1 </output>
+    </fcs_function>
+    <fcs_function name="fcs/manual/out-upper-servo2">
+      <function><sum><product><difference><value> 1.0 </value><property> fcs/manual/on </property></difference><property> fcs/upper-swash-servo2 </property></product><product><property> fcs/manual/on </property><property> fcs/manual/upper-servo2 </property></product></sum></function>
+      <output> fcs/upper-swash-servo2 </output>
+    </fcs_function>
+    <fcs_function name="fcs/manual/out-lower-servo0">
+      <function><sum><product><difference><value> 1.0 </value><property> fcs/manual/on </property></difference><property> fcs/lower-swash-servo0 </property></product><product><property> fcs/manual/on </property><property> fcs/manual/lower-servo0 </property></product></sum></function>
+      <output> fcs/lower-swash-servo0 </output>
+    </fcs_function>
+    <fcs_function name="fcs/manual/out-lower-servo1">
+      <function><sum><product><difference><value> 1.0 </value><property> fcs/manual/on </property></difference><property> fcs/lower-swash-servo1 </property></product><product><property> fcs/manual/on </property><property> fcs/manual/lower-servo1 </property></product></sum></function>
+      <output> fcs/lower-swash-servo1 </output>
+    </fcs_function>
+    <fcs_function name="fcs/manual/out-lower-servo2">
+      <function><sum><product><difference><value> 1.0 </value><property> fcs/manual/on </property></difference><property> fcs/lower-swash-servo2 </property></product><product><property> fcs/manual/on </property><property> fcs/manual/lower-servo2 </property></product></sum></function>
+      <output> fcs/lower-swash-servo2 </output>
+    </fcs_function>
+
+  </channel>
+
+</system>

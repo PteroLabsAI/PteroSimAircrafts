@@ -33,6 +33,8 @@
 
   <flight_control name="Ingenuity FCS"/>
 
+  <!-- Hand flying: attitude and yaw-rate commands -> the 6 swashplate servos, when switched on (before the demixer) -->
+  <system file="ingenuity_manual"/>
   <!-- Dual swashplate demixer: 6 servo inputs → 2 rotors (collective/pitch/roll each) -->
   <system file="rotor_control"/>
   <!-- Rotor speed governor: the RSC command sets the rpm, a PID per motor holds it -->

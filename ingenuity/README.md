@@ -15,8 +15,10 @@ Propulsion.xml       two electric motors, two rotors (engines rotor_upper / roto
 Gear.xml             four feet
 Engines/             ingenuity_motor (electric), ingenuity_upper_rotor / ingenuity_lower_rotor (FGRotor)
 Systems/             rotor_control.xml: six swashplate servos -> collective, longitudinal and lateral of each rotor;
-                     ingenuity_governor.xml: the RSC command sets the rotor speed, a PID per motor holds it
-Controls.xml         ArduCopter heli-dual outputs -> JSBSim bindings (sidecar)
+                     ingenuity_governor.xml: the RSC command sets the rotor speed, a PID per motor holds it;
+                     ingenuity_manual.xml: bank, pitch, yaw rate and lever -> the six servos, for flying by hand
+Controls.xml         ArduCopter heli-dual outputs -> JSBSim bindings, plus the manual channels (sidecar)
+fly_ingenuity.py     fly it by keyboard or gamepad, or let it fly a climb-hold-land profile
 Sensors.xml          imu / barometer / gps (sidecar)
 Visual.xml           meshes/: body (fixture), the two rotors (propellers), chase camera (sidecar)
 firmwares/           ardupilot_ingenuity.param: self-contained ArduCopter heli-dual SITL set
@@ -25,9 +27,32 @@ LICENSE, NOTICE      GPL-3.0, sources
 
 ## Run it
 
+Under ArduPilot:
+
 ```
 sim_vehicle.py -v ArduCopter -f heli-dual --model JSON:<host> --add-param-file=firmwares/ardupilot_ingenuity.param
 ```
+
+By hand (spawn it, start the simulation, then; needs the `pterosim` SDK and `pygame`):
+
+```
+python fly_ingenuity.py --input keyboard
+python fly_ingenuity.py --input gamepad
+python fly_ingenuity.py --auto          # rotors up, climbs, holds, lands, rotors off
+```
+
+| command | key | gamepad |
+| --- | --- | --- |
+| collective lever up / down | `W` / `S` | left stick Y (position) |
+| yaw: nose left / right | `A` / `D` | left stick X |
+| pitch: nose down / up | `Up` / `Down` | right stick Y |
+| bank left / right | `Left` / `Right` | right stick X |
+| rotors on (spool up) / off | `Enter` / `Backspace` | buttons 1 / 2 |
+| stop | `Esc` | Start |
+
+The lever holds where it is left; bank, pitch and yaw spring back. The model's stability system holds the commanded
+attitude (up to 20 deg of bank or pitch, 90 deg/s of yaw), so the sticks fly angles, not servos. It lifts off with
+the lever a little above 0.6 on Earth and 0.9 on Mars.
 
 ## Frames
 

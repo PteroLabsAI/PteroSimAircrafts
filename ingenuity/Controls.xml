@@ -14,6 +14,10 @@
   collective, longitudinal and lateral for its rotor. A servo arrives as -1..1 (PWM 1000..2000). The one RSC channel
   feeds both electric motors (fan-out; one rotor speed control drives both rotors of a coaxial). ArduPilot only: no
   PX4 airframe exists for a coaxial dual-swashplate helicopter.
+
+  Channels 8..12 are for flying by hand (fly_ingenuity.py, or anything that calls set_controls): they feed the
+  stability system in Systems/ingenuity_manual.xml, which takes the six servos over while channel 8 is above 0.75.
+  They belong to no stack, so an autopilot's unassigned outputs leave them at 0 and the system stays off.
 -->
 <control_bindings stack="ArduPilot">
   <binding stack="ArduPilot" channel="0" property="fcs/upper-swash-servo0" in="-1 1" out="-1 1" label="upper_swash_servo0"/>
@@ -24,4 +28,9 @@
   <binding stack="ArduPilot" channel="5" property="fcs/lower-swash-servo2" in="-1 1" out="-1 1" label="lower_swash_servo2"/>
   <binding stack="ArduPilot" channel="7" type="Motor" index="0" in="0 1" out="0 1" label="rsc_upper"/>
   <binding stack="ArduPilot" channel="7" type="Motor" index="1" in="0 1" out="0 1" label="rsc_lower"/>
+  <binding channel="8"  property="fcs/manual/enable"           in="0 1"  out="0 1"    label="manual_enable"/>
+  <binding channel="9"  property="fcs/manual/roll-cmd-deg"     in="-1 1" out="-20 20" label="manual_roll_deg"/>
+  <binding channel="10" property="fcs/manual/pitch-cmd-deg"    in="-1 1" out="-20 20" label="manual_pitch_deg"/>
+  <binding channel="11" property="fcs/manual/yaw-rate-cmd-dps" in="-1 1" out="-90 90" label="manual_yaw_rate_dps"/>
+  <binding channel="12" property="fcs/manual/collective-norm"  in="0 1"  out="0 1"    label="manual_collective"/>
 </control_bindings>
