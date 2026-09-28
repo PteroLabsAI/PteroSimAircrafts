@@ -176,8 +176,8 @@ PAD = [
     ("left stick up/down", "collective lever"),
     ("left stick left/right", "yaw rate"),
     ("right stick", "bank and pitch"),
-    ("buttons 1 / 2", "rotors on / off"),
-    ("Start", "stop"),
+    ("buttons 3 / 1", "rotors on / off (pygame numbering: Y / B on an Xbox pad)"),
+    ("button 6", "stop (Back on an Xbox pad)"),
 ]
 
 
@@ -272,8 +272,9 @@ def fly_manual(sim, heli, input_mode):
             pygame.display.flip()
 
         if time.time() > next_print:
-            print("  t+%5.1fs  agl=%6.2f m  roll=%+5.1f pitch=%+5.1f heading=%5.1f  lever=%.2f rsc=%.2f"
-                  % (time.time() - t0, a.z / 100.0 - z0, a.roll, a.pitch, a.yaw, lever, heli.c[RSC]))
+            pressed = [i for i in range(js.get_numbuttons()) if js.get_button(i)] if js else []
+            print("  t+%5.1fs  agl=%6.2f m  roll=%+5.1f pitch=%+5.1f heading=%5.1f  lever=%.2f rsc=%.2f  buttons=%s"
+                  % (time.time() - t0, a.z / 100.0 - z0, a.roll, a.pitch, a.yaw, lever, heli.c[RSC], pressed))
             next_print = time.time() + 1.0
         time.sleep(step)
 

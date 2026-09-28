@@ -47,8 +47,8 @@ python fly_ingenuity.py --auto          # rotors up, climbs, holds, lands, rotor
 | yaw: nose left / right | `A` / `D` | left stick X |
 | pitch: nose down / up | `Up` / `Down` | right stick Y |
 | bank left / right | `Left` / `Right` | right stick X |
-| rotors on (spool up) / off | `Enter` / `Backspace` | buttons 1 / 2 |
-| stop | `Esc` | Start |
+| rotors on (spool up) / off | `Enter` / `Backspace` | buttons 3 / 1 (pygame numbering: Y / B on an Xbox pad) |
+| stop | `Esc` | button 6 (Back on an Xbox pad) |
 
 The lever holds where it is left; bank, pitch and yaw spring back. The model's stability system holds the commanded
 attitude (up to 20 deg of bank or pitch, 90 deg/s of yaw), so the sticks fly angles, not servos. The lever's bottom
