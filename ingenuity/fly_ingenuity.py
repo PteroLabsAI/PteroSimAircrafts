@@ -17,7 +17,7 @@ pitch angle, a yaw rate and the collective lever; the script sends those five ch
   stop                                 Esc           Start
 
 The lever holds where it is left; bank, pitch and yaw spring back to zero. Its bottom is the rotor's idle, just
-under zero thrust. Take off with the lever a little above where it hovers (about 0.25 on Earth, 0.8 on Mars) and
+under zero thrust. Take off with the lever a little above where it hovers (about 0.15 on Earth, 0.75 on Mars) and
 bring it back once it lifts.
 """
 
@@ -44,9 +44,11 @@ RSC_ON = 0.7               # H_RSC_SETPOINT 70 in firmwares/ardupilot_ingenuity.
 SPOOL_S = 3.0              # chosen: the RSC ramps over this, as ArduPilot's H_RSC_RUNUP_TIME would
 LEVER_RATE = 0.25          # chosen: keyboard lever travel per second, full range in four seconds
 LANDING_SINK = 0.7         # m/s, chosen: the --auto landing's descent rate
-# The lever's bottom is the rotor's idle collective, just under zero thrust (Systems/rotor_control.xml: demix 0.46),
-# not zero root pitch: with the blades' twist that would be a strong downward thrust that presses the legs in.
-LEVER_IDLE = 0.46
+# Lever 0 = root pitch just under zero thrust (-3.7 N on Earth, -0.1 N on Mars): 0 deg presses the legs in with 144 N,
+# and at zero thrust itself FGRotor's inflow is singular on the ground (README.md, known limits).
+IDLE_PITCH_DEG = 12.2
+COLLECTIVE_RANGE_DEG = 25.0    # Systems/rotor_control.xml collective-range-rad
+LEVER_IDLE = IDLE_PITCH_DEG / COLLECTIVE_RANGE_DEG
 
 
 def clamp(v, lo=-1.0, hi=1.0):

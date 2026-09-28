@@ -3,8 +3,10 @@
 <!-- NASA Ingenuity Mars Helicopter - Landing Gear
      4 legs in X pattern, adjacent feet 0.61 m apart (the NASA model: +-0.289 m, 0.58 m). The feet 0.13 m below the CG
      is a chosen CG height (the NASA model has the feet ~0.20 m below the bus centre). Spring, damping and friction are
-     chosen, no source. Damping 10 N/m/s: the four struts at 0.305 m must stay under 2 Iyy / (dt * 4 x^2) = 12.9 N s/m
-     for the pitch step to be stable at the simulator's 240 Hz with Iyy 0.010 kg m2.
+     chosen, no source. Spring 1000 N/m per foot: 4 mm of sag under the weight on Earth, 2 mm on Mars, a 6 mm hop from
+     a 0.8 m/s touchdown (200 sank the feet 22 mm into the ground). Damping 10 N/m/s: the four struts at 0.305 m must
+     stay under 2 Iyy / (dt * 4 x^2) = 12.9 N s/m for the pitch step to be stable at the simulator's 240 Hz with Iyy
+     0.010 kg m2; at 1000 N/m the pitch mode is 43 Hz, 0.7 of critical.
 -->
 
 <ground_reactions>
@@ -18,7 +20,7 @@
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
     <rolling_friction> 0.05 </rolling_friction>
-    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
     <max_steer unit="DEG"> 0 </max_steer>
     <retractable> 0 </retractable>
@@ -33,7 +35,7 @@
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
     <rolling_friction> 0.05 </rolling_friction>
-    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
     <max_steer unit="DEG"> 0 </max_steer>
     <retractable> 0 </retractable>
@@ -48,7 +50,7 @@
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
     <rolling_friction> 0.05 </rolling_friction>
-    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
     <max_steer unit="DEG"> 0 </max_steer>
     <retractable> 0 </retractable>
@@ -63,7 +65,7 @@
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
     <rolling_friction> 0.05 </rolling_friction>
-    <spring_coeff unit="N/M">  200 </spring_coeff>
+    <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
     <max_steer unit="DEG"> 0 </max_steer>
     <retractable> 0 </retractable>

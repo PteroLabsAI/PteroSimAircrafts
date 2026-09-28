@@ -52,7 +52,7 @@ python fly_ingenuity.py --auto          # rotors up, climbs, holds, lands, rotor
 
 The lever holds where it is left; bank, pitch and yaw spring back. The model's stability system holds the commanded
 attitude (up to 20 deg of bank or pitch, 90 deg/s of yaw), so the sticks fly angles, not servos. The lever's bottom
-is the rotor's idle, just under zero thrust; it lifts off with the lever a little above 0.25 on Earth and 0.8 on Mars.
+is the rotor's idle, just under zero thrust; it lifts off with the lever a little above 0.15 on Earth and 0.75 on Mars.
 
 ## Frames
 
@@ -79,5 +79,9 @@ plate's three into collective, longitudinal and lateral cyclic for its rotor. Ya
   0.354 m above the feet. Visual.xml draws them where NASA has them.
 - The collective ranges disagree: 0..25 deg of root pitch here against `H_COL_ANG_MAX 15` in the param file.
 - The motor is far more than hover at Mars density takes; the governor holds the rpm regardless.
+- FGRotor's momentum-theory inflow is singular at zero thrust with no flow through the disc: a rotor held at the
+  zero-thrust pitch (12.5 deg root) on the ground and then moved runs away (Earth: NaN within 2 s; Mars: an overspeed
+  the governor cannot brake). The idle therefore sits at 12.2 deg, -3.7 N on Earth and -0.1 N on Mars, and the
+  collective crosses zero thrust moving, which the model survives at any rate up to a step.
 - Everything the NOTICE lists as chosen: inertias, CG height, blade moments, lift-curve slope, hinge offset, motor
   power, leg stiffness and damping, drag, governor gains.
