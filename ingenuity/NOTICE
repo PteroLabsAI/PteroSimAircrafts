@@ -24,8 +24,8 @@ under the GNU General Public License v3.0; see LICENSE in this folder for its te
 
 Chosen, with no source, and marked so where they appear: the blade lift-curve slope, the hinge-equivalent offset,
 the blade flapping, mass and polar moments, the inflow lag, the vehicle inertias, the CG height above the feet, the
-leg spring, damping and friction, the body drag coefficient, the motor power, the collective range and the cyclic
-limits. README.md lists what is known to be wrong with the model as it stands.
+leg spring, damping and friction, the body drag coefficient, the motor power, the collective range, the cyclic
+limits and the governor gains. README.md lists the model's known limits.
 
 The meshes are NASA's Ingenuity 3D model, credit NASA/JPL-Caltech, under the NASA media usage guidelines; NASA
 does not endorse PteroSim. meshes/NOTICE says what was cut and what was removed (the NASA insignia and JPL logotype).

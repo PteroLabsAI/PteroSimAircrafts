@@ -35,5 +35,7 @@
 
   <!-- Dual swashplate demixer: 6 servo inputs → 2 rotors (collective/pitch/roll each) -->
   <system file="rotor_control"/>
+  <!-- Rotor speed governor: the RSC command sets the rpm, a PID per motor holds it -->
+  <system file="ingenuity_governor"/>
 
 </fdm_config>

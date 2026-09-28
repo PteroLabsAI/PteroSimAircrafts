@@ -12,7 +12,6 @@
 
   <!-- Upper rotor motor - CW from above -->
   <engine file="ingenuity_motor" name="rotor_upper">
-    <feed> 0 </feed>
     <thruster file="ingenuity_upper_rotor">
       <location unit="M">
         <x> 0.0 </x>
@@ -30,7 +29,6 @@
 
   <!-- Lower rotor motor - CCW from above -->
   <engine file="ingenuity_motor" name="rotor_lower">
-    <feed> 0 </feed>
     <thruster file="ingenuity_lower_rotor">
       <location unit="M">
         <x> 0.0 </x>
@@ -46,17 +44,6 @@
     </thruster>
   </engine>
 
-  <!-- Battery: 6x Sony VTC4 Li-ion, 35-40 Wh. A placeholder "fuel" tank: its 1 lb is counted by JSBSim on top of
-       Mass.xml's 1.8 kg, so the model masses 2.25 kg (README.md). -->
-
-  <tank number="0" type="FUEL">
-    <location unit="M">
-      <x> 0.0 </x>
-      <y> 0.0 </y>
-      <z> 0.0 </z>
-    </location>
-    <capacity unit="LBS"> 1.0 </capacity>
-    <contents unit="LBS"> 1.0 </contents>
-  </tank>
+  <!-- No tank: the electric motors burn nothing, and the battery is inside Mass.xml's 1.8 kg. -->
 
 </propulsion>

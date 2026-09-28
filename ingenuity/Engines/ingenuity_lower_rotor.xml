@@ -10,6 +10,7 @@
   <diameter unit="M">       1.21 </diameter>
   <numblades>                   2 </numblades>
   <gearratio>                 1.0 </gearratio>
+  <gearloss unit="HP">        0.0 </gearloss>  <!-- direct drive, no gearbox (see ingenuity_upper_rotor.xml) -->
   <nominalrpm>             2600.0 </nominalrpm> <!-- NASA design RPM -->
   <maxrpm>                 2800.0 </maxrpm>    <!-- NASA tested max, prevents runaway -->
   <chord unit="M">        0.14048 </chord>    <!-- from the TM's thrust-weighted solidity 0.14782: c = sigma*pi*R/Nb -->

@@ -27,8 +27,8 @@
   <property value="0.0"> fcs/lower-swash-servo1 </property>
   <property value="0.0"> fcs/lower-swash-servo2 </property>
 
-  <!-- The rpm the simulator places both rotors at when the engines are armed (both rotor files: nominalrpm 2600).
-       There is no rpm governor in this model: rotor speed follows the RSC throttle against the motor's power. -->
+  <!-- The rpm the simulator places both rotors at when the engines are armed (both rotor files: nominalrpm 2600) and
+       the governor's target (Systems/ingenuity_governor.xml). -->
   <property value="2600.0"> fcs/nominal-rpm </property>
 
   <!-- Collective scaling:
@@ -225,11 +225,12 @@
       <output> propulsion/engine[1]/longitudinal-ctrl-rad </output>
     </pure_gain>
 
-    <!-- Lateral gain -1 on the lower rotor: inherited. It works against ArduPilot's coaxial mixer, which sends
-         the same roll to both swashplates, so the two rotors tilt against each other (README.md, Known limits). -->
+    <!-- Lateral: the same sign as the upper rotor. ArduPilot's coaxial mixer sends one roll to both swashplates
+         (AP_MotorsHeli_Dual mix_intermeshing), and FGRotor's cyclic tilts the disc the same way whichever way the
+         rotor turns, so both rotors must tilt together. -->
     <pure_gain name="fcs/lower/lateral-ctrl-rad">
       <input> fcs/lower/demix/lateral </input>
-      <gain> -1.0 </gain>
+      <gain> 1.0 </gain>
       <clipto><min> -0.20 </min><max> 0.20 </max></clipto>
       <output> propulsion/engine[1]/lateral-ctrl-rad </output>
     </pure_gain>

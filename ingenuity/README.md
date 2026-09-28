@@ -3,18 +3,19 @@
 A JSBSim model of NASA's Ingenuity, the coaxial helicopter that flew on Mars, with NASA's own 3D model as its meshes
 (GPL-3.0 for the model files, NASA/JPL-Caltech for the meshes; `NOTICE` names every source). Two counter-rotating
 two-bladed rotors of 1.21 m on one mast, each with its own swashplate, four legs. Set up for ArduPilot (ArduCopter,
-dual-helicopter frame in coaxial mode); as it stands it does not hold roll, see the limits below. It is meant for a
-Mars scene; the planet is the scene's setting, not the vehicle's.
+dual-helicopter frame in coaxial mode). It is meant for a Mars scene; the planet is the scene's setting, not the
+vehicle's.
 
 ```
 ingenuity.xml        main config, includes everything below
 Metrics.xml          reference area = the rotor disk, AERORP at the CG
 Mass.xml             1.8 kg, CG, inertias
 Aero.xml             body drag only
-Propulsion.xml       two electric motors, two rotors (engines rotor_upper / rotor_lower), a placeholder battery tank
-Gear.xml             four feet + crash contacts
+Propulsion.xml       two electric motors, two rotors (engines rotor_upper / rotor_lower)
+Gear.xml             four feet
 Engines/             ingenuity_motor (electric), ingenuity_upper_rotor / ingenuity_lower_rotor (FGRotor)
-Systems/             rotor_control.xml: six swashplate servos -> collective, longitudinal and lateral of each rotor
+Systems/             rotor_control.xml: six swashplate servos -> collective, longitudinal and lateral of each rotor;
+                     ingenuity_governor.xml: the RSC command sets the rotor speed, a PID per motor holds it
 Controls.xml         ArduCopter heli-dual outputs -> JSBSim bindings (sidecar)
 Sensors.xml          imu / barometer / gps (sidecar)
 Visual.xml           meshes/: body (fixture), the two rotors (propellers), chase camera (sidecar)
@@ -49,14 +50,9 @@ plate's three into collective, longitudinal and lateral cyclic for its rotor. Ya
 
 ## Known limits
 
-- The lower rotor's lateral cyclic is inverted in `Systems/rotor_control.xml`. ArduPilot's coaxial mixer sends the
-  same roll to both swashplates, so the two rotors tilt against each other and roll cannot be held.
 - The rotor hubs are within 5 cm of the CG and the "upper" one below the "lower"; NASA's model has them 0.453 and
   0.354 m above the feet. Visual.xml draws them where NASA has them.
-- The 1 lb "fuel" tank makes the vehicle 2.25 kg; Ingenuity is 1.8 kg.
 - The collective ranges disagree: 0..25 deg of root pitch here against `H_COL_ANG_MAX 15` in the param file.
-- There is no rotor speed governor, and the motor is far more than hover at Mars density takes.
-- The leg damping is too high for the vehicle's inertia at the simulator's physics rate: a disturbance on the
-  ground leaves a standing pitch-rate oscillation.
+- The motor is far more than hover at Mars density takes; the governor holds the rpm regardless.
 - Everything the NOTICE lists as chosen: inertias, CG height, blade moments, lift-curve slope, hinge offset, motor
-  power, leg stiffness, drag.
+  power, leg stiffness and damping, drag, governor gains.
