@@ -1,8 +1,8 @@
 """Fly Ingenuity by hand, or let it fly a profile on its own.
 
-  python fly_ingenuity.py --input keyboard
-  python fly_ingenuity.py --input gamepad
-  python fly_ingenuity.py --auto          # rotors up, climbs, holds, comes down, rotors off
+  python scripts/fly_ingenuity.py --input keyboard
+  python scripts/fly_ingenuity.py --input gamepad
+  python scripts/fly_ingenuity.py --auto          # rotors up, climbs, holds, comes down, rotors off
 
 Spawn the ingenuity in the editor and start the simulation first; this script only flies what is already there.
 Attitude is held by the model's own stability system (Systems/ingenuity_manual.xml): the sticks command a bank and a

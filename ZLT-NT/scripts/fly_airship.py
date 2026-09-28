@@ -1,8 +1,8 @@
 """Fly the ZLT-NT airship by hand, or let it fly a profile on its own.
 
-  python fly_airship.py --input keyboard
-  python fly_airship.py --input gamepad
-  python fly_airship.py --auto          # climbs, holds, descends and lands
+  python scripts/fly_airship.py --input keyboard
+  python scripts/fly_airship.py --input gamepad
+  python scripts/fly_airship.py --auto          # climbs, holds, descends and lands
 
 Spawn the airship in the editor first; this script only flies what is already there.
 
