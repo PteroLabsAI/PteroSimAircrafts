@@ -11,7 +11,7 @@
 
 <ground_reactions>
 
-  <contact name="FRONT_LEFT" type="BOGEY">
+  <contact name="FRONT_LEFT" type="STRUCTURE">
     <location unit="M">
       <x> -0.305 </x>
       <y> -0.305 </y>
@@ -19,14 +19,11 @@
     </location>
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
-    <rolling_friction> 0.05 </rolling_friction>
     <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <retractable> 0 </retractable>
   </contact>
 
-  <contact name="FRONT_RIGHT" type="BOGEY">
+  <contact name="FRONT_RIGHT" type="STRUCTURE">
     <location unit="M">
       <x> -0.305 </x>
       <y>  0.305 </y>
@@ -34,14 +31,11 @@
     </location>
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
-    <rolling_friction> 0.05 </rolling_friction>
     <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <retractable> 0 </retractable>
   </contact>
 
-  <contact name="AFT_LEFT" type="BOGEY">
+  <contact name="AFT_LEFT" type="STRUCTURE">
     <location unit="M">
       <x>  0.305 </x>
       <y> -0.305 </y>
@@ -49,14 +43,11 @@
     </location>
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
-    <rolling_friction> 0.05 </rolling_friction>
     <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <retractable> 0 </retractable>
   </contact>
 
-  <contact name="AFT_RIGHT" type="BOGEY">
+  <contact name="AFT_RIGHT" type="STRUCTURE">
     <location unit="M">
       <x>  0.305 </x>
       <y>  0.305 </y>
@@ -64,11 +55,8 @@
     </location>
     <static_friction>  1.5 </static_friction>
     <dynamic_friction> 1.0 </dynamic_friction>
-    <rolling_friction> 0.05 </rolling_friction>
     <spring_coeff unit="N/M"> 1000 </spring_coeff>
     <damping_coeff unit="N/M/SEC"> 10 </damping_coeff>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <retractable> 0 </retractable>
   </contact>
 
 </ground_reactions>
