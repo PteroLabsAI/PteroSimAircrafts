@@ -3,19 +3,20 @@
      Feet (measured on the STEP files; posture from the photo resources/explora_vtol_001.jpg): the two wing-tip tube caps (5x3x43 tube, BOM) and
      the ball cap on the lower end of the 5x3x600 fin tube. All three end within 0.2 mm of one plane 552 mm aft of the nose, so
      the feet plane is square to the fuselage axis; Fuselage_5's tail cap (549 mm) and the elevon trailing edges clear the ground.
-     Spring 6800 N/m, damping 227 N/m/s: quadtailsitter's 3000 / 100 (Gear.xml, a 1.5 kg vehicle, Mass.xml) scaled by the mass
-     ratio 3.4 / 1.5 = 2.27 (3.4 kg, forum). Static sag 33.4 N / (3 x 6800) = 1.6 mm. Drop-tested (with the earlier belly-side CG, z -0.0053) standing on the tail in
-     JSBSim 1.3.1 at 240 Hz; the ATLAS README warns that stiff gear on a wide stance and a small
-     inertia can pump energy, so re-run that check before stiffening.
-     Friction 0.8 / 0.5 / 0.8 and the BOGEY-with-pitch-90 form are quadtailsitter's (Gear.xml), the PteroSim tailsitter that stands
-     on its tail. Measured in the drop test: a BOGEY without the pitch-90 orientation goes NaN on the first contact at theta 90, and
-     STRUCTURE feet need the CG 12 mm inside the tripod before all three touch, BOGEY pitch-90 needs 2 mm.
+     Spring 6800 N/m: quadtailsitter's 3000 N/m (Gear.xml, a 1.5 kg vehicle, Mass.xml) scaled by the mass ratio 3.4 / 1.5 = 2.27
+     (3.4 kg, forum). Static sag 33.4 N / (3 x 6800) = 1.6 mm. Damping 100 N/m/s: an explicit step dt stays stable while
+     dt * c * sum(x^2) / I < 2, and the tightest mode standing on the tail is the rock about body Z on the wing-tip feet
+     (Izz 0.288 kg m2, feet +-0.66 m): 157 N/m/s at the simulator's 240 Hz. The mass-scaled 227 N/m/s exceeds it; 100 keeps
+     a third in hand. Re-check that limit before damping harder or adding a contact far from the CG.
+     Friction 0.8 / 0.5 are quadtailsitter's (Gear.xml), the PteroSim tailsitter that stands on its tail. The feet are STRUCTURE
+     contacts, not wheels: a BOGEY rolls along its own X axis, while static friction holds a STRUCTURE foot in every direction,
+     and a STRUCTURE contact compresses along the ground normal, so a foot needs no orientation to stand on the tail.
      The all-up CG z 0.0171 (Mass.xml, on the thrust line) is 18.1 mm on the upper-surface side of the wing-cap line
      (z -0.001), so the model rests on the two caps and the upper fin ball's crash contact, 1 deg off vertical.
      Crash contacts are STRUCTURE type as ATLAS writes them, with the same spring and damping as the feet (chosen). -->
 <ground_reactions>
   <!-- left wing-tip tube cap: CAD (664.5, -0.1, -17.0) mm -> X_ac -0.5518, Y -0.6645, Z_ac 0.0010 (down) -->
-  <contact type="BOGEY" name="foot_wing_left">
+  <contact type="STRUCTURE" name="foot_wing_left">
     <location unit="M">
       <x> 0.5518 </x>
       <y> -0.6645 </y>
@@ -24,19 +25,10 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
-    <orientation unit="DEG">
-      <roll> 0 </roll>
-      <pitch> 90 </pitch>
-      <yaw> 0 </yaw>
-    </orientation>
-    <rolling_friction> 0.8 </rolling_friction>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <brake_group> NONE </brake_group>
-    <retractable> 0 </retractable>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <!-- right wing-tip tube cap, mirrored -->
-  <contact type="BOGEY" name="foot_wing_right">
+  <contact type="STRUCTURE" name="foot_wing_right">
     <location unit="M">
       <x> 0.5518 </x>
       <y> 0.6645 </y>
@@ -45,19 +37,10 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
-    <orientation unit="DEG">
-      <roll> 0 </roll>
-      <pitch> 90 </pitch>
-      <yaw> 0 </yaw>
-    </orientation>
-    <rolling_friction> 0.8 </rolling_friction>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <brake_group> NONE </brake_group>
-    <retractable> 0 </retractable>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <!-- lower fin ball cap, lowest point: CAD z -17.43 mm -> X_ac -0.5522; ball centre CAD y -289.6 -> Z_ac 0.2905 (down) -->
-  <contact type="BOGEY" name="foot_fin_lower">
+  <contact type="STRUCTURE" name="foot_fin_lower">
     <location unit="M">
       <x> 0.5522 </x>
       <y> 0 </y>
@@ -66,16 +49,7 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
-    <orientation unit="DEG">
-      <roll> 0 </roll>
-      <pitch> 90 </pitch>
-      <yaw> 0 </yaw>
-    </orientation>
-    <rolling_friction> 0.8 </rolling_friction>
-    <max_steer unit="DEG"> 0 </max_steer>
-    <brake_group> NONE </brake_group>
-    <retractable> 0 </retractable>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
 
   <!-- crash contacts -->
@@ -89,7 +63,7 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <!-- upper fin ball cap, outermost point: centre X_ac -0.5442, Z_ac -0.3197 (up) + 8 mm ball radius (STEP) -->
   <contact type="STRUCTURE" name="fin_upper_ball">
@@ -101,7 +75,7 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <!-- wing-tip leading edges: Wing_L5 station x_cad 683.5, LE z 170.2, y 10.2 (STEP stations) -->
   <contact type="STRUCTURE" name="wingtip_le_left">
@@ -113,7 +87,7 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <contact type="STRUCTURE" name="wingtip_le_right">
     <location unit="M">
@@ -124,7 +98,7 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <!-- propeller hubs, the first thing to touch in a nose-over (Propulsion.xml thruster locations) -->
   <contact type="STRUCTURE" name="prop_hub_left">
@@ -136,7 +110,7 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
   <contact type="STRUCTURE" name="prop_hub_right">
     <location unit="M">
@@ -147,6 +121,6 @@
     <static_friction> 0.8 </static_friction>
     <dynamic_friction> 0.5 </dynamic_friction>
     <spring_coeff unit="N/M"> 6800 </spring_coeff>
-    <damping_coeff unit="N/M/SEC"> 227 </damping_coeff>
+    <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
   </contact>
 </ground_reactions>
