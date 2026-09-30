@@ -1,0 +1,6 @@
+<electric_engine name="ingenuity_motor">
+  <!-- Chosen: ~460 W per rotor so the rotor reaches 2600 rpm at full throttle on Earth in SITL. No NASA motor power is
+       published in the cited sources; the "~175 W" sometimes quoted has no citation either. At Mars density hover takes
+       ~60 W per rotor in this model and the motor is 8x oversized (README.md). -->
+  <power unit="HP"> 0.62 </power>
+</electric_engine>

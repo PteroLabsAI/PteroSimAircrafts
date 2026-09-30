@@ -34,6 +34,7 @@ so JSBSim loads the new definition.
 | <img src="docs/previews/c172p.jpg" width="320" alt="Cessna 172P Skyhawk"> | `c172p` | Cessna 172P Skyhawk | A four-seat single-piston trainer with tricycle gear, flaps, and PX4 and ArduPlane profiles; its meshes are FlightGear's c172p. |
 | <img src="docs/previews/explora.jpg" width="320" alt="eXplora Tailsitter VTOL"> | `explora` | eXplora Tailsitter VTOL | A 3D-printed dual-motor tailsitter flying wing with two elevons, built from the open-source eXplora design files, with ArduPlane and PX4 profiles. |
 | <img src="docs/previews/F450.jpg" width="320" alt="DJI F450"> | `F450` | DJI F450 | A baseline quadcopter using an F450 frame, DJI E305 motors, and 9450 propellers. |
+| <img src="docs/previews/ingenuity.jpg" width="320" alt="Ingenuity Mars Helicopter"> | `ingenuity` | Ingenuity Mars Helicopter | NASA's coaxial Mars helicopter: two counter-rotating rotors with their own swashplates on one mast, four legs, NASA's own 3D model as its meshes, an ArduCopter dual-helicopter profile; meant for a Mars scene. |
 | <img src="docs/previews/quadtailsitter.jpg" width="320" alt="Quad tailsitter"> | `quadtailsitter` | Quad tailsitter | A tailsitter VTOL: it takes off and lands vertically, then flies forward like a fixed-wing aircraft. |
 | <img src="docs/previews/standard_vtol.jpg" width="320" alt="Standard VTOL"> | `standard_vtol` | Standard VTOL | A fixed-wing VTOL with four lift rotors and a separate pusher propeller. |
 | <img src="docs/previews/tiltrotor.jpg" width="320" alt="Tiltrotor"> | `tiltrotor` | Tiltrotor | A convertible aircraft with tilting nacelles: rotor mode for take-off and fixed-wing mode for forward flight. |
@@ -58,3 +59,7 @@ Third-party licences and notices remain in the directories of the relevant aircr
   materials, and its ArduPlane setup from the published parameter file. `explora/NOTICE` lists every source.
 - `c172p` joins JSBSim's c172p flight model (GNU LGPL) and FlightGear's c172p meshes by David Megginson and
   the c172p team (GNU GPL). `c172p/NOTICE` lists every source.
+- `ingenuity` is a JSBSim model built from NASA's published rotor geometry (NASA/TM-20240001510 and the Koning,
+  Johnson and Grip AIAA paper), with NASA's own [Ingenuity 3D model](https://science.nasa.gov/resource/mars-ingenuity-helicopter-3d-model/)
+  (NASA/JPL-Caltech, under the NASA media usage guidelines; NASA does not endorse PteroSim) as its meshes.
+  `ingenuity/NOTICE` lists every source.

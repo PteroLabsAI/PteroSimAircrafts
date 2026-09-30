@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Metrics
+     Rotor disk area used as reference area
+-->
+
+<metrics>
+  <wingarea unit="M2">   1.150 </wingarea>  <!-- rotor disk area -->
+  <wingspan unit="M">    1.210 </wingspan>  <!-- rotor diameter -->
+  <chord unit="M">       0.140 </chord>     <!-- thrust-weighted mean blade chord -->
+
+  <location name="AERORP" unit="M">
+    <x> 0.0 </x>
+    <y> 0.0 </y>
+    <z> 0.0 </z>
+  </location>
+
+  <location name="EYEPOINT" unit="M">
+    <x> 0.0 </x>
+    <y> 0.0 </y>
+    <z> 0.2 </z>
+  </location>
+
+  <location name="VRP" unit="M">
+    <x> 0.0 </x>
+    <y> 0.0 </y>
+    <z> 0.0 </z>
+  </location>
+</metrics>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. The meshes are NASA's
+  Ingenuity model cut by node (meshes/NOTICE): the body in the glb's own frame, whose origin is the ground point under
+  the mast (feet at -0.005), each rotor about its own hub with the disc horizontal. The glb's forward (the cameras
+  under the fuselage) is its +x, which the loader shows on +Y, so every part is yawed -90 deg onto +X.
+
+  Body: Gear.xml puts the feet 0.13 m under the CG, so the glb origin goes to z -0.125 (its feet sit at -0.005).
+  Rotors: the hub of each <propeller> is its thruster location in Propulsion.xml (engine 0 "upper" at structural
+  z -0.0495, engine 1 "lower" at +0.0495: swapped and at the CG, see README.md), so the mesh offset along the spin
+  axis puts each rotor where the glb has it, 0.4531 and 0.3541 m above the glb origin, i.e. 0.3281 and 0.2291 above
+  the CG: 0.3281 - (-0.0495) = 0.3776 and 0.2291 - 0.0495 = 0.1796. They go to 0 once Propulsion.xml carries the
+  measured hubs.
+  Spin: a propeller turns about +axis with its unsigned rpm, clockwise seen from the axis tip. The upper rotor is
+  sense -1, clockwise from above (Propulsion.xml, FGRotor), so +Z; the lower is sense +1, anticlockwise, so -Z.
+  Chase: 3 m behind, 20 deg above.
+-->
+<visual>
+  <fixture file="meshes/body.glb" xyz="0 0 -0.125" rpy="0 0 -90"/>
+  <propeller file="meshes/rotor_upper.glb" xyz="0 0 0.3776" rpy="0 0 -90" motor="rotor_upper" axis="0 0 1"/>
+  <propeller file="meshes/rotor_lower.glb" xyz="0 0 0.1796" rpy="0 0 -90" motor="rotor_lower" axis="0 0 -1"/>
+
+  <chase xyz="0 0 0" rpy="0 -20 0" length="3"/>
+</visual>

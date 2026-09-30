@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. Which ArduCopter heli-dual output drives what (channel = SERVOn - 1, the
+  numbering c172p and explora use for their ArduPilot rows). The functions are the ones heli-dual assigns by default
+  (libraries/AP_Motors/AP_MotorsHeli_Dual.h: swashplate 1 on CH_1..3, swashplate 2 on CH_4..6; AP_MotorsHeli.h: RSC on
+  CH_8) and firmwares/ardupilot_ingenuity.param writes out:
+
+    SERVO1..3 Motor1..3 (33..35)  swashplate 1, upper rotor  -> channels 0..2 -> fcs/upper-swash-servo0..2
+    SERVO4..6 Motor4..6 (36..38)  swashplate 2, lower rotor  -> channels 3..5 -> fcs/lower-swash-servo0..2
+    SERVO8    HeliRSC   (31)      rotor speed control        -> channel 7    -> Motor index 0 AND Motor index 1
+
+  Each swashplate servo is bound to its own property: ArduPilot emits the mixed H3-120 servo positions (servos at -60,
+  +60 and 180 deg, AP_MotorsHeli_Swash), and Systems/rotor_control.xml demixes the three of each plate back into
+  collective, longitudinal and lateral for its rotor. A servo arrives as -1..1 (PWM 1000..2000). The one RSC channel
+  feeds both electric motors (fan-out; one rotor speed control drives both rotors of a coaxial). ArduPilot only: no
+  PX4 airframe exists for a coaxial dual-swashplate helicopter.
+
+  Channels 8..12 are for flying by hand (fly_ingenuity.py, or anything that calls set_controls): they feed the
+  stability system in Systems/ingenuity_manual.xml, which takes the six servos over while channel 8 is above 0.75.
+  They belong to no stack, so an autopilot's unassigned outputs leave them at 0 and the system stays off.
+-->
+<control_bindings stack="ArduPilot">
+  <binding stack="ArduPilot" channel="0" property="fcs/upper-swash-servo0" in="-1 1" out="-1 1" label="upper_swash_servo0"/>
+  <binding stack="ArduPilot" channel="1" property="fcs/upper-swash-servo1" in="-1 1" out="-1 1" label="upper_swash_servo1"/>
+  <binding stack="ArduPilot" channel="2" property="fcs/upper-swash-servo2" in="-1 1" out="-1 1" label="upper_swash_servo2"/>
+  <binding stack="ArduPilot" channel="3" property="fcs/lower-swash-servo0" in="-1 1" out="-1 1" label="lower_swash_servo0"/>
+  <binding stack="ArduPilot" channel="4" property="fcs/lower-swash-servo1" in="-1 1" out="-1 1" label="lower_swash_servo1"/>
+  <binding stack="ArduPilot" channel="5" property="fcs/lower-swash-servo2" in="-1 1" out="-1 1" label="lower_swash_servo2"/>
+  <binding stack="ArduPilot" channel="7" type="Motor" index="0" in="0 1" out="0 1" label="rsc_upper"/>
+  <binding stack="ArduPilot" channel="7" type="Motor" index="1" in="0 1" out="0 1" label="rsc_lower"/>
+  <binding channel="8"  property="fcs/manual/enable"           in="0 1"  out="0 1"    label="manual_enable"/>
+  <binding channel="9"  property="fcs/manual/roll-cmd-deg"     in="-1 1" out="-20 20" label="manual_roll_deg"/>
+  <binding channel="10" property="fcs/manual/pitch-cmd-deg"    in="-1 1" out="-20 20" label="manual_pitch_deg"/>
+  <binding channel="11" property="fcs/manual/yaw-rate-cmd-dps" in="-1 1" out="-90 90" label="manual_yaw_rate_dps"/>
+  <binding channel="12" property="fcs/manual/collective-norm"  in="0 1"  out="0 1"    label="manual_collective"/>
+</control_bindings>

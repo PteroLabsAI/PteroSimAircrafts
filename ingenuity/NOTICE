@@ -1,0 +1,38 @@
+This aircraft is a JSBSim model of NASA's Ingenuity Mars Helicopter, written by PteroLabs in 2026, with NASA's own
+3D model as its meshes.
+
+The flight model -- ingenuity.xml, the files it assembles, Engines/ and Systems/ -- is PteroLabs' work, distributed
+under the GNU General Public License v3.0; see LICENSE in this folder for its text. Its numbers come from:
+
+  NASA/TM-20240001510, Koning and Dominguez, "Ingenuity Mars Helicopter rotor geometry" (February 2024): rotor
+  diameter 1.21 m, two blades per rotor, design 2,600 rpm and 2,800 rpm maximum, thrust-weighted solidity 0.14782
+  (the chord), disk area 1.150 m2, rotor spacing 0.099 m, mass 1.8 kg, the hingeless hub, and the twist and chord
+  distributions the single twist value collapses.
+    https://ntrs.nasa.gov/citations/20240001510
+
+  Koning, Johnson and Grip, "Improved Mars Helicopter Aerodynamic Rotor Model for Comprehensive Analyses", AIAA
+  Journal Vol. 57 No. 9 (2019); open preprint from the 44th European Rotorcraft Forum (2018): the "Mars Condition 2"
+  atmosphere (0.017 kg/m3, 223.2 K) the model was tuned against.
+    https://rotorcraft.arc.nasa.gov/Publications/files/Koning_Johnson_Grip_Improved_Mars_Helicopter.pdf
+
+  Grip et al., "Flight Control System for NASA's Mars Helicopter", AIAA 2019-1289: the control layout (a coaxial
+  pair, yaw by differential collective).
+
+  JPL, "Mars Helicopter Ingenuity" fact sheet (JPL 400-1715 Rev. 1, April 2020): mass 4 lb (1.8 kg), height about
+  0.49 m, "about 2,400 rpm". NASA blog "Flying on Mars Is Getting Harder and Harder" (September 2021): 2,537 rpm
+  flown, 2,700 rpm on Flight 14, 2,800 rpm spin test, surface density 0.0145-0.0185 kg/m3 falling to 0.012.
+
+Chosen, with no source, and marked so where they appear: the blade lift-curve slope, the hinge-equivalent offset,
+the blade flapping, mass and polar moments, the inflow lag, the vehicle inertias, the CG height above the feet, the
+leg spring, damping and friction, the body drag coefficient, the motor power, the collective range, the cyclic
+limits and the governor gains. README.md lists the model's known limits.
+
+The meshes are NASA's Ingenuity 3D model, credit NASA/JPL-Caltech, under the NASA media usage guidelines; NASA
+does not endorse PteroSim. meshes/NOTICE says what was cut and what was removed (the NASA insignia and JPL logotype).
+    https://science.nasa.gov/resource/mars-ingenuity-helicopter-3d-model/
+    https://www.nasa.gov/nasa-brand-center/images-and-media/
+
+The ArduPilot parameter file (firmwares/ardupilot_ingenuity.param) carries ArduPilot's own SITL defaults for a
+dual-rotor helicopter (Tools/autotest/default_params/copter-heli.parm and copter-heli-dual.parm, ArduPilot commit
+b7ba8bca02) with PteroLabs' vehicle values on top. ArduPilot is distributed under the GNU General Public License v3.0.
+    https://github.com/ArduPilot/ardupilot

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Propulsion
+     Coaxial counter-rotating rotors, each driven by its own electric motor; the six swashplate servos are the
+     flight control system's (Systems/rotor_control.xml)
+     Rotor spacing: 0.099 m (NASA/TM-20240001510 Table 1). The hub heights about the CG are NOT measured: both hubs sit
+     within 5 cm of the CG and the "upper" one below the "lower" (structural Z is up); the NASA model puts them 0.453 and
+     0.354 m above the feet (README.md). The engines are named so Visual.xml can bind a propeller mesh to each.
+-->
+
+<propulsion>
+
+  <!-- Upper rotor motor - CW from above -->
+  <engine file="ingenuity_motor" name="rotor_upper">
+    <thruster file="ingenuity_upper_rotor">
+      <location unit="M">
+        <x> 0.0 </x>
+        <y> 0.0 </y>
+        <z> -0.0495 </z>
+      </location>
+      <orient unit="DEG">
+        <roll>   0.0 </roll>
+        <pitch> 90.0 </pitch>
+        <yaw>    0.0 </yaw>
+      </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+
+  <!-- Lower rotor motor - CCW from above -->
+  <engine file="ingenuity_motor" name="rotor_lower">
+    <thruster file="ingenuity_lower_rotor">
+      <location unit="M">
+        <x> 0.0 </x>
+        <y> 0.0 </y>
+        <z> 0.0495 </z>
+      </location>
+      <orient unit="DEG">
+        <roll>   0.0 </roll>
+        <pitch> 90.0 </pitch>
+        <yaw>    0.0 </yaw>
+      </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+
+  <!-- No tank: the electric motors burn nothing, and the battery is inside Mass.xml's 1.8 kg. -->
+
+</propulsion>
