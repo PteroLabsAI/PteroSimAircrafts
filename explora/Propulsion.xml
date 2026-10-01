@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!-- Two tractor motors on the wing, thrust along body +X (STEP: the Motor_Support
+     bores run along CAD +z and its back face is flush on Wing_L3's front face, cant 0, toe 0).
+     Structural frame: origin nose tip, X aft, Y right, Z up, metres.
+       x 0.153  prop plane: support front face at X_ac -0.1938 (STEP), motor body centre 16 mm ahead of it (MN4012 height 32.5 mm) and the
+                prop hub 8 mm further (hub half thickness chosen)
+       y +-0.325  motor axis 325 mm from the centreline (STEP)
+       z 0.0171  axis 17.1 mm above the nose-tip plane (STEP, Z_ac -0.0171 down positive), the all-up CG height (Mass.xml places the CG on this line)
+     Engine order = Controls.xml Motor index: 0 = left (ArduPlane ThrottleLeft, SERVO9), 1 = right (ThrottleRight, SERVO10).
+     Rotation sense: chosen, no evidence. No source says which side turns which way; the pair is counter-rotating (left +1, right -1). ArduPlane dual-motor tailsitters steer with differential thrust and the elevons, not
+     with motor torque (Q_TAILSIT_VFGAIN = VHGAIN = 0, param), so the choice only sets the sign of the residual roll torque. -->
+<propulsion>
+  <engine file="explora_motor_480kv" name="motor_left">
+    <thruster file="explora_prop_14x8">
+      <location unit="M">
+        <x> 0.153 </x>
+        <y> -0.325 </y>
+        <z> 0.0171 </z>
+      </location>
+      <orient unit="DEG">
+        <roll> 0 </roll>
+        <pitch> 0 </pitch>
+        <yaw> 0 </yaw>
+      </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+  <engine file="explora_motor_480kv" name="motor_right">
+    <thruster file="explora_prop_14x8">
+      <location unit="M">
+        <x> 0.153 </x>
+        <y> 0.325 </y>
+        <z> 0.0171 </z>
+      </location>
+      <orient unit="DEG">
+        <roll> 0 </roll>
+        <pitch> 0 </pitch>
+        <yaw> 0 </yaw>
+      </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+</propulsion>

@@ -1,0 +1,43 @@
+# ArduPlane SITL parameters for standard_vtol: sim_vehicle.py -v ArduPlane -f quadplane --model JSON:<host> --add-param-file=<this>.
+# Self-contained: with --model JSON the binary finds no frame defaults of its own, so quadplane.parm is not loaded.
+# What the frame, the outputs and the flight envelope are; everything else is ArduPlane's own default.
+Q_ENABLE 1
+Q_FRAME_CLASS 1
+Q_FRAME_TYPE 1
+Q_MAV_TYPE 22
+
+# The airframe's envelope: 10 m/s minimum, 15 cruise, 20 top. ArduPlane leaves VTOL above AIRSPEED_MIN and assists
+# below Q_ASSIST_SPEED, which arming refuses to see at zero.
+ARSPD_USE 1
+AIRSPEED_MIN 10
+AIRSPEED_CRUISE 15
+AIRSPEED_MAX 20
+Q_ASSIST_SPEED 8
+
+# Controls.xml channels 0-3 are the lift rotors in ArduPilot's quad-X order (front-right, rear-left, front-left,
+# rear-right), 4 the pusher, 5-7 the left elevon, right elevon and elevator. ArduPlane's default puts the plane
+# surfaces on 1-4 and the rotors on 5-8; left as is, two rotors sit at half throttle before the vehicle is armed.
+SERVO1_FUNCTION 33
+SERVO2_FUNCTION 34
+SERVO3_FUNCTION 35
+SERVO4_FUNCTION 36
+SERVO5_FUNCTION 70
+SERVO6_FUNCTION 4
+SERVO7_FUNCTION 4
+SERVO8_FUNCTION 19
+
+# Both elevons deflect trailing-edge up on a positive command, so the left one rolls left where ArduPilot's
+# positive aileron is a roll to the right. The elevator's positive is nose up on both sides.
+SERVO6_REVERSED 1
+
+# The full PWM span: the simulator reads the pusher as (PWM - 1000) / 1000 and the surfaces as (PWM - 1500) / 500,
+# and ArduPilot's default 1100..1900 would trim a fifth off every travel. The rotors already span 1000..2000
+# (Q_M_PWM_MIN/MAX).
+SERVO5_MIN 1000
+SERVO5_MAX 2000
+SERVO6_MIN 1000
+SERVO6_MAX 2000
+SERVO7_MIN 1000
+SERVO7_MAX 2000
+SERVO8_MIN 1000
+SERVO8_MAX 2000

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
+
+<!-- NASA Ingenuity Mars Helicopter, a JSBSim model by PteroLabs (GPL-3.0, see LICENSE and NOTICE). Read README.md
+     before trusting any number. The planet is the scene's, not the vehicle's: this model is meant for a Mars scene
+     (the rotor was tuned against the AIAA paper's Mars Condition 2, rho 0.017 kg/m3; g 3.72 m/s2). -->
+<fdm_config name="ingenuity" release="ALPHA" version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
+
+  <fileheader>
+    <author> PteroLabs </author>
+    <license
+      licenseName="GPL-3.0"
+      licenseURL="https://www.gnu.org/licenses/gpl-3.0.html"/>
+    <filecreationdate> 2026-04-04 </filecreationdate>
+    <description>
+      NASA Ingenuity Mars Helicopter (coaxial counter-rotating)
+      Mass 1.8 kg, rotor diameter 1.21 m, design 2600 rpm, max 2800 (NASA/TM-20240001510 Table 1)
+
+      References:
+        NASA/TM-20240001510 - Koning, Dominguez (2024) - rotor geometry, twist, chord, airfoils
+        AIAA J. Vol.57 No.9 - Koning, Johnson, Grip (2019) - rotor performance, "Mars Condition 2" atmosphere
+        AIAA 2019-1289 - Grip et al. (2019) - Flight Control System for NASA's Mars Helicopter
+    </description>
+  </fileheader>
+
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion file="Propulsion.xml"/>
+  <aerodynamics file="Aero.xml"/>
+
+  <flight_control name="Ingenuity FCS"/>
+
+  <!-- Hand flying: attitude and yaw-rate commands -> the 6 swashplate servos, when switched on (before the demixer) -->
+  <system file="ingenuity_manual"/>
+  <!-- Dual swashplate demixer: 6 servo inputs → 2 rotors (collective/pitch/roll each) -->
+  <system file="rotor_control"/>
+  <!-- Rotor speed governor: the RSC command sets the rpm, a PID per motor holds it -->
+  <system file="ingenuity_governor"/>
+
+</fdm_config>

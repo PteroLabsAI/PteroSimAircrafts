@@ -6,9 +6,9 @@ and NOTICE); visuals, livery and the flying script are this package's.
 ## Run it
 
 ```
-python fly_airship.py --input keyboard
-python fly_airship.py --input gamepad
-python fly_airship.py --auto          # climbs, holds, descends and lands on its own
+python scripts/fly_airship.py --input keyboard
+python scripts/fly_airship.py --input gamepad
+python scripts/fly_airship.py --auto          # climbs, holds, descends and lands on its own
 ```
 
 Spawn the airship in the editor and start the simulation first; the script only controls the

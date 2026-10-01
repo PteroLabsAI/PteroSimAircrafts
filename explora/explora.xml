@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- eXplora Tailsitter VTOL (robustini/eXploraVTOL, GPL-3.0). Read README.md before trusting any number.
+     Structural frame: origin at the nose tip, X aft, Y right, Z up, metres (Metrics.xml). version="2.0" is the
+     JSBSim config-schema version, not the airframe's. -->
+<fdm_config name="explora" version="2.0" release="ALPHA">
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <aerodynamics file="Aero.xml"/>
+  <flight_control file="FlightControl.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion file="Propulsion.xml"/>
+</fdm_config>

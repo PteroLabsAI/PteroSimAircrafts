@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Aerodynamics
+     Minimal body drag only. At Mars atmospheric density (~0.017 kg/m3)
+     aerodynamic forces on the fuselage are negligible.
+     Rotor aerodynamics handled by JSBSim rotor model.
+-->
+
+<aerodynamics>
+
+  <axis name="DRAG">
+    <function name="aero/force/drag">
+      <product>
+        <property> aero/qbar-psf </property>
+        <property> metrics/Sw-sqft </property>
+        <value> 0.02 </value>  <!-- chosen, no source: 0.02 on the rotor disk area is 0.023 m2 of drag area, about a
+                                    bluff 0.14 x 0.16 m fuselage at CD 1; negligible at Mars density either way -->
+      </product>
+    </function>
+  </axis>
+
+</aerodynamics>

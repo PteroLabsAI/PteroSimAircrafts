@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<!-- NASA Ingenuity Mars Helicopter - Lower Rotor
+     Identical to the upper rotor (see ingenuity_upper_rotor.xml for every value's source), counter-rotating
+     Rotor-rotor spacing: 0.099 m
+-->
+
+<rotor name="ingenuity_lower_rotor">
+
+  <diameter unit="M">       1.21 </diameter>
+  <numblades>                   2 </numblades>
+  <gearratio>                 1.0 </gearratio>
+  <gearloss unit="HP">        0.0 </gearloss>  <!-- direct drive, no gearbox (see ingenuity_upper_rotor.xml) -->
+  <nominalrpm>             2600.0 </nominalrpm> <!-- NASA design RPM -->
+  <maxrpm>                 2800.0 </maxrpm>    <!-- NASA tested max, prevents runaway -->
+  <chord unit="M">        0.14048 </chord>    <!-- from the TM's thrust-weighted solidity 0.14782: c = sigma*pi*R/Nb -->
+  <liftcurveslope>            4.5 </liftcurveslope> <!-- chosen, no source -->
+  <twist>                 -0.3075 </twist>    <!-- the TM's twist, 17.6 deg at 0.2R to 0 at the tip, as one linear washout -->
+  <hingeoffset unit="M">   0.027 </hingeoffset>
+  <tiplossfactor>            0.97 </tiplossfactor>
+
+  <flappingmoment unit="SLUG*FT2">  0.0011 </flappingmoment>
+  <!-- Match upper rotor: derived from the explicit flapping moment using
+       FGRotor's own blade-mass-moment estimate. -->
+  <massmoment>                     0.00075 </massmoment>
+  <polarmoment unit="SLUG*FT2">     0.0022 </polarmoment>
+
+  <inflowlag>                0.15 </inflowlag>
+
+  <groundeffectexp>          0.0 </groundeffectexp>
+
+
+</rotor>

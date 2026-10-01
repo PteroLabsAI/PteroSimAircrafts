@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<airframe>
+  <!-- How it rests when nobody says: standing on its tail (Gear.xml feet). A heading belongs to whoever places the vehicle. -->
+  <rest pitch="90"/>
+
+  <!-- No <sensors pitch="90"/>: ArduPlane flies a tailsitter in the PLANE body frame. ardupilot.org/plane/docs/guide-tailsitter.html:
+       "The AHRS_ORIENTATION, the accelerometer calibration and Level trim should all be done for fixed wing flight", and in VTOL
+       flight "the nose of the aircraft will try to point vertically for 'level' flight". The JSBSim body frame is that plane frame,
+       so the sensors stay where they are, as standard_vtol (ArduPlane profile, no Airframe.xml) has them. The PX4 quadtailsitter
+       needs the pitch-90 sensor frame; this vehicle must not copy it. The real aircraft's AHRS_ORIENTATION 2 (Yaw90, param) is a
+       board-mounting rotation on that airframe, not a hover frame; a simulator param set carries 0. -->
+</airframe>

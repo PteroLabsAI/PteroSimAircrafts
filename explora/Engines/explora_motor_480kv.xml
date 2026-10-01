@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- T-Motor MN4012 KV480 (BOM alternative to GARTT ML4112 480KV), 6S.
+     KV, R, Io: T-Motor spec table, https://store.tmotor.com/product/mn4012-kv480-motor-navigator-type.html
+     GARTT ML4112 480KV would be R 0.0952 Ohm, Io 0.8 A/10V (brushlessgimbal.ca product page); not used.
+     Limits NOT enforced by JSBSim: 29 A / 870 W continuous (180 s) per the same T-Motor table; full throttle at 22.2 V draws ~50 A
+     (QPROP full-throttle table), the BOM's ESC rating, so nobody should fly this model at full stick for long.
+     JSBSim applies V = maxvolts x throttle with no battery model and no supply/ESC resistance (coilresistance is the motor's own). -->
+<brushless_dc_motor name="explora_motor_480kv">
+  <velocityconstant> 480 </velocityconstant>   <!-- KV rpm/V, T-Motor spec table -->
+  <coilresistance> 0.057 </coilresistance>     <!-- Ohm, "Internal Resistance 57 mOhm", T-Motor spec table; no pack/ESC resistance added: the Turnigy page lists no IR and the 0.2 Ohm implied by the T-Motor bench data is that rig's supply, not this aircraft's -->
+  <noloadcurrent> 1.3 </noloadcurrent>         <!-- A, "Idle Current @10V 1.3A", T-Motor spec table -->
+  <maxvolts> 22.2 </maxvolts>                  <!-- V, 6S nominal 6 x 3.7 V: the voltage of the QPROP hover/validation rows and the SwanK1_Motor.xml convention (4S nominal); JSBSim has no battery sag, and the param's BATT_LOW_VOLT 18.6 shows the pack is flown well below the 25.2 V full charge -->
+</brushless_dc_motor>

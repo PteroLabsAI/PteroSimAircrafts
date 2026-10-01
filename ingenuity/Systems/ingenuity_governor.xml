@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!-- Rotor speed governor, one PID per motor, the way ah1s governs its rotor (systems/rpm_governor.xml): the autopilot's
+     RSC command sets the target as a share of the nominal rpm (ArduCopter heli RSC in setpoint mode ramps its output to
+     H_RSC_SETPOINT, 0.7 in firmwares/ardupilot_ingenuity.param, over H_RSC_RUNUP_TIME), and the PID drives each motor's
+     throttle to hold it. Without a governor an electric motor sized for Earth runs the rotor to its rpm ceiling at Mars
+     density. The rpm error is clipped so a cold start does not slam the throttle; the integrator is reset while the RSC
+     is off and on a large overspeed (anti-windup, as ah1s). Gains are chosen for this rotor's polar moment and the
+     0.62 hp motor: a 200 rpm error asks for 0.5 of throttle.
+     Spool-up: JSBSim's electric motor delivers its power at any speed, so its torque is power / speed and a rotor of
+     this small polar moment jumps past its rpm ceiling in one step from rest. The throttle is therefore scaled by
+     rpm / spool-rpm below spool-rpm, which makes the spool-up torque constant and the rotor reach speed in a fraction
+     of a second without overshoot. -->
+<system name="ingenuity rotor governor">
+
+  <property value="0.7">   fcs/governor/rsc-setpoint-norm </property>  <!-- H_RSC_SETPOINT 70 (param file) -->
+  <property value="0.05">  fcs/governor/rsc-on-norm </property>        <!-- chosen: below this the RSC is off -->
+  <property value="200.0"> fcs/governor/error-clip-rpm </property>     <!-- chosen: 8 % of nominal -->
+  <property value="1000.0"> fcs/governor/spool-rpm </property>         <!-- chosen: full throttle authority above this -->
+  <property value="0.005"> fcs/governor/spool-floor-norm </property>   <!-- chosen: the scale at rest, so it can start -->
+  <property value="0.0">   fcs/governor/active-norm[0] </property>
+  <property value="0.0">   fcs/governor/active-norm[1] </property>
+
+  <channel name="governor-upper">
+    <switch name="fcs/governor/active-norm[0]">
+      <default value="0.0"/>
+      <test value="1.0"> fcs/throttle-cmd-norm[0] GT fcs/governor/rsc-on-norm </test>
+    </switch>
+    <fcs_function name="fcs/governor/target-rpm[0]">
+      <function>
+        <product>
+          <property> fcs/nominal-rpm </property>
+          <min>
+            <value> 1.0 </value>
+            <quotient>
+              <property> fcs/throttle-cmd-norm[0] </property>
+              <property> fcs/governor/rsc-setpoint-norm </property>
+            </quotient>
+          </min>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="fcs/governor/rpm-error[0]">
+      <function>
+        <product>
+          <property> fcs/governor/active-norm[0] </property>
+          <difference>
+            <property> fcs/governor/target-rpm[0] </property>
+            <property> propulsion/engine[0]/rotor-rpm </property>
+          </difference>
+        </product>
+      </function>
+      <clipto>
+        <min> -fcs/governor/error-clip-rpm </min>
+        <max>  fcs/governor/error-clip-rpm </max>
+      </clipto>
+    </fcs_function>
+    <switch name="fcs/governor/pid-inhibit[0]">
+      <default value="-1.0"/>
+      <test value="-1.0"> fcs/governor/rpm-error[0] LT -100.0 </test>
+      <test value="0.0">  fcs/governor/active-norm[0] GT 0.5 </test>
+    </switch>
+    <pid name="fcs/governor/throttle[0]">
+      <input> fcs/governor/rpm-error[0] </input>
+      <kp> 0.0025 </kp>
+      <ki> 0.002  </ki>
+      <kd> 0.0    </kd>
+      <trigger> fcs/governor/pid-inhibit[0] </trigger>
+      <clipto><min> 0.0 </min><max> 1.0 </max></clipto>
+    </pid>
+    <fcs_function name="fcs/governor/spool-scale[0]">
+      <function>
+        <max>
+          <property> fcs/governor/spool-floor-norm </property>
+          <min>
+            <value> 1.0 </value>
+            <quotient>
+              <property> propulsion/engine[0]/rotor-rpm </property>
+              <property> fcs/governor/spool-rpm </property>
+            </quotient>
+          </min>
+        </max>
+      </function>
+    </fcs_function>
+    <fcs_function name="fcs/governor/throttle-pos[0]">
+      <function>
+        <product>
+          <property> fcs/governor/throttle[0] </property>
+          <property> fcs/governor/spool-scale[0] </property>
+        </product>
+      </function>
+      <output> fcs/throttle-pos-norm[0] </output>
+    </fcs_function>
+  </channel>
+
+  <channel name="governor-lower">
+    <switch name="fcs/governor/active-norm[1]">
+      <default value="0.0"/>
+      <test value="1.0"> fcs/throttle-cmd-norm[1] GT fcs/governor/rsc-on-norm </test>
+    </switch>
+    <fcs_function name="fcs/governor/target-rpm[1]">
+      <function>
+        <product>
+          <property> fcs/nominal-rpm </property>
+          <min>
+            <value> 1.0 </value>
+            <quotient>
+              <property> fcs/throttle-cmd-norm[1] </property>
+              <property> fcs/governor/rsc-setpoint-norm </property>
+            </quotient>
+          </min>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="fcs/governor/rpm-error[1]">
+      <function>
+        <product>
+          <property> fcs/governor/active-norm[1] </property>
+          <difference>
+            <property> fcs/governor/target-rpm[1] </property>
+            <property> propulsion/engine[1]/rotor-rpm </property>
+          </difference>
+        </product>
+      </function>
+      <clipto>
+        <min> -fcs/governor/error-clip-rpm </min>
+        <max>  fcs/governor/error-clip-rpm </max>
+      </clipto>
+    </fcs_function>
+    <switch name="fcs/governor/pid-inhibit[1]">
+      <default value="-1.0"/>
+      <test value="-1.0"> fcs/governor/rpm-error[1] LT -100.0 </test>
+      <test value="0.0">  fcs/governor/active-norm[1] GT 0.5 </test>
+    </switch>
+    <pid name="fcs/governor/throttle[1]">
+      <input> fcs/governor/rpm-error[1] </input>
+      <kp> 0.0025 </kp>
+      <ki> 0.002  </ki>
+      <kd> 0.0    </kd>
+      <trigger> fcs/governor/pid-inhibit[1] </trigger>
+      <clipto><min> 0.0 </min><max> 1.0 </max></clipto>
+    </pid>
+    <fcs_function name="fcs/governor/spool-scale[1]">
+      <function>
+        <max>
+          <property> fcs/governor/spool-floor-norm </property>
+          <min>
+            <value> 1.0 </value>
+            <quotient>
+              <property> propulsion/engine[1]/rotor-rpm </property>
+              <property> fcs/governor/spool-rpm </property>
+            </quotient>
+          </min>
+        </max>
+      </function>
+    </fcs_function>
+    <fcs_function name="fcs/governor/throttle-pos[1]">
+      <function>
+        <product>
+          <property> fcs/governor/throttle[1] </property>
+          <property> fcs/governor/spool-scale[1] </property>
+        </product>
+      </function>
+      <output> fcs/throttle-pos-norm[1] </output>
+    </fcs_function>
+  </channel>
+
+</system>
