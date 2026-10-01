@@ -3,9 +3,14 @@
   One contact per box collision, placed at the box's lowest corner with its own rotation applied.
   The friction and spring figures are NOT from the model: SDF states surface properties this format
   has no room for, so these are ordinary values and the first thing to tune if it bounces.
+
+  BOGEY where the collision sits on a link that turns on a revolute joint nothing drives, which is
+  a wheel, and STRUCTURE everywhere else. The difference is real: a BOGEY rolls freely fore and aft,
+  so a belly written as one cannot be held by friction, does not resist a takeoff run and never
+  decelerates on rollout, while a wheel written as STRUCTURE drags the aeroplane to a halt.
 -->
   <ground_reactions>
-    <contact type="BOGEY" name="base_link_collision_0_0">
+    <contact type="STRUCTURE" name="base_link_collision_0_0">
       <location unit="M">
         <x> 0.176777 </x>
         <y> 0.176777 </y>
@@ -16,7 +21,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_0_1">
+    <contact type="STRUCTURE" name="base_link_collision_0_1">
       <location unit="M">
         <x> 0.176777 </x>
         <y> -0.176777 </y>
@@ -27,7 +32,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_0_2">
+    <contact type="STRUCTURE" name="base_link_collision_0_2">
       <location unit="M">
         <x> -0.176777 </x>
         <y> 0.176777 </y>
@@ -38,7 +43,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_0_3">
+    <contact type="STRUCTURE" name="base_link_collision_0_3">
       <location unit="M">
         <x> -0.176777 </x>
         <y> -0.176777 </y>
@@ -49,7 +54,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_1_0">
+    <contact type="STRUCTURE" name="base_link_collision_1_0">
       <location unit="M">
         <x> 0.0075 </x>
         <y> 0.14105 </y>
@@ -60,7 +65,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_1_1">
+    <contact type="STRUCTURE" name="base_link_collision_1_1">
       <location unit="M">
         <x> 0.0075 </x>
         <y> 0.126959 </y>
@@ -71,7 +76,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_1_2">
+    <contact type="STRUCTURE" name="base_link_collision_1_2">
       <location unit="M">
         <x> -0.0075 </x>
         <y> 0.14105 </y>
@@ -82,7 +87,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_1_3">
+    <contact type="STRUCTURE" name="base_link_collision_1_3">
       <location unit="M">
         <x> -0.0075 </x>
         <y> 0.126959 </y>
@@ -93,7 +98,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_2_0">
+    <contact type="STRUCTURE" name="base_link_collision_2_0">
       <location unit="M">
         <x> 0.0075 </x>
         <y> -0.126959 </y>
@@ -104,7 +109,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_2_1">
+    <contact type="STRUCTURE" name="base_link_collision_2_1">
       <location unit="M">
         <x> 0.0075 </x>
         <y> -0.14105 </y>
@@ -115,7 +120,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_2_2">
+    <contact type="STRUCTURE" name="base_link_collision_2_2">
       <location unit="M">
         <x> -0.0075 </x>
         <y> -0.126959 </y>
@@ -126,7 +131,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_2_3">
+    <contact type="STRUCTURE" name="base_link_collision_2_3">
       <location unit="M">
         <x> -0.0075 </x>
         <y> -0.14105 </y>
@@ -137,7 +142,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_3_0">
+    <contact type="STRUCTURE" name="base_link_collision_3_0">
       <location unit="M">
         <x> 0.125 </x>
         <y> 0.1395 </y>
@@ -148,7 +153,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_3_1">
+    <contact type="STRUCTURE" name="base_link_collision_3_1">
       <location unit="M">
         <x> 0.125 </x>
         <y> 0.1245 </y>
@@ -159,7 +164,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_3_2">
+    <contact type="STRUCTURE" name="base_link_collision_3_2">
       <location unit="M">
         <x> -0.125 </x>
         <y> 0.1395 </y>
@@ -170,7 +175,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_3_3">
+    <contact type="STRUCTURE" name="base_link_collision_3_3">
       <location unit="M">
         <x> -0.125 </x>
         <y> 0.1245 </y>
@@ -181,7 +186,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_4_0">
+    <contact type="STRUCTURE" name="base_link_collision_4_0">
       <location unit="M">
         <x> 0.125 </x>
         <y> -0.1245 </y>
@@ -192,7 +197,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_4_1">
+    <contact type="STRUCTURE" name="base_link_collision_4_1">
       <location unit="M">
         <x> 0.125 </x>
         <y> -0.1395 </y>
@@ -203,7 +208,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_4_2">
+    <contact type="STRUCTURE" name="base_link_collision_4_2">
       <location unit="M">
         <x> -0.125 </x>
         <y> -0.1245 </y>
@@ -214,7 +219,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="base_link_collision_4_3">
+    <contact type="STRUCTURE" name="base_link_collision_4_3">
       <location unit="M">
         <x> -0.125 </x>
         <y> -0.1395 </y>
@@ -225,7 +230,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_0_collision_0">
+    <contact type="STRUCTURE" name="rotor_0_collision_0">
       <location unit="M">
         <x> -0.0343846 </x>
         <y> 0.182462 </y>
@@ -236,7 +241,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_0_collision_1">
+    <contact type="STRUCTURE" name="rotor_0_collision_1">
       <location unit="M">
         <x> -0.0343846 </x>
         <y> 0.165538 </y>
@@ -247,7 +252,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_0_collision_2">
+    <contact type="STRUCTURE" name="rotor_0_collision_2">
       <location unit="M">
         <x> -0.313615 </x>
         <y> 0.182462 </y>
@@ -258,7 +263,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_0_collision_3">
+    <contact type="STRUCTURE" name="rotor_0_collision_3">
       <location unit="M">
         <x> -0.313615 </x>
         <y> 0.165538 </y>
@@ -269,7 +274,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_1_collision_0">
+    <contact type="STRUCTURE" name="rotor_1_collision_0">
       <location unit="M">
         <x> 0.313615 </x>
         <y> -0.165538 </y>
@@ -280,7 +285,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_1_collision_1">
+    <contact type="STRUCTURE" name="rotor_1_collision_1">
       <location unit="M">
         <x> 0.313615 </x>
         <y> -0.182462 </y>
@@ -291,7 +296,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_1_collision_2">
+    <contact type="STRUCTURE" name="rotor_1_collision_2">
       <location unit="M">
         <x> 0.0343846 </x>
         <y> -0.165538 </y>
@@ -302,7 +307,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_1_collision_3">
+    <contact type="STRUCTURE" name="rotor_1_collision_3">
       <location unit="M">
         <x> 0.0343846 </x>
         <y> -0.182462 </y>
@@ -313,7 +318,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_2_collision_0">
+    <contact type="STRUCTURE" name="rotor_2_collision_0">
       <location unit="M">
         <x> -0.0343846 </x>
         <y> -0.165538 </y>
@@ -324,7 +329,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_2_collision_1">
+    <contact type="STRUCTURE" name="rotor_2_collision_1">
       <location unit="M">
         <x> -0.0343846 </x>
         <y> -0.182462 </y>
@@ -335,7 +340,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_2_collision_2">
+    <contact type="STRUCTURE" name="rotor_2_collision_2">
       <location unit="M">
         <x> -0.313615 </x>
         <y> -0.165538 </y>
@@ -346,7 +351,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_2_collision_3">
+    <contact type="STRUCTURE" name="rotor_2_collision_3">
       <location unit="M">
         <x> -0.313615 </x>
         <y> -0.182462 </y>
@@ -357,7 +362,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_3_collision_0">
+    <contact type="STRUCTURE" name="rotor_3_collision_0">
       <location unit="M">
         <x> 0.313615 </x>
         <y> 0.182462 </y>
@@ -368,7 +373,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_3_collision_1">
+    <contact type="STRUCTURE" name="rotor_3_collision_1">
       <location unit="M">
         <x> 0.313615 </x>
         <y> 0.165538 </y>
@@ -379,7 +384,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_3_collision_2">
+    <contact type="STRUCTURE" name="rotor_3_collision_2">
       <location unit="M">
         <x> 0.0343846 </x>
         <y> 0.182462 </y>
@@ -390,7 +395,7 @@
       <spring_coeff unit="N/M"> 632.623 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 12.6482 </damping_coeff>
     </contact>
-    <contact type="BOGEY" name="rotor_3_collision_3">
+    <contact type="STRUCTURE" name="rotor_3_collision_3">
       <location unit="M">
         <x> 0.0343846 </x>
         <y> 0.165538 </y>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
   <ground_reactions>
-    <contact type="BOGEY" name="Front_Center">
+    <contact type="STRUCTURE" name="Front_Center">
       <location unit="M">
         <x> -0.1016 </x>
         <y> 0 </y>
@@ -10,17 +10,8 @@
       <dynamic_friction> 0.5 </dynamic_friction>
       <spring_coeff unit="N/M"> 3000 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
-      <orientation unit="DEG">
-        <roll> 0 </roll>
-        <pitch> 0 </pitch>
-        <yaw> 0 </yaw>
-      </orientation>
-      <rolling_friction> 0.02 </rolling_friction>
-      <max_steer unit="DEG"> 0 </max_steer>
-      <brake_group> NONE </brake_group>
-      <retractable> 0 </retractable>
     </contact>
-    <contact type="BOGEY" name="Aft_Left">
+    <contact type="STRUCTURE" name="Aft_Left">
       <location unit="M">
         <x> 0.1016 </x>
         <y> -0.1016 </y>
@@ -30,17 +21,8 @@
       <dynamic_friction> 0.5 </dynamic_friction>
       <spring_coeff unit="N/M"> 3000 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
-      <orientation unit="DEG">
-        <roll> 0 </roll>
-        <pitch> 0 </pitch>
-        <yaw> 0 </yaw>
-      </orientation>
-      <rolling_friction> 0.02 </rolling_friction>
-      <max_steer unit="DEG"> 0 </max_steer>
-      <brake_group> NONE </brake_group>
-      <retractable> 0 </retractable>
     </contact>
-    <contact type="BOGEY" name="Aft_Right">
+    <contact type="STRUCTURE" name="Aft_Right">
       <location unit="M">
         <x> 0.1016 </x>
         <y> 0.1016 </y>
@@ -50,14 +32,5 @@
       <dynamic_friction> 0.5 </dynamic_friction>
       <spring_coeff unit="N/M"> 3000 </spring_coeff>
       <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
-      <orientation unit="DEG">
-        <roll> 0 </roll>
-        <pitch> 0 </pitch>
-        <yaw> 0 </yaw>
-      </orientation>
-      <rolling_friction> 0.02 </rolling_friction>
-      <max_steer unit="DEG"> 0 </max_steer>
-      <brake_group> NONE </brake_group>
-      <retractable> 0 </retractable>
     </contact>
   </ground_reactions>
