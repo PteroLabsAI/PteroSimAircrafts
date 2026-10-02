@@ -5,6 +5,7 @@
     fixture    a part that is seen and does not move, the airframe among them
     propeller  a blade that turns with its motor
     surface    a control surface that deflects
+    gripper    where a payload is taken hold of; the Gripper channel in Controls.xml works it
 
     file   a mesh inside this folder
     xyz    where it sits. For a propeller this is its offset from the motor, which is where its hub
@@ -12,10 +13,13 @@
     rpy    how it is turned: roll, pitch, yaw
     motor  which engine turns this propeller, by the name Propulsion.xml gives it
     axis   the axis it turns about, in the vehicle's frame; the sign is the direction
+    radius how far the gripper reaches for a payload, in metres
 
   A mesh may be drawn facing any way. Turn it here rather than editing the mesh.
 -->
 <visual>
+  <gripper name="gripper" xyz="0 0 -0.3" rpy="0 0 0" radius="0.3"/>
+
   <!-- A quarter turn, and the sign of it was found by looking rather than by working it out: the white
        pair is the front one, modelled at 315 and 45 degrees, and the axis swap glTF applies puts that
        bisector on an axis I twice predicted wrongly. At -90 the red pair led. Nothing is baked into the
