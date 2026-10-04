@@ -62,7 +62,7 @@
     <pid name="fcs/governor/throttle[0]">
       <input> fcs/governor/rpm-error[0] </input>
       <kp> 0.0025 </kp>
-      <ki> 0.002  </ki>
+      <ki> 0.004  </ki>
       <kd> 0.0    </kd>
       <trigger> fcs/governor/pid-inhibit[0] </trigger>
       <clipto><min> 0.0 </min><max> 1.0 </max></clipto>
@@ -134,7 +134,7 @@
     <pid name="fcs/governor/throttle[1]">
       <input> fcs/governor/rpm-error[1] </input>
       <kp> 0.0025 </kp>
-      <ki> 0.002  </ki>
+      <ki> 0.004  </ki>
       <kd> 0.0    </kd>
       <trigger> fcs/governor/pid-inhibit[1] </trigger>
       <clipto><min> 0.0 </min><max> 1.0 </max></clipto>
