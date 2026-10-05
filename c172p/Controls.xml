@@ -5,7 +5,7 @@
   ArduPlane's own defaults (Tools/autotest/models/plane.parm): SERVO1 aileron, SERVO2 elevator,
   SERVO3 throttle, SERVO4 rudder, then flaps. A typed row takes the stack's sign convention: ArduPlane's
   elevator and rudder servos above 1500 are nose up and yaw right, JSBSim's commands +1 are trailing
-  edge down and trailing edge left, so those two are inverted on the way in -- the same two servos
+  edge down and trailing edge left, so those two are inverted on the way in - the same two servos
   ArduPilot reverses for its own JSBSim frame (Tools/autotest/default_params/plane-jsbsim.parm).
   The nosewheel steers from the rudder channel as well, the way FlightGear's rudder pedals drive the c172p's
   fcs/steer-cmd-norm. The stack's sign convention has already turned that channel into JSBSim's rudder sign
