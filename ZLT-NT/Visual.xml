@@ -5,7 +5,7 @@
      is what the simulator reports and what the hull GLB is baked about.
      The six moving parts were cut out of that hull rather than modelled again, so
      each one still meets it along the seam it was cut on, and each GLB is baked
-     about its own hinge -- which is why every xyz below is zero. -->
+     about its own hinge - which is why every xyz below is zero. -->
 <visual>
   <fixture file="meshes/zlt_nt_airframe.glb" xyz="0 0 0" rpy="0 0 0"/>
 
@@ -18,7 +18,7 @@
        points every rudder's axis down. -->
   <surface file="meshes/zlt_nt_rudder_upper.glb" xyz="0 0 0" rpy="0 0 0" source="rudder" axis="0 0 -1" hinge="-29.90 0 11.93" limit="20"/>
   <!-- The lower pair share one sign: a rotation is a pseudo-vector, so the starboard axis is the port
-       one negated rather than mirrored -- mirrored, the same elevator sent one trailing edge up and
+       one negated rather than mirrored - mirrored, the same elevator sent one trailing edge up and
        the other down. Both now go down together on a positive elevator, as the FCS means it. -->
   <surface file="meshes/zlt_nt_rudder_port.glb" xyz="0 0 0" rpy="0 0 0" source="elevator" axis="0 -0.906 -0.423" hinge="-29.90 -7.30 0.48" limit="20"/>
   <surface file="meshes/zlt_nt_rudder_stbd.glb" xyz="0 0 0" rpy="0 0 0" source="elevator" axis="0 -0.906 0.423" hinge="-29.90 7.30 0.48" limit="20"/>
@@ -28,7 +28,7 @@
   <nacelle name="nacelle_port" file="meshes/zlt_nt_nacelle_port.glb" xyz="0 0 0" rpy="0 0 0" axis="0 1 0" hinge="7.86 -8.53 0.384" limit="120"/>
   <nacelle name="nacelle_stbd" file="meshes/zlt_nt_nacelle_stbd.glb" xyz="0 0 0" rpy="0 0 0" axis="0 1 0" hinge="7.86 8.53 0.384" limit="120"/>
   <!-- The tail cone is fixed, as the ship's is; only the spinner the propeller sits on swivels,
-       about its own base 40.53 m aft of the CG -- which is where the propeller sits too. -->
+       about its own base 40.53 m aft of the CG - which is where the propeller sits too. -->
   <nacelle name="nacelle_aft" file="meshes/zlt_nt_nacelle_aft.glb" xyz="0 0 0" rpy="0 0 0" axis="0 1 0" hinge="-40.53 0 3.88" limit="90"/>
 
   <propeller file="meshes/left_propeller.glb" xyz="0 0 0" rpy="0 90 0" motor="motor 0" parent="nacelle_port" axis="1 0 0"/>
