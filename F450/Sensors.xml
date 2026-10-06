@@ -5,5 +5,5 @@
   <sensor type="barometer" name="barometer"/>
   <sensor type="airspeed" name="airspeed"/>
   <sensor type="temperature" name="temperature"/>
-  <sensor type="camera" name="camera"/>
+  <sensor type="camera" name="camera" xyz="0.10 0 -0.035"/>
 </sensors>
