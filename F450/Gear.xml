@@ -1,10 +1,23 @@
 <?xml version="1.0"?>
   <ground_reactions>
-    <contact type="STRUCTURE" name="Front_Center">
+    <!-- The feet are the undersides of the four motor mounts, the lowest points of meshes/F450_body.glb as
+         Visual.xml places it: 158 mm out on each axis and 60 mm under the CG. The frame has no landing gear. -->
+    <contact type="STRUCTURE" name="Front_Left">
       <location unit="M">
-        <x> -0.1016 </x>
-        <y> 0 </y>
-        <z> -0.1524 </z>
+        <x> -0.158 </x>
+        <y> -0.158 </y>
+        <z> -0.060 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <spring_coeff unit="N/M"> 3000 </spring_coeff>
+      <damping_coeff unit="N/M/SEC"> 100 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="Front_Right">
+      <location unit="M">
+        <x> -0.158 </x>
+        <y> 0.158 </y>
+        <z> -0.060 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
@@ -13,9 +26,9 @@
     </contact>
     <contact type="STRUCTURE" name="Aft_Left">
       <location unit="M">
-        <x> 0.1016 </x>
-        <y> -0.1016 </y>
-        <z> -0.1524 </z>
+        <x> 0.158 </x>
+        <y> -0.158 </y>
+        <z> -0.060 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
@@ -24,9 +37,9 @@
     </contact>
     <contact type="STRUCTURE" name="Aft_Right">
       <location unit="M">
-        <x> 0.1016 </x>
-        <y> 0.1016 </y>
-        <z> -0.1524 </z>
+        <x> 0.158 </x>
+        <y> 0.158 </y>
+        <z> -0.060 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
