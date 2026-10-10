@@ -18,7 +18,7 @@ Systems/             rotor_control.xml: six swashplate servos -> collective, lon
                      ingenuity_governor.xml: the RSC command sets the rotor speed, a PID per motor holds it;
                      ingenuity_manual.xml: bank, pitch, yaw rate and lever -> the six servos, for flying by hand
 Controls.xml         ArduCopter heli-dual outputs -> JSBSim bindings, plus the manual channels (sidecar)
-scripts/             fly_ingenuity.py: fly it by keyboard or gamepad, or let it fly a climb-hold-land profile
+scripts/             fly_ingenuity.py: fly it by keyboard or gamepad
 Sensors.xml          imu / barometer / gps (sidecar)
 Visual.xml           meshes/: body (fixture), the two rotors (propellers), chase camera (sidecar)
 firmwares/           ardupilot_ingenuity.param: self-contained ArduCopter heli-dual SITL set
@@ -38,7 +38,6 @@ By hand (spawn it, start the simulation, then; needs the `pterosim` SDK and `pyg
 ```
 python scripts/fly_ingenuity.py --input keyboard
 python scripts/fly_ingenuity.py --input gamepad
-python scripts/fly_ingenuity.py --auto          # rotors up, climbs, holds, lands, rotors off
 ```
 
 | command | key | gamepad |

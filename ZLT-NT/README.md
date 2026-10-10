@@ -8,15 +8,13 @@ and NOTICE); visuals, livery and the flying script are this package's.
 ```
 python scripts/fly_airship.py --input keyboard
 python scripts/fly_airship.py --input gamepad
-python scripts/fly_airship.py --auto          # climbs, holds, descends and lands on its own
 ```
 
 Spawn the airship in the editor and start the simulation first; the script only controls the
-existing ZLT-NT. `--input` selects one manual input device. `--cruise` and `--hold` are the
-`--auto` profile's height in metres (default 40) and how long to stay there (default 60).
+existing ZLT-NT. `--input` selects the input device.
 
-Needs the `pterosim` SDK, and `pygame` to fly it yourself. A small window opens -- click it,
-that is where the keyboard focus lives.
+Needs the `pterosim` SDK and `pygame`. A small window opens -- click it, that is where the
+keyboard focus lives.
 
 ## Controls
 

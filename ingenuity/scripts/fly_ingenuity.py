@@ -1,8 +1,7 @@
-"""Fly Ingenuity by hand, or let it fly a profile on its own.
+"""Fly Ingenuity by hand.
 
   python scripts/fly_ingenuity.py --input keyboard
   python scripts/fly_ingenuity.py --input gamepad
-  python scripts/fly_ingenuity.py --auto          # rotors up, climbs, holds, comes down, rotors off
 
 Spawn the ingenuity in the editor and start the simulation first; this script only flies what is already there.
 Attitude is held by the model's own stability system (Systems/ingenuity_manual.xml): the sticks command a bank and a
@@ -44,7 +43,6 @@ CHANNELS = 13
 RSC_ON = 0.7               # H_RSC_SETPOINT 70 in firmwares/ardupilot_ingenuity.param: the governor's full speed
 SPOOL_S = 3.0              # chosen: the RSC ramps over this, as ArduPilot's H_RSC_RUNUP_TIME would
 LEVER_RATE = 0.25          # chosen: keyboard lever travel per second, full range in four seconds
-LANDING_SINK = 0.7         # m/s, chosen: the --auto landing's descent rate
 # Lever 0 = root pitch just under zero thrust (-3.7 N on Earth, -0.1 N on Mars): 0 deg presses the legs in with 144 N,
 # and at zero thrust itself FGRotor's inflow is singular on the ground (README.md, known limits).
 IDLE_PITCH_DEG = 12.2
@@ -105,63 +103,6 @@ def connect():
 
 def status(sim, instance_id):
     return next(a for a in sim.aircraft_status() if a.instance_id == instance_id)
-
-
-def fly_auto(sim, heli, height, hold_for):
-    """Rotors up, climb on the lever, hold the height, come down, rotors off. The height loop is the script's
-    hand on the lever at the link's rate; the attitude is the model's."""
-    t0 = time.time()
-    first = status(sim, heli.aircraft.instance_id)
-    z0 = first.z / 100.0
-    prev_alt, prev_t, vs = z0, time.time(), 0.0
-    lever, phase, mark, next_print = 0.0, "spool", time.time(), 0.0
-    heli.set(rotors=True)
-    print("rotors up, climb to %.0f m, hold %.0f s, then land" % (height, hold_for))
-
-    while phase != "done":
-        now = time.time()
-        t = now - t0
-        a = status(sim, heli.aircraft.instance_id)
-        agl = a.z / 100.0 - z0
-        if now - prev_t > 0.2:
-            vs = (a.z / 100.0 - prev_alt) / (now - prev_t)
-            prev_alt, prev_t = a.z / 100.0, now
-
-        if phase == "spool":
-            if t > SPOOL_S + 1.0:
-                phase, mark = "climb", now
-        elif phase == "climb":
-            lever += 0.15 / RATE_HZ                     # a slow pull until it lifts; the height loop takes it from there
-            if agl > 1.0:
-                phase, mark = "hold", now
-        elif phase == "land":
-            if agl < 0.15 and abs(vs) < 0.3:
-                heli.set(rotors=False); lever = 0.0
-                phase, mark = "down", now
-            else:
-                lever += -0.05 * (vs + LANDING_SINK) / RATE_HZ   # a steady sink, whatever the height
-        elif phase == "down":
-            if now - mark > SPOOL_S + 1.0:
-                phase = "done"
-        else:                                           # hold
-            lever += (0.05 * clamp(height - agl, -3.0, 3.0) - 0.05 * vs) / RATE_HZ
-            if now - mark > hold_for:
-                phase, mark = "land", now
-
-        lever = clamp(lever, 0.0, 1.0)
-        heli.set(collective=lever, roll=0.0, pitch=0.0, yaw=0.0)
-        heli.push()
-
-        if now > next_print:
-            print("  %-6s t+%5.1fs  agl=%6.2f m  vs=%+5.2f  roll=%+5.1f pitch=%+5.1f  lever=%.2f rsc=%.2f"
-                  % (phase, t, agl, vs, a.roll, a.pitch, lever, heli.c[RSC]))
-            next_print = now + 2.0
-        time.sleep(1.0 / RATE_HZ)
-
-    a = status(sim, heli.aircraft.instance_id)
-    print("\ndown at %.2f m, roll %.1f pitch %.1f, %.1f m from the start"
-          % (a.z / 100.0 - z0, a.roll, a.pitch, ((a.x - first.x) ** 2 + (a.y - first.y) ** 2) ** 0.5 / 100.0))
-    heli.rest()
 
 
 KEYS = [
@@ -284,23 +225,17 @@ def fly_manual(sim, heli, input_mode):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--auto", action="store_true", help="fly a climb-hold-land profile instead of flying it yourself")
     ap.add_argument("--input", choices=("keyboard", "gamepad"), default="keyboard",
-                    help="manual mode input device (default: keyboard)")
-    ap.add_argument("--height", type=float, default=5.0, help="height above the spawn point, metres")
-    ap.add_argument("--hold", type=float, default=20.0, help="seconds to hold up there")
+                    help="input device (default: keyboard)")
     args = ap.parse_args()
 
     sim, aircraft = connect()
     heli = Heli(aircraft)
     heli.rest()
-    print("connected to the running simulation, %s at the controls\n" % ("the script" if args.auto else args.input))
+    print("connected to the running simulation, %s at the controls\n" % args.input)
 
     try:
-        if args.auto:
-            fly_auto(sim, heli, args.height, args.hold)
-        else:
-            fly_manual(sim, heli, args.input)
+        fly_manual(sim, heli, args.input)
     except KeyboardInterrupt:
         print("\nstopped")
     finally:
