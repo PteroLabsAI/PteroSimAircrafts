@@ -1,8 +1,7 @@
-"""Fly the ZLT-NT airship by hand, or let it fly a profile on its own.
+"""Fly the ZLT-NT airship by hand.
 
   python scripts/fly_airship.py --input keyboard
   python scripts/fly_airship.py --input gamepad
-  python scripts/fly_airship.py --auto          # climbs, holds, descends and lands
 
 Spawn the airship in the editor first; this script only flies what is already there.
 
@@ -92,64 +91,6 @@ def connect():
     except Exception as e:
         print("[note] could not take the autopilot off (%s); stop the simulation first if it fights back" % e)
     return sim, aircraft
-
-
-def fly_auto(sim, ship, cruise, hold_for):
-    """Climb on vectored thrust, hold, come back down, sit on the wheels."""
-    t0 = time.time()
-    first = list(sim.aircraft_status())[0]
-    z0 = first.z / 100.0
-    prev_alt, prev_t, vs = z0, time.time(), 0.0
-    hover, sent = 0.65, 0.0            # hover integrates to whatever throttle holds height
-    phase, mark, next_print = "climb", time.time(), 0.0
-    print("climb to %.0f m, hold %.0f s, then land" % (cruise, hold_for))
-
-    while phase != "done":
-        now = time.time()
-        t = now - t0
-        a = list(sim.aircraft_status())[0]
-        agl = a.z / 100.0 - z0
-        if now - prev_t > 0.4:
-            vs = (a.z / 100.0 - prev_alt) / (now - prev_t)
-            prev_alt, prev_t = a.z / 100.0, now
-
-        if phase == "climb":
-            want = min(1.0, t / 3.0)
-            # Spool first, swivel second: the swivel actuator takes four seconds either way.
-            ship.set(throttle=want, lift=min(1.0, max(0.0, (t - 4.0) / 5.0)))
-            if agl > cruise - 4.0:
-                phase, mark = "hold", now
-        elif phase == "land":
-            want = 0.0
-            ship.set(throttle=0.0, lift=1.0)
-            if now - mark > 8.0:
-                phase = "done"
-        else:
-            target = cruise if phase == "hold" else 2.0
-            err = target - agl
-            want = hover + 0.03 * clamp(err, -12.0, 12.0) - 0.35 * vs
-            hover = clamp(hover + 0.01 * clamp(err, -6.0, 6.0) * (now - prev_t), 0.2, 0.95)
-            ship.set(throttle=want, lift=1.0)
-            if phase == "hold" and now - mark > hold_for:
-                phase, mark = "descend", now
-            elif phase == "descend" and agl < 1.2:
-                phase, mark, want = "land", now, 0.0
-
-        # No throttle slams: a step on three engines rings the hull for half a minute.
-        sent += clamp(clamp(want, 0.0, 1.0) - sent, -0.02, 0.02)
-        ship.set(throttle=sent)
-        ship.push()
-
-        if now > next_print:
-            print("  %-8s t+%5.1fs  agl=%7.2f m  vs=%+5.2f  pitch=%6.2f  thr=%.2f"
-                  % (phase, t, agl, vs, a.pitch, sent))
-            next_print = now + 5.0
-        time.sleep(1.0 / RATE_HZ)
-
-    a = list(sim.aircraft_status())[0]
-    print("\ndown at %.2f m, pitch %.1f deg, %.0f m from the start"
-          % (a.z / 100.0 - z0, a.pitch, a.x / 100.0 - first.x / 100.0))
-    ship.rest()
 
 
 KEYS = [
@@ -274,23 +215,17 @@ def fly_manual(sim, ship, input_mode):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--auto", action="store_true", help="fly a climb-hold-land profile instead of flying it yourself")
     ap.add_argument("--input", choices=("keyboard", "gamepad"), default="keyboard",
-                    help="manual mode input device (default: keyboard)")
-    ap.add_argument("--cruise", type=float, default=40.0, help="height above the spawn point, metres")
-    ap.add_argument("--hold", type=float, default=60.0, help="seconds to hold up there")
+                    help="input device (default: keyboard)")
     args = ap.parse_args()
 
     sim, aircraft = connect()
     ship = Airship(aircraft)
     ship.rest()
-    print("connected to the running simulation, %s at the controls\n" % ("the script" if args.auto else args.input))
+    print("connected to the running simulation, %s at the controls\n" % args.input)
 
     try:
-        if args.auto:
-            fly_auto(sim, ship, args.cruise, args.hold)
-        else:
-            fly_manual(sim, ship, args.input)
+        fly_manual(sim, ship, args.input)
     except KeyboardInterrupt:
         print("\nstopped")
     finally:
