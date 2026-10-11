@@ -1,0 +1,84 @@
+# ArduPlane SITL parameters for quadtailsitter (Swan K1):
+#   sim_vehicle.py -v ArduPlane --model JSON:<host> -w --add-param-file=<this>
+# Self-contained: with --model JSON the binary loads no frame defaults. Anything not listed
+# is ArduPlane's default. Without -w, values saved in eeprom.bin override this file.
+# Lines stay under 99 characters: AP_Param reads a defaults file 99 bytes at a time and
+# parses the rest of a longer line as a parameter.
+
+# A copter tailsitter with no control surfaces. ENABLE 2 forces Q-assist and airmode in
+# forward flight, so the copter controller flies every axis there too.
+Q_ENABLE 1
+Q_TAILSIT_ENABLE 2
+
+# Airframe.xml <sensors pitch="90"/> sends the IMU in the hover frame, while SITL builds the
+# compass from the JSON quaternion, which stays in the plane frame. Pitch270 turns the IMU
+# back into the plane frame a tailsitter flies in. Pitch90 on external compass 1 undoes
+# SITL's board rotation of the field; internal compasses 2 and 3 are rotated twice and read
+# 180 deg off. If Airframe.xml's sensor frame changes, change all four.
+AHRS_ORIENTATION 25
+COMPASS_ORIENT 24
+COMPASS_USE2 0
+COMPASS_USE3 0
+
+# Controls.xml channels 0-3 (motor1_fr_ccw, motor2_bl_ccw, motor3_fl_cw, motor4_br_cw) are
+# ArduPilot's quad-X order in the hover frame, belly forward. The propellers spin opposite
+# to those labels, but the 10 deg motor cant yaws harder than the propeller torque, so each
+# motor's net yaw has the quad-X sign.
+SERVO1_FUNCTION 33
+SERVO2_FUNCTION 34
+SERVO3_FUNCTION 35
+SERVO4_FUNCTION 36
+
+# Airspeed from the simulated pitot (SITL's default ARSPD_TYPE 2). The 8 m/s minimum is the
+# real Swan K1's; cruise and top are near the PX4 airframe's 12 and 16. Roll comes only from
+# differential thrust, so the bank limit stays low and the L1 period long.
+ARSPD_USE 1
+AIRSPEED_MIN 8
+AIRSPEED_CRUISE 11
+AIRSPEED_MAX 16
+ROLL_LIMIT_DEG 30
+NAVL1_PERIOD 25
+
+# Transitions: pitch over at 30 deg/s (about the PX4 airframe's 3 s), back up at 15 deg/s.
+Q_TAILSIT_ANGLE 70
+Q_TAILSIT_ANG_VT 20
+Q_TAILSIT_RAT_FW 30
+Q_TAILSIT_RAT_VT 15
+Q_TAILSIT_THR_VT 41
+
+# Linear thrust, as the PX4 airframe flies it (THR_MDL_FAC 0); hover throttle starts at 0.45
+# and is learnt in flight. The simulated motor has no dead band, so spin-arm and spin-min
+# sit low and leave differential thrust its range at low collective.
+Q_M_THST_EXPO 0
+Q_M_THST_HOVER 0.45
+Q_M_SPIN_ARM 0.04
+Q_M_SPIN_MIN 0.05
+
+# Attitude loops, which also fly forward flight (VTOL yaw is FW roll). Gyro filter, D-term
+# filters, roll and pitch slew limits and throttle mix are the real Swan K1 board's; gains
+# and rate limits suit this model's inertia.
+INS_GYRO_FILTER 30
+Q_A_THR_MIX_MAN 2
+Q_A_THR_MIX_MAX 2
+Q_A_THR_MIX_MIN 0.3
+Q_A_RAT_RLL_P 0.30
+Q_A_RAT_RLL_I 0.01
+Q_A_RAT_RLL_D 0.012
+Q_A_RAT_RLL_FLTD 15
+Q_A_RAT_RLL_SMAX 15
+Q_A_RAT_PIT_P 0.20
+Q_A_RAT_PIT_I 0.01
+Q_A_RAT_PIT_D 0.004
+Q_A_RAT_PIT_FLTD 15
+Q_A_RAT_PIT_SMAX 15
+Q_A_RAT_YAW_P 0.08
+Q_A_RAT_YAW_I 0.008
+Q_A_RAT_YAW_D 0.001
+Q_A_RAT_YAW_FLTD 15
+Q_A_RAT_YAW_FLTE 10
+Q_A_ANG_RLL_P 5
+Q_A_ANG_PIT_P 5
+Q_A_ANG_YAW_P 4
+Q_A_RATE_P_MAX 45
+Q_A_RATE_R_MAX 70
+Q_A_RATE_Y_MAX 45
