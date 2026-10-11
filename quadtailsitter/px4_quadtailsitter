@@ -15,6 +15,9 @@
 param set-default MAV_TYPE 20
 
 param set-default CA_AIRFRAME 4
+# The simulator reports the IMU in the aircraft's plane frame (ArduPlane flies a tailsitter in it); PX4 flies it in the hover
+# frame: v_hover = Ry(+90 deg) v_plane, PX4's ROTATION_PITCH_90, as explora.
+param set-default SENS_BOARD_ROT 24
 
 param set-default CA_ROTOR_COUNT 4
 # Rotor axes declared from the source model: the motors are canted +-10 deg on two axes, so the cant

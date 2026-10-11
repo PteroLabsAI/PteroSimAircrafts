@@ -10,15 +10,11 @@
 Q_ENABLE 1
 Q_TAILSIT_ENABLE 2
 
-# Airframe.xml <sensors pitch="90"/> sends the IMU in the hover frame, while SITL builds the
-# compass from the JSON quaternion, which stays in the plane frame. Pitch270 turns the IMU
-# back into the plane frame a tailsitter flies in. Pitch90 on external compass 1 undoes
-# SITL's board rotation of the field; internal compasses 2 and 3 are rotated twice and read
-# 180 deg off. If Airframe.xml's sensor frame changes, change all four.
-AHRS_ORIENTATION 25
-COMPASS_ORIENT 24
-COMPASS_USE2 0
-COMPASS_USE3 0
+# The simulator reports the IMU and the compass in the plane frame, the frame the ArduPilot
+# tailsitter guide asks for: "AHRS_ORIENTATION, the accelerometer calibration and Level trim
+# should all be done for fixed wing flight". So no board rotation, as explora.
+AHRS_ORIENTATION 0
+COMPASS_ORIENT 0
 
 # Controls.xml channels 0-3 (motor1_fr_ccw, motor2_bl_ccw, motor3_fl_cw, motor4_br_cw) are
 # ArduPilot's quad-X order in the hover frame, belly forward. The propellers spin opposite
