@@ -3,6 +3,8 @@
      Structural frame: origin at the nose tip, X aft, Y right, Z up, metres (Metrics.xml). version="2.0" is the
      JSBSim config-schema version, not the airframe's. -->
 <fdm_config name="explora" version="2.0" release="ALPHA">
+  <!-- PteroSim spawns it standing on its tail; JSBSim does not read this element. -->
+  <spawn pitch="90"/>
   <metrics file="Metrics.xml"/>
   <mass_balance file="Mass.xml"/>
   <aerodynamics file="Aero.xml"/>

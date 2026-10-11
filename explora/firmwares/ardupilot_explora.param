@@ -233,7 +233,7 @@ WP_RADIUS 2
 WP_LOITER_RAD 25
 RTL_RADIUS 35
 
-# ---- sensors and body frame: the simulated IMU is body-aligned (Airframe.xml keeps the sensors in the plane frame, as the
+# ---- sensors and body frame: the simulated IMU is body-aligned (the simulator reports it in the plane frame, as the
 # ArduPilot tailsitter guide asks: "AHRS_ORIENTATION, the accelerometer calibration and Level trim should all be done for fixed
 # wing flight"); the dump's 2 / 4 are the real board mount.
 AHRS_ORIENTATION 0

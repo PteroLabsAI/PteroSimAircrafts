@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <fdm_config name="quadtailsitter" version="2.0" release="ALPHA">
+  <!-- PteroSim spawns it standing on its tail; JSBSim does not read this element. -->
+  <spawn pitch="90"/>
   <metrics file="Metrics.xml"/>
   <mass_balance file="Mass.xml"/>
   <aerodynamics file="Aero.xml"/>

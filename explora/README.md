@@ -17,7 +17,6 @@ Propulsion.xml       2 motors, thrust along body +X
 Engines/             T-Motor MN4012 480KV + 14x8 propeller (QPROP tables)
 Controls.xml         autopilot outputs -> JSBSim bindings (ArduPlane and PX4 rows)
 Sensors.xml          imu / baro / gps / airspeed
-Airframe.xml         rests pitch 90, sensors in the plane frame
 Visual.xml           meshes/: airframe + motors, elevons, propellers, chase camera
 firmwares/           ardupilot_explora.param (ArduPlane SITL), px4_explora (PX4 airframe 22006)
 LICENSE, NOTICE      GPL-3.0, sources
@@ -36,9 +35,9 @@ PX4: `firmwares/px4_explora` is airframe 22006; install it as a SITL airframe an
 ## Frames
 
 Body X runs along the fuselage; the wing's +3 deg incidence is inside the alpha tables of `Aero.xml`, not a
-mount angle. Hover is theta 90, nose up: `Airframe.xml` rests the aircraft at pitch 90 and leaves the sensors in
-the plane frame, as ArduPlane expects for a tailsitter (level is calibrated in fixed-wing flight). The motors
-point along the fuselage axis.
+mount angle. Hover is theta 90, nose up: `<spawn pitch="90"/>` in `explora.xml` stands it on its tail, and the
+sensors stay in the plane frame, as ArduPlane expects for a tailsitter (level is calibrated in fixed-wing flight);
+PX4 turns them into its hover frame with `SENS_BOARD_ROT 24`. The motors point along the fuselage axis.
 
 ```
 CAD (STEP assembly):   x = span toward the LEFT wing, y up, z forward, mm
