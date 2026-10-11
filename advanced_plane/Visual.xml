@@ -10,7 +10,7 @@
   <fixture file="meshes/RightWheel__RightWheelVisual.glb" xyz="-0.039932 0.13 -0.102993" rpy="-180 -90 90"/>
   <fixture file="meshes/CenterWheel__CenterWheelVisual.glb" xyz="0.130068 0 -0.102993" rpy="-180 -90 90"/>
 
-  <propeller file="meshes/rotor_puller__rotor_puller_visual.glb" xyz="-0.099023999999999973 0 0.022671" rpy="89.954400000000049 -6.3611093629270335e-15 -90.000000000000028" motor="rotor_puller" axis="1 0 -0.000796"/>
+  <propeller file="meshes/rotor_puller__rotor_puller_visual.glb" xyz="-0.0888 0 0.0058" rpy="89.954400000000049 -6.3611093629270335e-15 -90.000000000000028" motor="rotor_puller" axis="1 0 -0.000796"/>
 
   <surface file="meshes/left_elevon__left_elevon_visual.glb" xyz="0.153694 0.362823 -0.150332" rpy="0 0 -90" source="left-aileron" axis="-0.1172 1 -0.04409" hinge="-0.088626 -0.362823 0.087339" limit="61.7"/>
   <surface file="meshes/right_elevon__right_elevon_visual.glb" xyz="0.155054 -0.361274 -0.150315" rpy="0 0 -90" source="right-aileron" axis="0.1136 1 0.04308" hinge="-0.089986 0.361274 0.087322" limit="44.6907"/>
