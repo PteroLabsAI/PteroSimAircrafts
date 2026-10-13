@@ -74,8 +74,6 @@ plate's three into collective, longitudinal and lateral cyclic for its rotor. Ya
 
 ## Known limits
 
-- The rotor hubs are within 5 cm of the CG and the "upper" one below the "lower"; NASA's model has them 0.453 and
-  0.354 m above the feet. Visual.xml draws them where NASA has them.
 - The collective ranges disagree: 0..25 deg of root pitch here against `H_COL_ANG_MAX 15` in the param file.
 - The motor is far more than hover at Mars density takes; the governor holds the rpm regardless.
 - FGRotor's momentum-theory inflow is singular at zero thrust with no flow through the disc: a rotor held at the
