@@ -3,9 +3,10 @@
 <!-- NASA Ingenuity Mars Helicopter - Propulsion
      Coaxial counter-rotating rotors, each driven by its own electric motor; the six swashplate servos are the
      flight control system's (Systems/rotor_control.xml)
-     Rotor spacing: 0.099 m (NASA/TM-20240001510 Table 1). The hub heights about the CG are NOT measured: both hubs sit
-     within 5 cm of the CG and the "upper" one below the "lower" (structural Z is up); the NASA model puts them 0.453 and
-     0.354 m above the feet (README.md). The engines are named so Visual.xml can bind a propeller mesh to each.
+     Hubs: measured on NASA's 3D model, 0.4531 and 0.3541 m above its origin (its feet at -0.005); Gear.xml's feet
+     0.13 m under the CG put the CG at 0.125, so the hubs are 0.3281 and 0.2291 m above it (structural Z up; spacing
+     0.099 m = NASA/TM-20240001510 Table 1).
+     The engines are named so Visual.xml can bind a propeller mesh to each.
 -->
 
 <propulsion>
@@ -16,7 +17,7 @@
       <location unit="M">
         <x> 0.0 </x>
         <y> 0.0 </y>
-        <z> -0.0495 </z>
+        <z> 0.3281 </z>
       </location>
       <orient unit="DEG">
         <roll>   0.0 </roll>
@@ -33,7 +34,7 @@
       <location unit="M">
         <x> 0.0 </x>
         <y> 0.0 </y>
-        <z> 0.0495 </z>
+        <z> 0.2291 </z>
       </location>
       <orient unit="DEG">
         <roll>   0.0 </roll>
