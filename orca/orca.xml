@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
+
+<!-- Orca, PteroSim's unmanned version of NASA's Quiet Single-Main-Rotor helicopter (QSMR, 450 ft/s design), a JSBSim
+     model by PteroLabs. Read README.md before trusting any number. Structural frame: X aft, Y right, Z up, feet,
+     origin at the rotor hub (NASA's OpenVSP frame). -->
+<fdm_config name="orca" release="ALPHA" version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
+
+  <fileheader>
+    <author> PteroLabs </author>
+    <license
+      licenseName="GPL-3.0"
+      licenseURL="https://www.gnu.org/licenses/gpl-3.0.html"/>
+    <filecreationdate> 2026-10-12 </filecreationdate>
+    <description>
+      NASA QSMR (450 ft/s tip speed), unmanned: one 6-blade articulated main rotor, two turboshafts (modelled as one),
+      NOTAR anti-torque (fan, circulation-control boom, direct-jet thruster, twin fins). DGW 3912 lb.
+
+      References:
+        [J20] Johnson, "A Quiet Helicopter for Air Taxi Operations", VFS Aeromechanics 2020 (NTRS 20200000509)
+        [V22] Ventura Diaz et al., VFS 2022 (NTRS 20220006620) - blade chords, rotor speed
+        [VSP] NASA OpenVSP model QEU2023-SMR-6pax-turbo-notar_450fps.vsp3 - geometry
+        [S21] Whiteside et al., NASA/TM-20210017971 - sister designs' fixed useful load
+        [NT], [NI] NDARC theory (2022) and input (2025) manuals
+        [ERF] Logan, Morger, Sampatacos, "NOTAR demonstrator", 9th ERF 1983 paper 67
+        Bakir, METU thesis 2008 (NOTAR control-volume model); Mechanika 2018 (Sampatacos' Cy vs Cmu); Luo, ICAS 2000
+    </description>
+  </fileheader>
+
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion file="Propulsion.xml"/>
+  <aerodynamics file="Aero.xml"/>
+
+  <!-- NOTAR direct-jet thruster: the sleeve's net exit to the left pushes the tail right. The force acts at the cutout's
+       centre on the thruster axis, x = (cutout-x0 + cutout-x1) / 2, z = thruster-axis-z of Systems/notar.xml
+       (scripts/validate.py checks); the vanes turn the jet sideways, so y gives it no arm. The force is notar.xml's, this
+       step's pedal with last step's rotor speed. -->
+  <external_reactions>
+    <force name="notar_jet" frame="BODY" unit="LBS">
+      <function>
+        <property> fcs/notar/jet-force-lbs </property>
+      </function>
+      <location unit="FT">
+        <x> 23.0 </x>
+        <y> 0.0 </y>
+        <z> -3.173 </z>
+      </location>
+      <direction>
+        <x> 0.0 </x>
+        <y> 1.0 </y>
+        <z> 0.0 </z>
+      </direction>
+    </force>
+  </external_reactions>
+
+  <!-- The swashplate's blade-pitch stops. Before the autopilot's first servo packet the binding leaves the collective at
+       0 rad, 8.8 deg under zero thrust: at idle that is ~3800 lb of downforce and a 200 lb backward pull on wheels with
+       no brakes. -->
+  <flight_control name="Orca FCS">
+    <property value="0.11868"> fcs/collective-stop-min-rad </property>  <!-- 6.8 deg, H_COL_ANG_MIN in firmwares/ardupilot_orca.param -->
+    <property value="0.5">     fcs/collective-stop-max-rad </property>  <!-- 28.65 deg, H_COL_ANG_MAX; Controls.xml's full range -->
+    <channel name="swashplate">
+      <pure_gain name="fcs/collective-stopped-rad">
+        <input> propulsion/engine[0]/collective-ctrl-rad </input>
+        <gain> 1.0 </gain>
+        <clipto>
+          <min> fcs/collective-stop-min-rad </min>
+          <max> fcs/collective-stop-max-rad </max>
+        </clipto>
+        <output> propulsion/engine[0]/collective-ctrl-rad </output>
+      </pure_gain>
+    </channel>
+  </flight_control>
+
+  <!-- NOTAR fan, boom pressure, thruster areas from the pedals; fan power and gearbox loss onto the rotor brake. First:
+       the governor's feed-forward reads its shaft load. -->
+  <system file="notar"/>
+  <!-- Rotor speed governor: throttle command engages it, a PID on rotor rpm with a load feed-forward drives the turboshaft -->
+  <system file="orca_governor"/>
+
+</fdm_config>

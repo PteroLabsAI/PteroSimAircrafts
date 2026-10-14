@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<!-- Orca - Landing gear: tricycle, three wheels of radius 0.625 ft whose axles sit at z -9.25 [VSP LandingGear_010 /
+     _040], so the tyres touch at z -9.875. Wheels, so BOGEY (rolling), unbraked and unsteered.
+     Static loads at the DGW CG (x 0.219): nose 3912 (4.50 - 0.219) / (4.50 + 6.696) = 1496 lb, each main 1208 lb.
+     Springs: chosen for 0.25 ft of static deflection (a light-helicopter tyre and oleo, no source): 1496 / 0.25 and
+     1208 / 0.25. The contacts sit that deflection below the tyres' bottoms (z -9.875 - 0.25): a contact rests that far
+     below the ground, so at the DGW the drawn tyres, which do not compress, rest on it instead of in it. Damping: chosen 0.6 of critical for each wheel's static share, 2 * 0.6 * sqrt(k * W / g).
+     Friction: chosen (rubber on concrete). -->
+
+<ground_reactions>
+
+  <contact name="NOSE" type="BOGEY">
+    <location unit="FT">
+      <x> -6.696 </x>
+      <y>  0.0 </y>
+      <z> -10.125 </z>
+    </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <rolling_friction> 0.02 </rolling_friction>
+    <spring_coeff unit="LBS/FT">       5984 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">   633 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <brake_group> NONE </brake_group>
+    <retractable> 0 </retractable>
+  </contact>
+
+  <contact name="LEFT_MAIN" type="BOGEY">
+    <location unit="FT">
+      <x>  4.50 </x>
+      <y> -3.026 </y>
+      <z> -10.125 </z>
+    </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <rolling_friction> 0.02 </rolling_friction>
+    <spring_coeff unit="LBS/FT">       4832 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">   510 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <brake_group> NONE </brake_group>
+    <retractable> 0 </retractable>
+  </contact>
+
+  <contact name="RIGHT_MAIN" type="BOGEY">
+    <location unit="FT">
+      <x>  4.50 </x>
+      <y>  3.026 </y>
+      <z> -10.125 </z>
+    </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <rolling_friction> 0.02 </rolling_friction>
+    <spring_coeff unit="LBS/FT">       4832 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">   510 </damping_coeff>
+    <max_steer unit="DEG"> 0 </max_steer>
+    <brake_group> NONE </brake_group>
+    <retractable> 0 </retractable>
+  </contact>
+
+</ground_reactions>

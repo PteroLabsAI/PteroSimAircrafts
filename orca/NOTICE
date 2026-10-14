@@ -1,0 +1,48 @@
+This aircraft is a JSBSim model of an unmanned version of NASA's Quiet Single Main Rotor helicopter (QSMR, the
+450 ft/s design), written by PteroLabs in 2026 and named Orca, with meshes built from NASA's OpenVSP model.
+
+The flight model -- orca.xml, the files it assembles, Engines/ and Systems/ -- is PteroLabs' work, distributed under
+the GNU General Public License v3.0; see LICENSE in this folder for its text. Its numbers come from:
+
+  Johnson, "A Quiet Helicopter for Air Taxi Operations", VFS Aeromechanics for Advanced Vertical Flight Technical
+  Meeting, 2020 (NTRS 20200000509), Table 2 and pp. 5-8: weights, rotor radius, blade count, solidity, twist, hinge
+  offset, engine power and sfc, drag area, fuel tank, the anti-torque shares, and the performance the model is
+  checked against.
+    https://ntrs.nasa.gov/citations/20200000509
+
+  Ventura Diaz et al., VFS Forum 2022 (NTRS 20220006620), Tables 1, 3 and 4: rotor speed, blade chords, hover
+  condition.
+    https://ntrs.nasa.gov/citations/20220006620
+
+  NASA's OpenVSP model of the QSMR (meshes/NOTICE): all geometry and the projected areas measured on it.
+
+  Whiteside et al., NASA/TM-20210017971: fixed useful load, the 6000 ft hover and 10000 ft cruise conditions.
+    https://ntrs.nasa.gov/citations/20210017971
+
+  NDARC Theory (2022) and Input (2025) manuals: lift-curve slope, inflow gradient, tail stall model, download
+  factor, gearbox loss, engine rating ratios, ground effect.
+
+  Logan, Morger and Sampatacos, "NOTAR demonstrator", 9th European Rotorcraft Forum (1983), paper 67: constant boom
+  pressure, jet-to-wake speed ratio, fan efficiency, the direct-jet thruster's sleeve valve and its pedal schedule.
+
+  Bakir, METU MSc thesis (2008), section 2.3.4 and chapter 3: the thruster's cones and openings, its momentum force,
+  the slot momentum coefficient, the boom's fade with speed (Dawson and Thompson's data).
+
+  Mechanika (2018), Table 2 (Sampatacos' experiment): the boom's side-force coefficient against the slot momentum
+  coefficient; Luo, ICAS 2000: its saturation.
+
+  Leishman, "Principles of Helicopter Aerodynamics", 2nd ed. (2006), chapters 3 and 10, and Landgrebe, JAHS 17(4)
+  (1972): the hover inflow over the disc and the wake's contraction at the boom.
+
+Chosen, with no source, and marked so where they appear: the blades' share of the rotor group's mass, the hub's
+radius of gyration, the fan's mass and speed, the CG on the shaft line, the gear springs, damping and friction, the
+fin and stabiliser maximum lift, the thruster's cone sizes and opening angles, the engine output speed, the governor
+gains, the slot's segment count. README.md lists the model's known limits.
+
+NOTAR is a registered trademark (US Reg. No. 1732062) of its owner. The anti-torque system here is a model of the
+published principle, a circulation-control tail boom with a direct-jet thruster, not of any product.
+
+The ArduPilot parameter file (firmwares/ardupilot_orca.param) carries ArduPilot's own SITL defaults for a helicopter
+(Tools/autotest/default_params/copter-heli.parm) with PteroLabs' vehicle values on top. ArduPilot is distributed under
+the GNU General Public License v3.0.
+    https://github.com/ArduPilot/ardupilot

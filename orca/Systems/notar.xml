@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<!-- NOTAR fan, boom pressure, direct-jet thruster and slot, after Logan, Morger and Sampatacos (ERF 1983 paper 67) and
+     Bakir's control-volume model (METU 2008, ch.3). The fan, geared to the main transmission, holds a constant total
+     pressure in the boom [ERF]: its pitch follows the open exit area. Both exits are ideal (no loss, exit at ambient
+     pressure), so the slot and the thruster blow at V = sqrt(2 dp / rho) and the thruster force is
+     F = mdot V + (p - p0) A = rho V^2 A = 2 dp A [Bakir eq. 3.47]. The fan's pressure rise scales with its speed
+     squared, so off nominal rotor rpm dp = dp0 (rpm / nominal)^2.
+     The thruster is a sleeve valve of two concentric truncated cones at the boom's end [ERF p.67-1; Bakir 2008 2.3.4]:
+     the fixed inner cone has a left and a right opening with turning vanes, the rotating outer cone one constant-area
+     cutout. Pedals (fcs/notar/pedal-cmd-norm, -1 full left = nose left .. +1 full right) turn the sleeve as ERF Fig. 4:
+     neutral exposes half the cutout over the left (anti-torque) opening, sized for the DGW hover; full left centres it
+     on the left opening, full right on the right. The boom's circulation-control force is in Aero.xml (it needs the
+     rotor wake), the thruster force is applied in orca.xml.
+     Fan power = volume flow x dp / efficiency. It and the gearbox loss are charged to the main rotor through the rotor
+     brake (this system is the brake's only writer), so they load the rotor in autorotation too. The rotor speed and
+     torque used here are the previous step's (systems run before propulsion): a deliberate one-step lag. -->
+<system name="NOTAR">
+
+  <property value="0.0">     fcs/notar/pedal-cmd-norm </property>          <!-- input -->
+  <!-- ERF: the boom needs a slot jet of at least 3.5 x the wake velocity, the OH-6A's 220 fps at < 0.5 psi; with
+       the fully developed wake 2 v_h = 58.0 fps (DGW, sea level) that is 203.1 fps, 1/2 rho V^2 = 49.0 psf (0.34 psi).
+       The slot's fastest hover crossflow (Aero.xml segments) is 49.4 fps: Vj / w 4.14, still above 3.5 -->
+  <property value="49.02">   fcs/notar/boom-pressure-design-psf </property>
+  <!-- Sized so the pedals rest at neutral in the DGW sea-level hover [ERF]: the trimmed hover (scripts/validate.py, segmented
+       boom, the slot width below) needs a jet moment of 3817 lb ft = 167.5 lb at the 22.787 ft arm (cutout centre
+       x 23.0 - CG); 167.5 / (2 x 49.02) = 1.709 ft2, iterated with the slot width. NASA's VSP jet window is 1.28 ft2. -->
+  <property value="1.709">   fcs/notar/jet-area-neutral-ft2 </property>
+  <!-- Thruster geometry: feet, X aft, Z up; angles about the thruster axis from +Y (right), 90 up, 180 left -->
+  <property value="21.6">    fcs/notar/thruster-seam-x-ft </property>        <!-- chosen: just aft of the stabiliser's trailing edge x 21.33 [VSP] -->
+  <property value="24.5">    fcs/notar/thruster-end-x-ft </property>         <!-- VSP boom end x 24.51 -->
+  <property value="-3.173">  fcs/notar/thruster-axis-z-ft </property>       <!-- measured: centre of the VSP boom's end circle -->
+  <property value="0.97">    fcs/notar/thruster-radius-front-ft </property>  <!-- chosen: 0.03 ft inside the 1.00 ft VSP boom, a visible seam -->
+  <property value="0.75">    fcs/notar/thruster-radius-aft-ft </property>    <!-- chosen taper of the "truncated cones" [ERF] -->
+  <property value="21.85">   fcs/notar/cutout-x0-ft </property>              <!-- chosen: axial span of the cutout and the inner openings -->
+  <property value="24.15">   fcs/notar/cutout-x1-ft </property>              <!-- chosen, as x0 -->
+  <property value="180.0">   fcs/notar/left-opening-centre-deg </property>   <!-- defined by the angle convention -->
+  <property value="0.0">     fcs/notar/right-opening-centre-deg </property>  <!-- defined by the angle convention -->
+  <!-- chosen: "two large openings" [Bakir], 60 deg ribs top and bottom; needs beta <= alpha <= (180 - beta) / 2 so
+       the right one is shut at neutral (scripts/validate.py checks) -->
+  <property value="60.0">    fcs/notar/opening-half-angle-deg </property>
+  <!-- derived: the cutout is twice the neutral opening (keeps full left at 2 x neutral; 1.5 x starved the 6000 ft
+       hover of yaw margin), beta = A_n / (L r_m) = 1.709 / (2.30 x 0.8638) = 0.8602 rad (scripts/validate.py checks) -->
+  <property value="49.29">   fcs/notar/cutout-half-angle-deg </property>
+  <!-- Sized for Cmu = 0.4, the design optimum [Bakir eq. 3.64, Mechanika 2018, US 4,200,252]: Cmu = 2 (h/D) (Vj/w)^2
+       at the fastest segment crossflow of the trimmed DGW hover, w 49.4 fps, D 2 ft: h = 0.4 x 2 / (2 x 4.14^2). So no
+       segment in the wake runs below 0.4; Vj^2 and w^2 both go as 1 / rho, so the altitude does not matter. The slot
+       then takes 10.7 % of the fan's hover flow, over the "less than 10%" [J20 p.6]; 10 % allows h 0.0217 ft (Cmu 0.37).
+       NASA's VSP slot is 0.077 ft wide. -->
+  <property value="0.02332"> fcs/notar/slot-width-ft </property>
+  <property value="8.803">   fcs/notar/slot-length-ft </property>          <!-- VSP NOTAR_slot x 9.291..18.094 -->
+  <property value="0.73">    fcs/notar/fan-efficiency </property>          <!-- redesigned NOTAR fan in hover [ERF] -->
+  <property value="0.04">    fcs/notar/gearbox-loss-fraction </property>   <!-- NDARC default fPloss_xmsn [NDARC input] -->
+  <property value="189.0">   fcs/notar/max-brake-power-hp </property>      <!-- = maxbrakepower, Engines/orca_main_rotor.xml -->
+  <property value="550.0">   fcs/notar/ftlbs-per-hp </property>
+  <property value="0.10472"> fcs/notar/rad-per-rev-min </property>         <!-- 2 pi / 60: rpm to rad/s -->
+
+  <channel name="NOTAR fan and thruster">
+
+    <pure_gain name="fcs/notar/pedal-norm">
+      <input> fcs/notar/pedal-cmd-norm </input>
+      <gain> 1.0 </gain>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>
+    </pure_gain>
+
+    <fcs_function name="fcs/notar/boom-pressure-psf">
+      <function>
+        <product>
+          <property> fcs/notar/boom-pressure-design-psf </property>
+          <pow>
+            <quotient>
+              <property> propulsion/engine[0]/rotor-rpm </property>
+              <property> fcs/nominal-rpm </property>
+            </quotient>
+            <value> 2.0 </value>
+          </pow>
+        </product>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/exit-velocity-fps">
+      <function>
+        <sqrt>
+          <quotient>
+            <product><value> 2.0 </value><property> fcs/notar/boom-pressure-psf </property></product>
+            <property> atmosphere/rho-slugs_ft3 </property>
+          </quotient>
+        </sqrt>
+      </function>
+    </fcs_function>
+
+    <!-- Radius is linear in x from seam to end, so its mean over the cutout is its value at the cutout's centre -->
+    <fcs_function name="fcs/notar/cutout-centre-x-ft">
+      <function>
+        <avg>
+          <property> fcs/notar/cutout-x0-ft </property>
+          <property> fcs/notar/cutout-x1-ft </property>
+        </avg>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/cutout-mean-radius-ft">
+      <function>
+        <interpolate1d>
+          <property> fcs/notar/cutout-centre-x-ft </property>
+          <property> fcs/notar/thruster-seam-x-ft </property> <property> fcs/notar/thruster-radius-front-ft </property>
+          <property> fcs/notar/thruster-end-x-ft </property>  <property> fcs/notar/thruster-radius-aft-ft </property>
+        </interpolate1d>
+      </function>
+    </fcs_function>
+
+    <!-- Exit area per radian of exposed arc, L r_m -->
+    <fcs_function name="fcs/notar/cutout-area-per-rad-ft2">
+      <function>
+        <product>
+          <difference>
+            <property> fcs/notar/cutout-x1-ft </property>
+            <property> fcs/notar/cutout-x0-ft </property>
+          </difference>
+          <property> fcs/notar/cutout-mean-radius-ft </property>
+        </product>
+      </function>
+    </fcs_function>
+
+    <!-- Neutral exposes half the cutout over the left opening [ERF Fig. 4] -->
+    <fcs_function name="fcs/notar/sleeve-neutral-deg">
+      <function>
+        <difference>
+          <property> fcs/notar/left-opening-centre-deg </property>
+          <property> fcs/notar/opening-half-angle-deg </property>
+        </difference>
+      </function>
+    </fcs_function>
+
+    <!-- Full left centres the cutout on the left opening, full right on the right [ERF Fig. 4] -->
+    <fcs_function name="fcs/notar/sleeve-angle-deg">
+      <function>
+        <interpolate1d>
+          <property> fcs/notar/pedal-norm </property>
+          <value> -1.0 </value> <property> fcs/notar/left-opening-centre-deg </property>
+          <value>  0.0 </value> <property> fcs/notar/sleeve-neutral-deg </property>
+          <value>  1.0 </value> <property> fcs/notar/right-opening-centre-deg </property>
+        </interpolate1d>
+      </function>
+    </fcs_function>
+
+    <!-- Output: the visual model turns the outer cone by this, from neutral, where its mesh is drawn -->
+    <fcs_function name="fcs/notar/sleeve-turn-deg">
+      <function>
+        <difference>
+          <property> fcs/notar/sleeve-angle-deg </property>
+          <property> fcs/notar/sleeve-neutral-deg </property>
+        </difference>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/cutout-max-deg">
+      <function>
+        <sum>
+          <property> fcs/notar/sleeve-angle-deg </property>
+          <property> fcs/notar/cutout-half-angle-deg </property>
+        </sum>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/cutout-min-deg">
+      <function>
+        <difference>
+          <property> fcs/notar/sleeve-angle-deg </property>
+          <property> fcs/notar/cutout-half-angle-deg </property>
+        </difference>
+      </function>
+    </fcs_function>
+
+    <!-- Exposed area = L r_m x overlap of the cutout with an opening centred c: max(0, min(max - c, alpha) +
+         min(c - min, alpha)). Both openings are wider than the cutout, so either side reaches 2 A_n. -->
+    <fcs_function name="fcs/notar/jet-area-left-ft2">
+      <function>
+        <product>
+          <property> fcs/notar/cutout-area-per-rad-ft2 </property>
+          <toradians>
+            <max>
+              <value> 0.0 </value>
+              <sum>
+                <min>
+                  <difference>
+                    <property> fcs/notar/cutout-max-deg </property>
+                    <property> fcs/notar/left-opening-centre-deg </property>
+                  </difference>
+                  <property> fcs/notar/opening-half-angle-deg </property>
+                </min>
+                <min>
+                  <difference>
+                    <property> fcs/notar/left-opening-centre-deg </property>
+                    <property> fcs/notar/cutout-min-deg </property>
+                  </difference>
+                  <property> fcs/notar/opening-half-angle-deg </property>
+                </min>
+              </sum>
+            </max>
+          </toradians>
+        </product>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/jet-area-right-ft2">
+      <function>
+        <product>
+          <property> fcs/notar/cutout-area-per-rad-ft2 </property>
+          <toradians>
+            <max>
+              <value> 0.0 </value>
+              <sum>
+                <min>
+                  <difference>
+                    <property> fcs/notar/cutout-max-deg </property>
+                    <property> fcs/notar/right-opening-centre-deg </property>
+                  </difference>
+                  <property> fcs/notar/opening-half-angle-deg </property>
+                </min>
+                <min>
+                  <difference>
+                    <property> fcs/notar/right-opening-centre-deg </property>
+                    <property> fcs/notar/cutout-min-deg </property>
+                  </difference>
+                  <property> fcs/notar/opening-half-angle-deg </property>
+                </min>
+              </sum>
+            </max>
+          </toradians>
+        </product>
+      </function>
+    </fcs_function>
+
+    <!-- Positive pushes the tail right (nose left), against the counter-clockwise rotor's torque -->
+    <fcs_function name="fcs/notar/jet-force-lbs">
+      <function>
+        <product>
+          <value> 2.0 </value>
+          <property> fcs/notar/boom-pressure-psf </property>
+          <difference>
+            <property> fcs/notar/jet-area-left-ft2 </property>
+            <property> fcs/notar/jet-area-right-ft2 </property>
+          </difference>
+        </product>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/slot-flow-cfs">
+      <function>
+        <product>
+          <property> fcs/notar/slot-width-ft </property>
+          <property> fcs/notar/slot-length-ft </property>
+          <property> fcs/notar/exit-velocity-fps </property>
+        </product>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/fan-flow-cfs">
+      <function>
+        <sum>
+          <property> fcs/notar/slot-flow-cfs </property>
+          <product>
+            <sum>
+              <property> fcs/notar/jet-area-left-ft2 </property>
+              <property> fcs/notar/jet-area-right-ft2 </property>
+            </sum>
+            <property> fcs/notar/exit-velocity-fps </property>
+          </product>
+        </sum>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/fan-power-hp">
+      <function>
+        <quotient>
+          <product>
+            <property> fcs/notar/fan-flow-cfs </property>
+            <property> fcs/notar/boom-pressure-psf </property>
+          </product>
+          <product>
+            <property> fcs/notar/fan-efficiency </property>
+            <property> fcs/notar/ftlbs-per-hp </property>
+          </product>
+        </quotient>
+      </function>
+    </fcs_function>
+
+  </channel>
+
+  <channel name="Drive load">
+
+    <!-- Power the rotor's air loads absorb (negative when the air drives it, as in autorotation) -->
+    <fcs_function name="fcs/notar/rotor-power-hp">
+      <function>
+        <quotient>
+          <product>
+            <property> propulsion/engine[0]/torque-lbsft </property>
+            <property> propulsion/engine[0]/rotor-rpm </property>
+            <property> fcs/notar/rad-per-rev-min </property>
+          </product>
+          <property> fcs/notar/ftlbs-per-hp </property>
+        </quotient>
+      </function>
+    </fcs_function>
+
+    <!-- Gearbox loss on the power it carries: engine to rotor and fan, or rotor to fan in autorotation -->
+    <fcs_function name="fcs/notar/gearbox-loss-hp">
+      <function>
+        <product>
+          <property> fcs/notar/gearbox-loss-fraction </property>
+          <sum>
+            <property> fcs/notar/fan-power-hp </property>
+            <max>
+              <value> 0.0 </value>
+              <property> fcs/notar/rotor-power-hp </property>
+            </max>
+          </sum>
+        </product>
+      </function>
+    </fcs_function>
+
+    <!-- What the engine must deliver: rotor, fan and gearbox (the governor's feed-forward) -->
+    <fcs_function name="fcs/notar/shaft-load-hp">
+      <function>
+        <sum>
+          <property> fcs/notar/rotor-power-hp </property>
+          <property> fcs/notar/fan-power-hp </property>
+          <property> fcs/notar/gearbox-loss-hp </property>
+        </sum>
+      </function>
+    </fcs_function>
+
+    <fcs_function name="fcs/notar/brake-norm">
+      <function>
+        <quotient>
+          <sum>
+            <property> fcs/notar/fan-power-hp </property>
+            <property> fcs/notar/gearbox-loss-hp </property>
+          </sum>
+          <property> fcs/notar/max-brake-power-hp </property>
+        </quotient>
+      </function>
+      <output> propulsion/engine[0]/brake-ctrl-norm </output>
+    </fcs_function>
+
+  </channel>
+
+</system>

@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!-- Rotor speed governor: a PID on rotor rpm, the way the AH-1S T53 work governs its rotor (jsbsim fork
+     feature/ah1s-t53-turboshaft, systems/rpm_governor.xml): error clipped, integrator held while the demand is pinned
+     in the error's direction, derivative lead equal to the N1 spool time. A feed-forward carries the load: the shaft
+     power the drive absorbed last step (rotor torque x speed, NOTAR fan, gearbox; Systems/notar.xml, which runs first),
+     as a fraction of the engine's maximum here, so the PID only trims and an air start or a collective step does not
+     wait for its integrator. The power demand is turned into the throttle (N1 demand) by the inverse of the engine's
+     own N1-to-power table at 100 % speed, as a FADEC schedules fuel: the table has a dead band (N1 70 to 93.4 % gives
+     0 to 32 % power) that would otherwise make the loop's gain vary tenfold.
+     Input: fcs/throttle-cmd-norm[0] above engage-norm switches the governor on (target = nominal rpm); below it the
+     throttle stays at the command (0 = ground idle N1). FGRotor's transmission speed is unbounded, so without this
+     loop the rotor runs away or droops.
+     Gains (chosen, then checked in scripts/validate.py): rotor plus engine side inertia 791 slug ft2 at 25.5 rad/s gives
+     0.26 rpm/s per hp, 120 rpm/s per unit of power demand; with the lead cancelling the 1 s spool, kp 0.015 is a
+     1.8 rad/s loop. -->
+<system name="Orca rotor governor">
+
+  <property value="243.5"> fcs/nominal-rpm </property>               <!-- Omega 25.5 rad/s [V22 Table 3] -->
+  <property value="0.5">   fcs/governor/engage-norm </property>      <!-- chosen: throttle command that engages it -->
+  <property value="25.0">  fcs/governor/error-clip-rpm </property>   <!-- chosen: ~10 % of nominal -->
+  <property value="462.0"> fcs/governor/max-power-hp </property>     <!-- = maxpower, Engines/orca_turboshaft.xml (scripts/validate.py checks) -->
+
+  <channel name="governor">
+
+    <switch name="fcs/governor/active-norm">
+      <default value="0.0"/>
+      <test value="1.0"> fcs/throttle-cmd-norm[0] GT fcs/governor/engage-norm </test>
+    </switch>
+
+    <fcs_function name="fcs/governor/rpm-error">
+      <function>
+        <product>
+          <property> fcs/governor/active-norm </property>
+          <difference>
+            <property> fcs/nominal-rpm </property>
+            <property> propulsion/engine[0]/rotor-rpm </property>
+          </difference>
+        </product>
+      </function>
+      <clipto>
+        <min> -fcs/governor/error-clip-rpm </min>
+        <max>  fcs/governor/error-clip-rpm </max>
+      </clipto>
+    </fcs_function>
+
+    <!-- Engine power lapses with altitude and speed (EnginePowerVC), so full N1 gives maxpower x lapse -->
+    <fcs_function name="fcs/governor/feedforward-norm">
+      <function>
+        <quotient>
+          <property> fcs/notar/shaft-load-hp </property>
+          <product>
+            <property> fcs/governor/max-power-hp </property>
+            <property> propulsion/engine[0]/EnginePowerVC </property>
+          </product>
+        </quotient>
+      </function>
+    </fcs_function>
+
+    <!-- -1 resets the integrator (off), 1 holds it (demand pinned in the error's direction), 0 integrates -->
+    <switch name="fcs/governor/pid-inhibit">
+      <default value="-1.0"/>
+      <test logic="AND" value="1.0">
+        fcs/governor/active-norm GT 0.5
+        fcs/governor/demand-norm LE 0.0
+        fcs/governor/rpm-error LT 0.0
+      </test>
+      <test logic="AND" value="1.0">
+        fcs/governor/active-norm GT 0.5
+        fcs/governor/demand-norm GE 1.0
+        fcs/governor/rpm-error GT 0.0
+      </test>
+      <test value="0.0"> fcs/governor/active-norm GT 0.5 </test>
+    </switch>
+
+    <pid name="fcs/governor/pid">
+      <input> fcs/governor/rpm-error </input>
+      <kp> 0.015 </kp>   <!-- chosen, see header -->
+      <ki> 0.006 </ki>   <!-- chosen: integral time kp/ki = 2.5 s -->
+      <kd> 0.015 </kd>   <!-- kp x n1idle_max_delay (1 s): the lead cancels the N1 spool lag -->
+      <trigger> fcs/governor/pid-inhibit </trigger>
+      <clipto><min> -1.0 </min><max> 1.0 </max></clipto>   <!-- a trim of at most the whole demand range -->
+    </pid>
+
+    <fcs_function name="fcs/governor/demand-norm">
+      <function>
+        <sum>
+          <property> fcs/governor/feedforward-norm </property>
+          <property> fcs/governor/pid </property>
+        </sum>
+      </function>
+      <clipto><min> 0.0 </min><max> 1.0 </max></clipto>
+    </fcs_function>
+
+    <!-- Power demand to throttle: Engines/orca_turboshaft.xml's 6016 rpm row inverted, power / 462 hp against
+         (N1 - idle 70) / (max 106 - 70) -->
+    <fcs_function name="fcs/governor/scheduled-throttle">
+      <function>
+        <table>
+          <independentVar> fcs/governor/demand-norm </independentVar>
+          <tableData>
+            0.0     0.0
+            0.3214  0.65
+            0.6429  0.85
+            0.7071  0.875
+            0.75    0.9
+            0.8071  0.925
+            0.8714  0.95
+            0.9286  0.975
+            1.0     1.0
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+
+    <switch name="fcs/governor/throttle">
+      <default value="fcs/throttle-cmd-norm[0]"/>
+      <test value="fcs/governor/scheduled-throttle"> fcs/governor/active-norm GT 0.5 </test>
+      <output> fcs/throttle-pos-norm[0] </output>
+    </switch>
+
+  </channel>
+
+</system>

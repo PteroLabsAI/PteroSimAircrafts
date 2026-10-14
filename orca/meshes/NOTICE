@@ -1,0 +1,16 @@
+The meshes in this folder are built from NASA's OpenVSP model of its Quiet Single Main Rotor helicopter, 450 ft/s
+design (file QEU2023-SMR-6pax-turbo-notar_450fps.vsp3, sha256
+1a9b3940a1e021fa0b345575d50386a6a186b47615ec4cc9fea19747da4f9da1, in
+https://www.nasa.gov/wp-content/uploads/2026/03/qsmr-vsp.zip, sha256
+c9909b05206bcf04193c99eeb74ae1ffa6521db4955b4b1b86da8fc89617a13a). The model is a work of NASA's Revolutionary
+Vertical Lift Technology project; under the NASA media usage guidelines (nasa.gov/nasa-brand-center/images-and-media)
+NASA's 3D model files "generally are not subject to copyright in the United States". NASA is acknowledged here and
+does not endorse PteroSim. No NASA insignia, logotype or identifier appears on the meshes or their textures.
+
+Changes made here (scripts/ holds the pipeline): the geometry was tessellated with OpenVSP 3.55 and split by
+component; PteroLabs modelled the detail NASA's concept model leaves out (landing gear struts and torque links, the
+exhaust, the direct-jet thruster's fixed and turning cones with their vanes), unwrapped the result, and painted and
+baked its own textures: the livery, access panels, steps, the circulation-control slot and the lettering "Orca",
+"PTEROSIM" and "PS-U1". body.glb is the airframe, rotor.glb the main rotor about its hub with the disc
+level, thruster.glb the thruster's turning cone about its axis; all in NASA's frame (X aft, Y right, Z up, origin at
+the rotor hub), metres.

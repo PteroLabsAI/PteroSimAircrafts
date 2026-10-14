@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. Which ArduCopter single-heli output drives what (channel = SERVOn - 1, the
+  numbering c172p and ingenuity use for their ArduPilot rows). The functions are the ones a single heli assigns by
+  default (AP_MotorsHeli_Swash.cpp: swashplate on Motor1..3; AP_MotorsHeli_Single.cpp: tail on Motor4; AP_MotorsHeli.h:
+  RSC on CH_8) and firmwares/ardupilot_orca.param writes out:
+
+    SERVO1 Motor1 (33)  H1 roll servo        -> channel 0 -> propulsion/engine[0]/lateral-ctrl-rad
+    SERVO2 Motor2 (34)  H1 pitch servo       -> channel 1 -> propulsion/engine[0]/longitudinal-ctrl-rad (inverted)
+    SERVO3 Motor3 (35)  H1 collective servo  -> channel 2 -> propulsion/engine[0]/collective-ctrl-rad
+    SERVO4 Motor4 (36)  tail servo           -> channel 3 -> fcs/notar/pedal-cmd-norm
+    SERVO8 HeliRSC (31) rotor speed control  -> channel 7 -> Motor index 0, i.e. fcs/throttle-cmd-norm[0]
+
+  H_SW_TYPE 1 (H1, non-CCPM): ArduPilot sends roll, pitch and collective each on its own servo (servo 1 = 0.9 x roll,
+  servo 2 = 0.9 x pitch, servo 3 = collective, AP_MotorsHeli_Swash.cpp), and FGRotor takes exactly those three, so each
+  binds straight to its property. H3-120 would mix them onto three servos and need a demixer system to undo it
+  (ingenuity's Systems/rotor_control.xml); this model has no swashplate to model, so it gets none.
+
+  Signs, measured (validate.py's trimmed DGW hover at 500 ft, controls then frozen, one step against an unstepped twin,
+  dt 1/240 and 1/1000 alike); ArduPilot's outputs are body FRD: + roll = right wing down, + pitch = nose UP, + yaw =
+  nose right (AC_AttitudeControl rate loops; SIM_Helicopter.cpp turns + pitch into + pitch acceleration):
+    lateral-ctrl-rad +0.01       -> p +0.91 deg/s at 0.05 s, +9.0 at 1 s: roll right            -> as is
+    longitudinal-ctrl-rad +0.01  -> q -0.18 deg/s at 0.05 s, -4.4 at 2 s: nose DOWN             -> inverted
+    pedal-cmd-norm +0.1          -> r +0.73 deg/s at 0.05 s, +15.7 at 1 s: nose right           -> as is
+    collective-ctrl-rad +0.01    -> climb +0.43 ft/s at 0.2 s, +1.5 at 1 s (and r +5.9 deg/s at 1 s: rotor torque)
+  Ranges:
+    cyclic      servo -1..1 = -0.35..0.35 rad, scripts/validate.py's CYCLIC_LIMIT_RAD (the range the model was flown
+                with). H1 puts 0.9 x roll on the servo and AP_MotorsHeli_Single caps |(roll, pitch)| at H_CYC_MAX / 4500,
+                so H_CYC_MAX 4500 reaches 0.315 rad (18.0 deg); the 105 kt cruise at 10000 ft trims at 11.6 deg forward
+                and 3.3 deg lateral (12.1 deg together, validate_zt.log).
+    collective  PWM 1000..2000 read as 0..1 = 0..0.5 rad root pitch, scripts/validate.py's COLLECTIVE_RANGE_RAD.
+                ArduPilot drives 1237..2000 of it (H_COL_MIN..H_COL_MAX = 6.8..28.65 deg, H_COL_ANG_MIN..MAX): zero
+                thrust at 8.80 deg, DGW hover at 20.08 deg (both measured).
+    pedal       PWM 1000..2000 (SERVO4_MIN..MAX in the param file; ArduPilot's own 1100..1900 would stop it at +-0.8)
+                = -1..1 = sleeve 180..0 deg (Systems/notar.xml); neutral is the DGW sea-level hover's anti-torque.
+    RSC         PWM 1000..2000 read as 0..1 onto fcs/throttle-cmd-norm[0] through the engine binding (type Motor index 0:
+                PteroSim sets the FCS throttle command and starts the engine on the first command above 0.01; a
+                property= binding would do neither). Above 0.5 Systems/orca_governor.xml holds 243.5 rpm, below it the
+                value is the N1 command, 0 = ground idle. H_RSC_SETPOINT 100 and H_RSC_IDLE 0 use exactly that.
+-->
+<control_bindings stack="ArduPilot">
+  <binding stack="ArduPilot" channel="0" property="propulsion/engine[0]/lateral-ctrl-rad" in="-1 1" out="-0.35 0.35" label="h1_roll"/>
+  <binding stack="ArduPilot" channel="1" property="propulsion/engine[0]/longitudinal-ctrl-rad" in="-1 1" out="-0.35 0.35" invert="1" label="h1_pitch"/>
+  <binding stack="ArduPilot" channel="2" property="propulsion/engine[0]/collective-ctrl-rad" in="0 1" out="0 0.5" label="h1_collective"/>
+  <binding stack="ArduPilot" channel="3" property="fcs/notar/pedal-cmd-norm" in="-1 1" out="-1 1" label="notar_pedal"/>
+  <binding stack="ArduPilot" channel="7" type="Motor" index="0" in="0 1" out="0 1" label="rsc"/>
+</control_bindings>

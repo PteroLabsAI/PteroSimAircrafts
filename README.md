@@ -35,6 +35,7 @@ so JSBSim loads the new definition.
 | <img src="docs/previews/explora.jpg" width="320" alt="eXplora Tailsitter VTOL"> | `explora` | eXplora Tailsitter VTOL | A 3D-printed dual-motor tailsitter flying wing with two elevons, built from the open-source eXplora design files, with ArduPlane and PX4 profiles. |
 | <img src="docs/previews/F450.jpg" width="320" alt="DJI F450"> | `F450` | DJI F450 | A baseline quadcopter using an F450 frame, DJI E305 motors, and 9450 propellers. |
 | <img src="docs/previews/ingenuity.jpg" width="320" alt="Ingenuity Mars Helicopter"> | `ingenuity` | Ingenuity Mars Helicopter | NASA's coaxial Mars helicopter: two counter-rotating rotors with their own swashplates on one mast, four legs, NASA's own 3D model as its meshes, an ArduCopter dual-helicopter profile; meant for a Mars scene. |
+| <img src="docs/previews/orca.jpg" width="320" alt="Orca"> | `orca` | Orca | An unmanned version of NASA's Quiet Single Main Rotor helicopter: a six-blade articulated rotor, a turboshaft, NOTAR-principle anti-torque with a thruster sleeve that turns with the pedals, meshes built from NASA's OpenVSP model, and an ArduCopter helicopter profile. |
 | <img src="docs/previews/quadtailsitter.jpg" width="320" alt="Quad tailsitter"> | `quadtailsitter` | Quad tailsitter | A tailsitter VTOL: it takes off and lands vertically, then flies forward like a fixed-wing aircraft. |
 | <img src="docs/previews/standard_vtol.jpg" width="320" alt="Standard VTOL"> | `standard_vtol` | Standard VTOL | A fixed-wing VTOL with four lift rotors and a separate pusher propeller. |
 | <img src="docs/previews/tiltrotor.jpg" width="320" alt="Tiltrotor"> | `tiltrotor` | Tiltrotor | A convertible aircraft with tilting nacelles: rotor mode for take-off and fixed-wing mode for forward flight. |
@@ -63,3 +64,6 @@ Third-party licences and notices remain in the directories of the relevant aircr
   Johnson and Grip AIAA paper), with NASA's own [Ingenuity 3D model](https://science.nasa.gov/resource/mars-ingenuity-helicopter-3d-model/)
   (NASA/JPL-Caltech, under the NASA media usage guidelines; NASA does not endorse PteroSim) as its meshes.
   `ingenuity/NOTICE` lists every source.
+- `orca` is a JSBSim model of an unmanned version of NASA's Quiet Single Main Rotor helicopter (QSMR), written from
+  NASA's published design data (Johnson 2020, Ventura Diaz et al. 2022, NASA/TM-20210017971) and published NOTAR papers,
+  with meshes built from NASA's OpenVSP model of it (NASA does not endorse PteroSim). `orca/NOTICE` lists every source.
