@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!-- Orca main rotor: 6 blades, articulated, counter-clockwise from above (Propulsion.xml).
+     [J20] Johnson 2020 Table 2 (450 ft/s column) and p.8; [V22] Ventura Diaz 2022 Table 1 and Table 3; [NT] NDARC
+     theory 2022. Blade mass: the rotor group is 330 lb [J20 Table 2]; 0.6 of it in the blades (chosen, no evidence),
+     33 lb a blade, spread evenly from the flap hinge e to the tip: m = 1.0257 slug, L = R - e = 16.846 ft.
+       flapping moment I_b = m L^2 / 3 = 97.03 slug ft2;   mass moment S = m L / 2 = 8.639 slug ft
+       Lock number rho a c R^4 / I_b = 0.0023769 * 5.7 * 0.918 * 17.64^4 / 97.03 = 12.4 (sea level)
+     Rotor kinetic energy 1/2 J Omega^2 = 234,000 ft lb: 0.92 s of the 462 hp, where NDARC calls KE/P >= 3 s good for
+     small helicopters [NT 'autorotation index']; even all 330 lb in the blades gives 1.2 s (README.md, limits). -->
+
+<rotor name="orca_main_rotor">
+
+  <diameter unit="FT">      35.28 </diameter>      <!-- 2 x 17.64 [J20 Table 2] -->
+  <numblades>                   6 </numblades>     <!-- [J20 Table 2] -->
+  <nominalrpm>              243.5 </nominalrpm>    <!-- Omega 25.5 rad/s [V22 Table 3]; 450 ft/s / 17.64 ft -->
+  <minrpm>                    1.0 </minrpm>        <!-- FGRotor's floor; the rotor model needs a non-zero speed -->
+  <maxrpm>                  487.0 </maxrpm>        <!-- 2 x nominal: not a limit, high enough that an overspeed shows -->
+  <gearratio>              24.706 </gearratio>     <!-- 6016 / 243.5: engine output speed (Engines/orca_turboshaft.xml) -->
+  <gearloss unit="HP">        0.0 </gearloss>      <!-- the 4 % gearbox loss is charged through the brake (Systems/notar.xml) -->
+  <gearmoment unit="SLUG*FT2"> 71.9 </gearmoment>  <!-- chosen: FGRotor's own 0.1 x polar moment, no power-turbine data -->
+
+  <chord unit="FT">         0.918 </chord>         <!-- sigma pi R / Nb = 0.0994 pi 17.64 / 6 [J20 Table 2] -->
+  <liftcurveslope>            5.7 </liftcurveslope> <!-- NDARC's blade lift slope for the Lock number [NT ch.12] -->
+  <twist unit="RAD">     -0.20944 </twist>          <!-- -12 deg linear [J20 p.8, V22 Table 1] -->
+  <hingeoffset unit="FT">   0.794 </hingeoffset>   <!-- flap hinge 0.045 R [J20 p.8] -->
+  <tiplossfactor>           0.979 </tiplossfactor> <!-- Prandtl B = 1 - sqrt(2 CT) / Nb, CT 0.00831 at DGW sea level -->
+
+  <flappingmoment unit="SLUG*FT2"> 97.03 </flappingmoment> <!-- derived above -->
+  <massmoment>                     8.639 </massmoment>     <!-- slug ft, derived above -->
+  <!-- 6 blades m (R^3 - e^3) / (3 L) = 668.3, hub 132 lb at 0.75 ft radius of gyration = 2.3 (chosen: half the
+       VSP hub's 1.5 ft radius), NOTAR fan reflected = 48.4: a 10 lb disc of 25.5 in (ERF 1983 fan diameter; mass chosen)
+       turning at the main rotor's 450 ft/s tip speed (chosen), 16.6 x rotor speed: 0.1754 x 16.6^2 -->
+  <polarmoment unit="SLUG*FT2">    719.0 </polarmoment>
+
+  <!-- Pitt-Peters uniform-inflow time constant 0.849 / (4 lambda Omega), lambda = sqrt(CT/2) = 0.0645 at DGW sea level -->
+  <inflowlag>                 0.129 </inflowlag>
+
+  <!-- Brake = NOTAR fan + gearbox loss (Systems/notar.xml writes it). Sized at the envelope corner: fan at full left
+       or right pedal (2 x 1.709 ft2 + slot 0.02332 x 8.803 ft) 89.8 hp at sea level and 100 % speed, x sqrt(rho_SL /
+       rho_20000ft) for the constant-pressure boom's faster exit at altitude, x 1.1^3 at 110 % rotor speed = 163.8 hp;
+       + 4 % of (462 + 163.8) = 188.8, rounded up to 189 hp. scripts/validate.py fails if the brake ever saturates. -->
+  <maxbrakepower unit="HP">   189.0 </maxbrakepower>
+
+  <!-- Ground effect OFF: FGRotor multiplies the inflow by its ground-effect factor fs inside the inflow lag on every
+       step, nu = fs ((nu - c0) e + c0) with e = exp(-dt / inflowlag), so the steady inflow is fs (1 - e) / (1 - fs e) c0,
+       not fs c0: on the gear (fs 0.78) 10 % of c0 at dt 1/240 and 3 % at 1/1000. The k that would match Cheeseman and
+       Bennett (README.md) waits for that fix in FGRotor.cpp calc_flow_and_thrust. -->
+  <groundeffectexp>            0.0 </groundeffectexp>
+
+</rotor>

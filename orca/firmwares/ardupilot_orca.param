@@ -1,0 +1,211 @@
+# ArduPilot (ArduCopter single heli) SITL parameters for orca (NASA QSMR, unmanned):
+#   sim_vehicle.py -v ArduCopter -f heli --model JSON:<host> --add-param-file=<this file>
+# Self-contained: with --model JSON the binary loads no frame defaults (standard_vtol / explora convention), so this file
+# carries the file sim_vehicle would otherwise load for -f heli (Tools/autotest/pysim/vehicleinfo.json:
+# default_params/copter-heli.parm, ArduPilot b7ba8bca02, 2025-08-09) with the vehicle's own values last; the keys the
+# last block sets are left out of the first. Everything not listed is ArduCopter's own default.
+#
+# Not from NASA: QSMR is a design study with no flight control system. The numbers below come from the JSBSim model,
+# measured with the fork build in validate.py's trimmed DGW hover at 500 ft (controls frozen, one step against an
+# unstepped twin, dt 1/240 and 1/1000 alike), or from ArduPilot's own defaults, as each line says.
+#
+# Channel map (channel = SERVOn - 1), the functions a single heli assigns by default, written out so Controls.xml can
+# cite them:
+#   SERVO1 = Motor1 (33)   H1 roll        -> channel 0 -> propulsion/engine[0]/lateral-ctrl-rad,  +-0.35 rad
+#   SERVO2 = Motor2 (34)   H1 pitch       -> channel 1 -> propulsion/engine[0]/longitudinal-ctrl-rad, inverted
+#   SERVO3 = Motor3 (35)   H1 collective  -> channel 2 -> propulsion/engine[0]/collective-ctrl-rad, 6.8..28.65 deg
+#   SERVO4 = Motor4 (36)   tail servo     -> channel 3 -> fcs/notar/pedal-cmd-norm, -1..1
+#   SERVO8 = HeliRSC (31)  rotor speed    -> channel 7 -> engine 0 throttle (Systems/orca_governor.xml)
+#
+# Rate gains. Plant per unit of ArduPilot output (H1 servo = 0.9 x output, servo 1 = 0.35 rad: 0.315 rad per unit),
+# fitted to first order on the steps: roll 17.45 rad/s per rad of lateral cyclic, tau 0.415 s -> 5.50 rad/s per unit;
+# pitch 9.35 rad/s per rad, tau 1.13 s -> 2.95 rad/s per unit; yaw an integrator, 2.8 rad/s^2 per unit pedal (no
+# steady rate within 3 s). Method, from ArduPilot's heli tuning order (FF first, then P/D, I last):
+#   FF = 1 / steady rate per unit (what tuning FF in ACRO converges on); yaw none, its plant has no steady rate
+#   rate loop closed at w = 1 / (3 tau_flap) = 6.59 rad/s, tau_flap = 16 / (Lock 12.4 x 25.5 rad/s) = 0.051 s
+#     (the factor 3: chosen): P = (tau w - 1) / G per unit; yaw P = w / 2.8
+#   ATC_ANG_*_P = w / 2 = 3.3: attitude loop damping 0.7 around that rate loop
+#   I = FF (ArduPilot's heli defaults set RP_I = RP_FF = 0.15); yaw I = P / 1.5 s (heli defaults YAW_P/YAW_I 0.18/0.12)
+#   D = P x 0.042 s (heli defaults RP_D/RP_P 0.001/0.024), yaw D = P x 0.0167 s (YAW_D/YAW_P 0.003/0.18)
+# Pitch P and D and yaw P sit above the GCS's advisory ranges (0.35, 0.03, 0.6): a full-size rotor gives far less
+# angular acceleration per unit output than the RC helicopters those ranges were written for.
+# Acceleration limits: half the measured full-control acceleration (half: chosen): roll 18.3 deg/s^2 per 0.01 rad x
+# 0.315 rad = 576, pitch 3.66 x 31.5 = 115, yaw 14.6 deg/s^2 per 0.1 pedal x 10 = 146.
+# Checked in SITL (this commit's arducopter-heli, JSON backend, the model at 1 kHz; at 240 Hz ArduCopter refuses to arm,
+# its 400 Hz loop and gyro checks): ALT_HOLD hover at 10 m holds height to +-0.02 m, attitude to 0.06 deg; 5 deg roll
+# and pitch stick steps overshoot 10..19 % and reach 90 % in 0.7..0.8 s; a 40 deg/s yaw stop overshoots 7 deg.
+
+# ---- ArduPilot default_params/copter-heli.parm (SITL heli defaults; INS offsets make SITL treat the IMU as calibrated)
+BATT_MONITOR 4.0000
+COMPASS_OFS2_X 5.0000
+COMPASS_OFS2_Y 13.0000
+COMPASS_OFS2_Z -18.0000
+COMPASS_OFS3_X 1.0000
+COMPASS_OFS3_Y 1.0000
+COMPASS_OFS3_Z 1.0000
+COMPASS_OFS_X 2.8749
+COMPASS_OFS_Y -21.8262
+COMPASS_OFS_Z -21.8422
+FLTMODE1 7.0000
+FLTMODE2 9.0000
+FLTMODE3 6.0000
+FLTMODE4 3.0000
+FLTMODE5 5.0000
+INS_ACCOFFS_X 0.001
+INS_ACCOFFS_Y 0.001
+INS_ACCOFFS_Z 0.001
+INS_ACCSCAL_X 1.001
+INS_ACCSCAL_Y 1.001
+INS_ACCSCAL_Z 1.001
+INS_ACC2OFFS_X 0.001
+INS_ACC2OFFS_Y 0.001
+INS_ACC2OFFS_Z 0.001
+INS_ACC2SCAL_X 1.001
+INS_ACC2SCAL_Y 1.001
+INS_ACC2SCAL_Z 1.001
+INS_ACC3OFFS_X 0.000
+INS_ACC3OFFS_Y 0.000
+INS_ACC3OFFS_Z 0.000
+INS_ACC3SCAL_X 1.000
+INS_ACC3SCAL_Y 1.000
+INS_ACC3SCAL_Z 1.000
+ATC_INPUT_TC 0.20
+ATC_RAT_PIT_FLTD 0
+ATC_RAT_PIT_FLTE 20
+ATC_RAT_PIT_FLTT 20
+ATC_RAT_PIT_ILMI 0.1
+ATC_RAT_PIT_IMAX 0.4
+ATC_RAT_RLL_FLTD 0
+ATC_RAT_RLL_FLTE 20
+ATC_RAT_RLL_FLTT 20
+ATC_RAT_RLL_ILMI 0.1
+ATC_RAT_RLL_IMAX 0.4
+ATC_RAT_YAW_FLTD 0
+ATC_RAT_YAW_FLTE 0
+ATC_RAT_YAW_FLTT 20
+ATC_RAT_YAW_ILMI 0
+# a servo tail with H_COL2YAW 0 never raises limit.yaw (it needs |yaw| > 1, the rate loop clamps to 1 first): the I term
+# winds up; the hover pedal trim seen is -0.22..+0.10
+ATC_RAT_YAW_IMAX 0.5
+RC1_MAX 2000.000000
+RC1_MIN 1000.000000
+RC1_TRIM 1500.000000
+RC2_MAX 2000.000000
+RC2_MIN 1000.000000
+RC2_TRIM 1500.000000
+RC3_MAX 2000.000000
+RC3_MIN 1000.000000
+RC3_TRIM 1500.000000
+RC4_MAX 2000.000000
+RC4_MIN 1000.000000
+RC4_TRIM 1500.000000
+RC5_MAX 2000.000000
+RC5_MIN 1000.000000
+RC5_TRIM 1500.000000
+RC6_MAX 2000.000000
+RC6_MIN 1000.000000
+RC6_TRIM 1500.000000
+RC7_MAX 2000.000000
+RC7_MIN 1000.000000
+RC7_TRIM 1500.000000
+RC8_MAX 2000.000000
+RC8_MIN 1000.000000
+RC8_TRIM 1500.000000
+RPM1_TYPE 10
+IM_ACRO_COL_EXP 0.2
+# NE position loop: TradHeli's 1 / 1 / 0.5 / 0 held a 6 s, +-0.4 m fore-aft swing in a LOITER hover behind the 0.16 s delay and
+# 0.34 s lag from target to measured acceleration (log fit); chosen on a model of that loop, stable to 1.5x the lag; flown:
+# hover swing 0.01 m, 60 m square misses <= 0.1 m and cross-track 0.4 m
+PSC_NE_POS_P 0.8
+PSC_NE_VEL_P 3.0
+PSC_NE_VEL_I 0.5
+PSC_NE_VEL_D 0.75
+# waypoints: 1 m/s^2 along and round a corner, 5.8 deg of lean, not 2.5 and twice that at corners (14 and 27 deg, the
+# +-15 deg swings); a corner blends within 0.5 m of its waypoint, not 2 m (the 1.9..2.4 m misses at "reached")
+WP_ACC 1.0
+WP_ACC_CNR 1.0
+WP_RADIUS_M 0.5
+# face the planned path, not TradHeli's default 3, the measured ground course: stopping at a corner the drift swung the
+# nose to 225 deg on a 180 deg leg, and the turn's NOTAR side force fed the drift it was chasing
+WP_YAW_BEHAVIOR 1
+SERVO8_MIN 1000.000000
+SERVO8_MAX 2000.000000
+
+# ---- explicit servo functions (single-heli defaults)
+SERVO1_FUNCTION 33
+SERVO2_FUNCTION 34
+SERVO3_FUNCTION 35
+SERVO4_FUNCTION 36
+SERVO8_FUNCTION 31
+
+# ---- orca (every copter-heli.parm key the vehicle changes is restated here)
+FRAME_CLASS 6
+# H1: roll, pitch and collective each on one servo, which is what FGRotor takes (Controls.xml)
+H_SW_TYPE 1
+H_TAIL_TYPE 0
+# tail servo over the whole PWM range: SERVO4's 1100..1900 default would stop the pedal at +-0.8
+SERVO4_MIN 1000
+SERVO4_MAX 2000
+# collective: the binding maps PWM 1000..2000 to 0..0.5 rad root pitch (scripts/validate.py's COLLECTIVE_RANGE_RAD);
+# ArduPilot uses 6.8..28.65 deg of it. The floor: ArduPilot's defaults put COL_ANG_MIN and COL_LAND_MIN 2 deg below
+# their zero thrust (-2 against 0), here 8.8 - 2 = 6.8 deg (-258 lb at 7 deg on the ground), PWM 1000 + 1000 x 6.8 /
+# 28.65. With the floor at 0 deg, STABILIZE's low stick gave -8.8 deg of thrust pitch: the disc pushed the aircraft
+# along on its unbraked wheels (SITL, 2.4 m/s before take-off).
+H_COL_MIN 1237
+H_COL_MAX 2000
+H_COL_ANG_MIN 6.8
+H_COL_ANG_MAX 28.65
+# measured: thrust crosses zero at 8.80 deg on the ground at governed rpm (= 0.75 x 12 deg twist x tip loss 0.979)
+H_COL_ZERO_THRST 8.8
+H_COL_LAND_MIN 6.8
+# measured: DGW sea-level hover at 20.08 deg, (20.08 - 6.8) / (28.65 - 6.8) (learnt from here on)
+H_COL_HOVER 0.61
+# 0.9 x 4500/4500 x 0.35 rad = 18.0 deg of cyclic; the 105 kt cruise at 10000 ft trims at 12.1 deg (validate_zt.log)
+H_CYC_MAX 4500
+# the model governs its rotor: setpoint mode, full scale clears the governor's 0.5 engage threshold by the most
+H_RSC_MODE 2
+H_RSC_SETPOINT 100
+# interlock off = throttle 0 = ground idle N1, governor off (Systems/orca_governor.xml)
+H_RSC_IDLE 0
+# measured, collective 10 deg, governor engaging at half ramp: from rest 99 % rpm at 3.8 s with a 1 s ramp (from ground
+# idle 144 rpm: 3.3 s); runup = 3.8 s rounded up past ramp + 1 s (the parameter's own rule). The rotor then overshoots to
+# 102.5 % and is back inside 1 % only after ~17 s (the governor's integrator)
+H_RSC_RAMP_TIME 1
+H_RSC_RUNUP_TIME 5
+# the parameter's rule: estimated speed below critical ~3 s after the interlock drops, 1 - 3 / 5
+H_RSC_CRITICAL 40
+# take-off collective slew, land min to full in this many seconds (the maximum; ArduPilot's 2 s is 11 deg/s here): the
+# model's governor droops 5 % for a 3 deg collective step in hover and the NOTAR's anti-torque goes as rpm^2
+TKOFF_SLEW_TIME 5
+# hover attitude, the one LOITER holds still in, averaged over 30 s in two flights: roll -4.73 and -4.72 deg (left, the
+# NOTAR pushes the tail right; negative for a counter-clockwise rotor, outside the GCS's 0..1000 hint, inside the code's
+# +-1000 clamp) and pitch +2.94 and +3.07 deg (the shaft's 3 deg tilt), their mean: ALT_HOLD flies that attitude with
+# the sticks centred, and a level that misses it by 0.1 deg drifts ~0.02 m/s^2
+ATC_HOVR_ROL_TRM -473
+AHRS_TRIM_Y 0.0524
+ATC_ANG_RLL_P 3.3
+ATC_ANG_PIT_P 3.3
+ATC_ANG_YAW_P 3.3
+ATC_RAT_RLL_FF 0.18
+ATC_RAT_RLL_P 0.32
+ATC_RAT_RLL_I 0.18
+ATC_RAT_RLL_D 0.013
+ATC_RAT_PIT_FF 0.34
+ATC_RAT_PIT_P 2.2
+ATC_RAT_PIT_I 0.34
+ATC_RAT_PIT_D 0.092
+ATC_RAT_YAW_FF 0
+ATC_RAT_YAW_P 2.35
+ATC_RAT_YAW_I 1.57
+ATC_RAT_YAW_D 0.039
+# acceleration feed-forward for a yaw plant that integrates the pedal, 1 / 2.8 rad/s^2 per unit = 0.36 s^2/rad; half to start
+ATC_RAT_YAW_D_FF 0.18
+ATC_ACC_R_MAX 290
+ATC_ACC_P_MAX 58
+# full left pedal gave 35..50 deg/s^2 stopping a yaw in the sweeps, not the 146 of the small-step fit: stay inside it
+ATC_ACC_Y_MAX 25
+# deg/s: a 30 deg/s yaw stops in 1.2 s and 18 deg at 25 deg/s^2
+ATC_RATE_Y_MAX 30
+# on the gear the 3 deg nose-up level drives ~10 deg of aft cyclic through the take-off ramp and rolls the machine back;
+# 0.3 of the pitch gains leaves ~2.5 deg, the disc about level over the shaft's 3 deg forward tilt
+ATC_LAND_P_MULT 0.3

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<!-- Orca - Propulsion: one turboshaft (2 x 231 hp as one engine, Engines/orca_turboshaft.xml) driving the main rotor.
+     The NOTAR fan has no engine of its own: it is driven off the main gearbox, so its power is charged to the rotor
+     through the rotor brake (Systems/notar.xml) and its forces are applied in Aero.xml and orca.xml. -->
+
+<propulsion>
+
+  <engine file="orca_turboshaft" name="main_rotor">
+    <feed> 0 </feed>
+    <thruster file="orca_main_rotor">
+      <location unit="FT">  <!-- the hub, the structural origin [VSP Rotor_1] -->
+        <x> 0.0 </x>
+        <y> 0.0 </y>
+        <z> 0.0 </z>
+      </location>
+      <orient unit="DEG">
+        <roll>   0.0 </roll>
+        <pitch> 87.0 </pitch>  <!-- shaft 3 deg forward of vertical: VSP rotor Y rotation 87 deg, the disc's front tip lower -->
+        <yaw>    0.0 </yaw>
+      </orient>
+      <sense> 1 </sense>        <!-- counter-clockwise from above: the NOTAR jet blows left [VSP NOTAR_jet] -->
+    </thruster>
+  </engine>
+
+  <tank type="FUEL" number="0">
+    <location unit="FT">  <!-- centre of the VSP FuelTank_1 box: x 4.405..6.310, y -1.429..0.476, z -5.095..-4.095 -->
+      <x>  5.358 </x>
+      <y> -0.477 </y>
+      <z> -4.595 </z>
+    </location>
+    <capacity unit="LBS"> 186.0 </capacity>  <!-- fuel tank capacity [J20 Table 2] -->
+    <contents unit="LBS"> 186.0 </contents>  <!-- full: the DGW mission fuel (Mass.xml) -->
+    <type> JET-A </type>
+  </tank>
+
+</propulsion>

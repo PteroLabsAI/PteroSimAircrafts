@@ -1,0 +1,1408 @@
+<?xml version="1.0"?>
+
+<!-- Orca - Aerodynamics of the airframe: drag and download, the NOTAR circulation-control boom, the twin fins and the
+     horizontal stabiliser. The main rotor is FGRotor's (Engines/orca_main_rotor.xml). Body axes (X forward, Y right,
+     Z down); every force acts at the AERORP (the DGW CG, Metrics.xml) and each surface adds its own moment
+     F x (r_surface - r_AERORP), so JSBSim's transfer to the actual CG stays exact. Arms (ft, from the AERORP
+     (0.219, 0, -4.18), structural frame): l aft, h up.
+     These functions run after the rotor in each step, so they see this step's induced velocity and inflow.
+
+     Rotor wake at a part of the airframe (one set of functions per part; the NOTAR slot differs, see below):
+       - depth z below the disc and station x along it (aft +), the disc tilted 3 deg nose-down with the shaft
+       - momentum-theory induced velocity vi (FGRotor vi-fps) grown with depth as a semi-infinite vortex cylinder,
+         vi (1 + z / sqrt(z^2 + R^2)) (no contraction: FGRotor has no wake geometry)
+       - the wake leaves the disc with the total flow down through it, w = -lambda Omega R, and drifts with the air
+         past the aircraft, (u, -v) (aft, right): at depth z it has moved z (u, -v) / w, i.e. z tan chi away from the
+         flight direction (tan chi = mu / |lambda|). A part spanning x1..x2 on the centreline is immersed where its
+         origin on the disc, (x - z u / w, z v / w), lies within R
+       - Coleman-Feingold gradient 1 + (15 pi / 32) tan(chi/2) r / R [NDARC theory 12-4.1.3] at the middle of the
+         immersed part, r its origin's distance behind the hub along the flight path; with tan(chi/2) = mu / (|lambda|
+         + sqrt(mu^2 + lambda^2)) and mu = |(u, v)| / Omega R that is (15 pi / 32) (x u + y v) / (R Omega R (|lambda|
+         + sqrt(mu^2 + lambda^2)))
+       - with no flow down through the disc (lambda >= 0) nothing is immersed
+     The NOTAR slot is cut into segments, each with its own wake speed, Cmu and Cy (the force is nonlinear in the wake
+     speed, so an average over the slot is biased): vi times the hover radial shape of the mean downwash (blade-element
+     momentum theory with Prandtl tip loss), read at the disc radius its wake came from, the wake contracting with
+     Landgrebe's tip vortex and the downwash growing by continuity, 1 / c^2; with the drift and the Coleman gradient
+     above about that origin (scripts/bemt_inflow.py writes the block).
+     [J20] Johnson 2020; [VSP] NASA's OpenVSP QSMR; [NT]/[NI] NDARC theory 2022 / input 2025. -->
+
+<aerodynamics>
+
+  <property value="17.64">  aero/wake/rotor-radius-ft </property>        <!-- [J20 Table 2] -->
+  <property value="1.4726"> aero/wake/coleman-factor </property>         <!-- 15 pi / 32 [NT 12-4.1.3] -->
+
+  <!-- Horizontal stabiliser: x 18.769..21.326 at z -2.5 [VSP]; disc x 18.613..21.166, depth at mid 3.546 -->
+  <property value="18.613"> aero/wake/stab-x1-ft </property>
+  <property value="21.166"> aero/wake/stab-x2-ft </property>
+  <property value="3.546">  aero/wake/stab-depth-ft </property>
+  <!-- Airframe (download): the part under the disc in hover, nose x -10.5 [VSP body] to the disc edge; disc x
+       -10.70..17.64, at the CG depth 0.219 sin3 + 4.18 cos3 = 4.186 -->
+  <property value="-10.70"> aero/wake/airframe-x1-ft </property>
+  <property value="17.64">  aero/wake/airframe-x2-ft </property>
+  <property value="4.186">  aero/wake/airframe-depth-ft </property>
+
+  <!-- Drag areas. Forward: D/q 5.29 ft2 [J20 Table 2]. Vertical: NDARC's download (D/q)V = kDL A, kDL 0.05 [NI kDL]
+       = 48.9 ft2, i.e. a drag coefficient of 0.423 on the 115.6 ft2 top projection under the disc (measured on the
+       VSP body). Side: the same 0.423 on the 151.3 ft2 side projection less one fin's 11.2 ft2 (the fins have their own
+       model) = 59.3 ft2. Crossflow principle: each body axis sees its own velocity component. -->
+  <property value="5.29">   aero/airframe/drag-area-x-ft2 </property>
+  <property value="59.3">   aero/airframe/drag-area-y-ft2 </property>
+  <property value="48.9">   aero/airframe/drag-area-z-ft2 </property>
+
+  <!-- NOTAR boom: diameter 2.0 ft [VSP tail boom]; slot on the boom axis z -3.27, h 0.91 (arms aft per segment) -->
+  <property value="2.0">    aero/notar/boom-diameter-ft </property>
+  <property value="0.91">   aero/notar/boom-arm-up-ft </property>
+
+  <!-- Fins: two endplates, chord 2.744 (x 18.727..21.471), span 4.083 (z -4.125..-0.042) [VSP]: area 2 x 11.20.
+       Aspect ratio 4.083 / 2.744 = 1.488; Helmbold's low-aspect-ratio slope 2 pi A / (2 + sqrt(A^2 + 4)) = 2.08 /rad.
+       Quarter chord x 19.413, mid-span z -2.084: l 19.194, h 2.096.
+       Incidence: chosen so the fins carry 70 % of the yaw balance (inside the published 50-90 % [J20 p.6]) at
+       NASA's cruise, 105.4 kt at 10000 ft and DGW, with no sideslip: 0.084 rad gave 57.2 % and the fin is linear
+       there, so 0.084 x 0.70 / 0.572 = 0.103 (scripts/validate.py prints 70.0 %). Positive pushes the tail right. -->
+  <property value="22.41">  aero/fin/area-ft2 </property>
+  <property value="19.194"> aero/fin/arm-aft-ft </property>
+  <property value="2.096">  aero/fin/arm-up-ft </property>
+  <property value="0.103">  aero/fin/incidence-rad </property>
+
+  <!-- Stabiliser: chord 2.557, span 2 x 4.347 [VSP], area 22.23, A = 8.694^2 / 22.23 = 3.40, Helmbold 3.59 /rad,
+       incidence 0 (VSP rotation 0). Quarter chord x 19.408, z -2.5: l 19.189, h 1.68. -->
+  <property value="22.23">  aero/stab/area-ft2 </property>
+  <property value="19.189"> aero/stab/arm-aft-ft </property>
+  <property value="1.68">   aero/stab/arm-up-ft </property>
+
+  <!-- ========== Rotor wake ========== -->
+
+  <function name="aero/wake/flowing-down">
+    <lt><property> propulsion/engine[0]/inflow-ratio </property><value> 0.0 </value></lt>
+  </function>
+
+  <function name="aero/wake/tip-speed-fps">
+    <product>
+      <property> propulsion/engine[0]/rotor-rpm </property>
+      <property> fcs/notar/rad-per-rev-min </property>
+      <property> aero/wake/rotor-radius-ft </property>
+    </product>
+  </function>
+
+  <function name="aero/wake/down-flow-fps">
+    <product>
+      <value> -1.0 </value>
+      <property> propulsion/engine[0]/inflow-ratio </property>
+      <property> aero/wake/tip-speed-fps </property>
+    </product>
+  </function>
+
+  <!-- wake drift aft and to the right per foot of depth: u / w and -v / w -->
+  <function name="aero/wake/drift-aft">
+    <ifthen>
+      <property> aero/wake/flowing-down </property>
+      <quotient><property> velocities/u-aero-fps </property><property> aero/wake/down-flow-fps </property></quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/wake/drift-right">
+    <ifthen>
+      <property> aero/wake/flowing-down </property>
+      <quotient>
+        <product><value> -1.0 </value><property> velocities/v-aero-fps </property></product>
+        <property> aero/wake/down-flow-fps </property>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- (15 pi / 32) / (R Omega R (|lambda| + sqrt(mu^2 + lambda^2))): times (x u + y v) gives the Coleman term -->
+  <function name="aero/wake/coleman-gain">
+    <ifthen>
+      <property> aero/wake/flowing-down </property>
+      <quotient>
+        <property> aero/wake/coleman-factor </property>
+        <product>
+          <property> aero/wake/rotor-radius-ft </property>
+          <property> aero/wake/tip-speed-fps </property>
+          <sum>
+            <product><value> -1.0 </value><property> propulsion/engine[0]/inflow-ratio </property></product>
+            <sqrt>
+              <sum>
+                <pow><property> propulsion/engine[0]/advance-ratio </property><value> 2.0 </value></pow>
+                <pow><property> propulsion/engine[0]/inflow-ratio </property><value> 2.0 </value></pow>
+              </sum>
+            </sqrt>
+          </sum>
+        </product>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- stabiliser -->
+  <function name="aero/wake/stab-shift-aft-ft">
+    <product><property> aero/wake/stab-depth-ft </property><property> aero/wake/drift-aft </property></product>
+  </function>
+  <function name="aero/wake/stab-shift-right-ft">
+    <product><property> aero/wake/stab-depth-ft </property><property> aero/wake/drift-right </property></product>
+  </function>
+  <function name="aero/wake/stab-half-width-ft">
+    <sqrt>
+      <max>
+        <value> 0.0 </value>
+        <difference>
+          <pow><property> aero/wake/rotor-radius-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/wake/stab-shift-right-ft </property><value> 2.0 </value></pow>
+        </difference>
+      </max>
+    </sqrt>
+  </function>
+  <function name="aero/wake/stab-lo-ft">
+    <max>
+      <product><value> -1.0 </value><property> aero/wake/stab-half-width-ft </property></product>
+      <difference><property> aero/wake/stab-x1-ft </property><property> aero/wake/stab-shift-aft-ft </property></difference>
+    </max>
+  </function>
+  <function name="aero/wake/stab-hi-ft">
+    <min>
+      <property> aero/wake/stab-half-width-ft </property>
+      <difference><property> aero/wake/stab-x2-ft </property><property> aero/wake/stab-shift-aft-ft </property></difference>
+    </min>
+  </function>
+  <function name="aero/wake/stab-immersed-norm">
+    <product>
+      <property> aero/wake/flowing-down </property>
+      <quotient>
+        <max><value> 0.0 </value><difference><property> aero/wake/stab-hi-ft </property><property> aero/wake/stab-lo-ft </property></difference></max>
+        <difference><property> aero/wake/stab-x2-ft </property><property> aero/wake/stab-x1-ft </property></difference>
+      </quotient>
+    </product>
+  </function>
+  <function name="aero/wake/stab-vi-fps">
+    <product>
+      <property> propulsion/engine[0]/vi-fps </property>
+      <property> aero/wake/stab-immersed-norm </property>
+      <sum>
+        <value> 1.0 </value>
+        <quotient>
+          <property> aero/wake/stab-depth-ft </property>
+          <sqrt><sum><pow><property> aero/wake/stab-depth-ft </property><value> 2.0 </value></pow><pow><property> aero/wake/rotor-radius-ft </property><value> 2.0 </value></pow></sum></sqrt>
+        </quotient>
+      </sum>
+      <sum>
+        <value> 1.0 </value>
+        <product>
+          <property> aero/wake/coleman-gain </property>
+          <sum>
+            <product>
+              <value> 0.5 </value>
+              <sum><property> aero/wake/stab-lo-ft </property><property> aero/wake/stab-hi-ft </property></sum>
+              <property> velocities/u-aero-fps </property>
+            </product>
+            <product><property> aero/wake/stab-shift-right-ft </property><property> velocities/v-aero-fps </property></product>
+          </sum>
+        </product>
+      </sum>
+    </product>
+  </function>
+
+  <!-- airframe -->
+  <function name="aero/wake/airframe-shift-aft-ft">
+    <product><property> aero/wake/airframe-depth-ft </property><property> aero/wake/drift-aft </property></product>
+  </function>
+  <function name="aero/wake/airframe-shift-right-ft">
+    <product><property> aero/wake/airframe-depth-ft </property><property> aero/wake/drift-right </property></product>
+  </function>
+  <function name="aero/wake/airframe-half-width-ft">
+    <sqrt>
+      <max>
+        <value> 0.0 </value>
+        <difference>
+          <pow><property> aero/wake/rotor-radius-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/wake/airframe-shift-right-ft </property><value> 2.0 </value></pow>
+        </difference>
+      </max>
+    </sqrt>
+  </function>
+  <function name="aero/wake/airframe-lo-ft">
+    <max>
+      <product><value> -1.0 </value><property> aero/wake/airframe-half-width-ft </property></product>
+      <difference><property> aero/wake/airframe-x1-ft </property><property> aero/wake/airframe-shift-aft-ft </property></difference>
+    </max>
+  </function>
+  <function name="aero/wake/airframe-hi-ft">
+    <min>
+      <property> aero/wake/airframe-half-width-ft </property>
+      <difference><property> aero/wake/airframe-x2-ft </property><property> aero/wake/airframe-shift-aft-ft </property></difference>
+    </min>
+  </function>
+  <function name="aero/wake/airframe-immersed-norm">
+    <product>
+      <property> aero/wake/flowing-down </property>
+      <quotient>
+        <max><value> 0.0 </value><difference><property> aero/wake/airframe-hi-ft </property><property> aero/wake/airframe-lo-ft </property></difference></max>
+        <difference><property> aero/wake/airframe-x2-ft </property><property> aero/wake/airframe-x1-ft </property></difference>
+      </quotient>
+    </product>
+  </function>
+  <function name="aero/wake/airframe-vi-fps">
+    <product>
+      <property> propulsion/engine[0]/vi-fps </property>
+      <property> aero/wake/airframe-immersed-norm </property>
+      <sum>
+        <value> 1.0 </value>
+        <quotient>
+          <property> aero/wake/airframe-depth-ft </property>
+          <sqrt><sum><pow><property> aero/wake/airframe-depth-ft </property><value> 2.0 </value></pow><pow><property> aero/wake/rotor-radius-ft </property><value> 2.0 </value></pow></sum></sqrt>
+        </quotient>
+      </sum>
+      <sum>
+        <value> 1.0 </value>
+        <product>
+          <property> aero/wake/coleman-gain </property>
+          <sum>
+            <product>
+              <value> 0.5 </value>
+              <sum><property> aero/wake/airframe-lo-ft </property><property> aero/wake/airframe-hi-ft </property></sum>
+              <property> velocities/u-aero-fps </property>
+            </product>
+            <product><property> aero/wake/airframe-shift-right-ft </property><property> velocities/v-aero-fps </property></product>
+          </sum>
+        </product>
+      </sum>
+    </product>
+  </function>
+
+  <!-- ========== NOTAR circulation-control boom ========== -->
+
+  <!-- Cmu w^2 = 2 (h / D) Vj^2: a crossflow w gives Cmu = this / w^2 [Mechanika 2018 eq. 21; Bakir eq. 3.62]. An upward
+       crossflow meets the slot jet head-on and gets no force: no data. -->
+  <function name="aero/notar/cmu-w2-fps2">
+    <product>
+      <value> 2.0 </value>
+      <quotient><property> fcs/notar/slot-width-ft </property><property> aero/notar/boom-diameter-ft </property></quotient>
+      <pow><property> fcs/notar/exit-velocity-fps </property><value> 2.0 </value></pow>
+    </product>
+  </function>
+
+  <function name="aero/notar/segment-length-ft">
+    <quotient>
+      <property> fcs/notar/slot-length-ft </property>
+      <property> aero/notar/slot-segment-count </property>
+    </quotient>
+  </function>
+
+  <!-- BEGIN slot segments: written by scripts/bemt_inflow.py 8, do not edit. Derived there: the shape table (BEMT
+       with Prandtl tip loss, theta0 19.83 deg for CT 0.00855, the DGW sea-level hover), each segment's
+       station in the disc plane, depth below the tip-path plane, Landgrebe contraction there and arm aft of the AERORP.
+       Cy vs Cmu: Sampatacos [Mechanika 2018 Table 2], held above 0.5 [Luo, ICAS 2000]. -->
+  <property value="8"> aero/notar/slot-segment-count </property>
+
+  <!-- segment 1 of 8: slot x 9.841 ft -->
+  <property value="9.657"> aero/notar/slot1/disc-x-ft </property>
+  <property value="6.352"> aero/notar/slot1/depth-ft </property>
+  <property value="0.8106"> aero/notar/slot1/contraction </property>
+  <property value="9.622"> aero/notar/slot1/arm-aft-ft </property>
+  <function name="aero/notar/slot1/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot1/disc-x-ft </property>
+        <product><property> aero/notar/slot1/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot1/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot1/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot1/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot1/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot1/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot1/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot1/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot1/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot1/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot1/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot1/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot1/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot1/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot1/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot1/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot1/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot1/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot1/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot1/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot1/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 2 of 8: slot x 10.942 ft -->
+  <property value="10.755"> aero/notar/slot2/disc-x-ft </property>
+  <property value="6.410"> aero/notar/slot2/depth-ft </property>
+  <property value="0.8102"> aero/notar/slot2/contraction </property>
+  <property value="10.723"> aero/notar/slot2/arm-aft-ft </property>
+  <function name="aero/notar/slot2/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot2/disc-x-ft </property>
+        <product><property> aero/notar/slot2/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot2/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot2/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot2/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot2/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot2/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot2/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot2/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot2/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot2/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot2/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot2/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot2/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot2/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot2/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot2/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot2/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot2/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot2/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot2/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot2/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 3 of 8: slot x 12.042 ft -->
+  <property value="11.854"> aero/notar/slot3/disc-x-ft </property>
+  <property value="6.467"> aero/notar/slot3/depth-ft </property>
+  <property value="0.8097"> aero/notar/slot3/contraction </property>
+  <property value="11.823"> aero/notar/slot3/arm-aft-ft </property>
+  <function name="aero/notar/slot3/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot3/disc-x-ft </property>
+        <product><property> aero/notar/slot3/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot3/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot3/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot3/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot3/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot3/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot3/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot3/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot3/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot3/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot3/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot3/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot3/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot3/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot3/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot3/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot3/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot3/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot3/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot3/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot3/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 4 of 8: slot x 13.142 ft -->
+  <property value="12.953"> aero/notar/slot4/disc-x-ft </property>
+  <property value="6.525"> aero/notar/slot4/depth-ft </property>
+  <property value="0.8093"> aero/notar/slot4/contraction </property>
+  <property value="12.923"> aero/notar/slot4/arm-aft-ft </property>
+  <function name="aero/notar/slot4/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot4/disc-x-ft </property>
+        <product><property> aero/notar/slot4/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot4/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot4/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot4/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot4/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot4/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot4/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot4/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot4/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot4/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot4/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot4/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot4/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot4/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot4/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot4/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot4/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot4/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot4/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot4/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot4/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 5 of 8: slot x 14.243 ft -->
+  <property value="14.052"> aero/notar/slot5/disc-x-ft </property>
+  <property value="6.582"> aero/notar/slot5/depth-ft </property>
+  <property value="0.8088"> aero/notar/slot5/contraction </property>
+  <property value="14.024"> aero/notar/slot5/arm-aft-ft </property>
+  <function name="aero/notar/slot5/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot5/disc-x-ft </property>
+        <product><property> aero/notar/slot5/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot5/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot5/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot5/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot5/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot5/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot5/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot5/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot5/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot5/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot5/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot5/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot5/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot5/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot5/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot5/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot5/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot5/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot5/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot5/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot5/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 6 of 8: slot x 15.343 ft -->
+  <property value="15.151"> aero/notar/slot6/disc-x-ft </property>
+  <property value="6.640"> aero/notar/slot6/depth-ft </property>
+  <property value="0.8084"> aero/notar/slot6/contraction </property>
+  <property value="15.124"> aero/notar/slot6/arm-aft-ft </property>
+  <function name="aero/notar/slot6/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot6/disc-x-ft </property>
+        <product><property> aero/notar/slot6/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot6/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot6/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot6/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot6/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot6/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot6/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot6/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot6/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot6/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot6/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot6/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot6/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot6/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot6/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot6/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot6/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot6/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot6/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot6/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot6/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 7 of 8: slot x 16.443 ft -->
+  <property value="16.250"> aero/notar/slot7/disc-x-ft </property>
+  <property value="6.698"> aero/notar/slot7/depth-ft </property>
+  <property value="0.8080"> aero/notar/slot7/contraction </property>
+  <property value="16.224"> aero/notar/slot7/arm-aft-ft </property>
+  <function name="aero/notar/slot7/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot7/disc-x-ft </property>
+        <product><property> aero/notar/slot7/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot7/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot7/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot7/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot7/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot7/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot7/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot7/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot7/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot7/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot7/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot7/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot7/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot7/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot7/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot7/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot7/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot7/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot7/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot7/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot7/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <!-- segment 8 of 8: slot x 17.544 ft -->
+  <property value="17.349"> aero/notar/slot8/disc-x-ft </property>
+  <property value="6.755"> aero/notar/slot8/depth-ft </property>
+  <property value="0.8075"> aero/notar/slot8/contraction </property>
+  <property value="17.325"> aero/notar/slot8/arm-aft-ft </property>
+  <function name="aero/notar/slot8/origin-aft-ft">
+    <quotient>
+      <difference>
+        <property> aero/notar/slot8/disc-x-ft </property>
+        <product><property> aero/notar/slot8/depth-ft </property><property> aero/wake/drift-aft </property></product>
+      </difference>
+      <property> aero/notar/slot8/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot8/origin-left-ft">
+    <quotient>
+      <product><property> aero/notar/slot8/depth-ft </property><property> aero/wake/drift-right </property></product>
+      <property> aero/notar/slot8/contraction </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot8/origin-r-norm">
+    <quotient>
+      <sqrt>
+        <sum>
+          <pow><property> aero/notar/slot8/origin-aft-ft </property><value> 2.0 </value></pow>
+          <pow><property> aero/notar/slot8/origin-left-ft </property><value> 2.0 </value></pow>
+        </sum>
+      </sqrt>
+      <property> aero/wake/rotor-radius-ft </property>
+    </quotient>
+  </function>
+  <function name="aero/notar/slot8/crossflow-fps">
+    <difference>
+      <product>
+        <property> propulsion/engine[0]/vi-fps </property>
+        <property> aero/wake/flowing-down </property>
+        <table>
+          <independentVar> aero/notar/slot8/origin-r-norm </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.150  0.0000
+            0.200  0.6048
+            0.300  0.7708
+            0.400  0.8937
+            0.500  0.9839
+            0.600  1.0469
+            0.700  1.0858
+            0.800  1.1023
+            0.850  1.1016
+            0.900  1.0900
+            0.940  1.0498
+            0.960  0.9514
+            0.980  0.7786
+            0.990  0.6130
+            0.995  0.4699
+            0.999  0.2388
+            1.000  0.0000
+          </tableData>
+        </table>
+        <pow><property> aero/notar/slot8/contraction </property><value> -2.0 </value></pow>
+        <sum>
+          <value> 1.0 </value>
+          <product>
+            <property> aero/wake/coleman-gain </property>
+            <sum>
+              <product><property> aero/notar/slot8/origin-aft-ft </property><property> velocities/u-aero-fps </property></product>
+              <product><property> aero/notar/slot8/origin-left-ft </property><property> velocities/v-aero-fps </property></product>
+            </sum>
+          </product>
+        </sum>
+      </product>
+      <sum>
+        <property> velocities/w-aero-fps </property>
+        <product><property> velocities/q-rad_sec </property><property> aero/notar/slot8/arm-aft-ft </property></product>
+      </sum>
+    </difference>
+  </function>
+  <function name="aero/notar/slot8/cmu">
+    <ifthen>
+      <gt><property> aero/notar/slot8/crossflow-fps </property><value> 0.0 </value></gt>
+      <quotient>
+        <property> aero/notar/cmu-w2-fps2 </property>
+        <pow><property> aero/notar/slot8/crossflow-fps </property><value> 2.0 </value></pow>
+      </quotient>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+  <function name="aero/notar/slot8/force-lbs">
+    <ifthen>
+      <gt><property> aero/notar/slot8/crossflow-fps </property><value> 0.0 </value></gt>
+      <product>
+        <table>
+          <independentVar> aero/notar/slot8/cmu </independentVar>
+          <tableData>
+            0.000  0.0000
+            0.100  1.1200
+            0.200  4.9800
+            0.300  5.6800
+            0.400  5.9800
+            0.500  6.5100
+          </tableData>
+        </table>
+        <value> 0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <pow><property> aero/notar/slot8/crossflow-fps </property><value> 2.0 </value></pow>
+        <property> aero/notar/boom-diameter-ft </property>
+        <property> aero/notar/segment-length-ft </property>
+      </product>
+      <value> 0.0 </value>
+    </ifthen>
+  </function>
+
+  <function name="aero/notar/boom-force-lbs">
+    <sum>
+      <property> aero/notar/slot1/force-lbs </property>
+      <property> aero/notar/slot2/force-lbs </property>
+      <property> aero/notar/slot3/force-lbs </property>
+      <property> aero/notar/slot4/force-lbs </property>
+      <property> aero/notar/slot5/force-lbs </property>
+      <property> aero/notar/slot6/force-lbs </property>
+      <property> aero/notar/slot7/force-lbs </property>
+      <property> aero/notar/slot8/force-lbs </property>
+    </sum>
+  </function>
+  <function name="aero/notar/boom-yaw-lbsft">
+    <product>
+      <value> -1.0 </value>
+      <sum>
+        <product><property> aero/notar/slot1/arm-aft-ft </property><property> aero/notar/slot1/force-lbs </property></product>
+        <product><property> aero/notar/slot2/arm-aft-ft </property><property> aero/notar/slot2/force-lbs </property></product>
+        <product><property> aero/notar/slot3/arm-aft-ft </property><property> aero/notar/slot3/force-lbs </property></product>
+        <product><property> aero/notar/slot4/arm-aft-ft </property><property> aero/notar/slot4/force-lbs </property></product>
+        <product><property> aero/notar/slot5/arm-aft-ft </property><property> aero/notar/slot5/force-lbs </property></product>
+        <product><property> aero/notar/slot6/arm-aft-ft </property><property> aero/notar/slot6/force-lbs </property></product>
+        <product><property> aero/notar/slot7/arm-aft-ft </property><property> aero/notar/slot7/force-lbs </property></product>
+        <product><property> aero/notar/slot8/arm-aft-ft </property><property> aero/notar/slot8/force-lbs </property></product>
+      </sum>
+    </product>
+  </function>
+  <!-- END slot segments -->
+
+  <!-- ========== Fins ========== -->
+
+  <!-- Velocity of the fin's quarter chord, body axes: u - q h, v + p h - r l -->
+  <function name="aero/fin/u-fps">
+    <difference>
+      <property> velocities/u-aero-fps </property>
+      <product><property> velocities/q-rad_sec </property><property> aero/fin/arm-up-ft </property></product>
+    </difference>
+  </function>
+  <function name="aero/fin/v-fps">
+    <sum>
+      <property> velocities/v-aero-fps </property>
+      <product><property> velocities/p-rad_sec </property><property> aero/fin/arm-up-ft </property></product>
+      <product><value> -1.0 </value><property> velocities/r-rad_sec </property><property> aero/fin/arm-aft-ft </property></product>
+    </sum>
+  </function>
+  <!-- Positive when the air comes from the left (pushes the tail right) -->
+  <function name="aero/fin/alpha-rad">
+    <sum>
+      <atan2>
+        <product><value> -1.0 </value><property> aero/fin/v-fps </property></product>
+        <property> aero/fin/u-fps </property>
+      </atan2>
+      <property> aero/fin/incidence-rad </property>
+    </sum>
+  </function>
+  <!-- NDARC's tail model [NT 14-3.1]: linear to CLmax, then linearly to 0 at 90 deg, reverse flow mirrored.
+       CLmax 1.0 chosen; slope 2.08 /rad (header), so stall at 0.481 rad. -->
+  <function name="aero/fin/side-force-lbs">
+    <product>
+      <value> 0.5 </value>
+      <property> atmosphere/rho-slugs_ft3 </property>
+      <sum>
+        <pow><property> aero/fin/u-fps </property><value> 2.0 </value></pow>
+        <pow><property> aero/fin/v-fps </property><value> 2.0 </value></pow>
+      </sum>
+      <property> aero/fin/area-ft2 </property>
+      <table>
+        <independentVar> aero/fin/alpha-rad </independentVar>
+        <tableData>
+          -3.1416   0.0
+          -2.6606   1.0
+          -1.5708   0.0
+          -0.4810  -1.0
+           0.0      0.0
+           0.4810   1.0
+           1.5708   0.0
+           2.6606  -1.0
+           3.1416   0.0
+        </tableData>
+      </table>
+    </product>
+  </function>
+
+  <!-- ========== Horizontal stabiliser ========== -->
+
+  <function name="aero/stab/u-fps">
+    <difference>
+      <property> velocities/u-aero-fps </property>
+      <product><property> velocities/q-rad_sec </property><property> aero/stab/arm-up-ft </property></product>
+    </difference>
+  </function>
+  <!-- Down through the stabiliser relative to the air: w + q l less the wake's downwash there -->
+  <function name="aero/stab/w-fps">
+    <sum>
+      <property> velocities/w-aero-fps </property>
+      <product><property> velocities/q-rad_sec </property><property> aero/stab/arm-aft-ft </property></product>
+      <product><value> -1.0 </value><property> aero/wake/stab-vi-fps </property></product>
+    </sum>
+  </function>
+  <function name="aero/stab/alpha-rad">
+    <atan2>
+      <property> aero/stab/w-fps </property>
+      <property> aero/stab/u-fps </property>
+    </atan2>
+  </function>
+  <!-- NDARC tail model as the fins; slope 3.59 /rad, CLmax 1.0 chosen, stall at 0.2786 rad -->
+  <function name="aero/stab/lift-lbs">
+    <product>
+      <value> 0.5 </value>
+      <property> atmosphere/rho-slugs_ft3 </property>
+      <sum>
+        <pow><property> aero/stab/u-fps </property><value> 2.0 </value></pow>
+        <pow><property> aero/stab/w-fps </property><value> 2.0 </value></pow>
+      </sum>
+      <property> aero/stab/area-ft2 </property>
+      <table>
+        <independentVar> aero/stab/alpha-rad </independentVar>
+        <tableData>
+          -3.1416   0.0
+          -2.8630   1.0
+          -1.5708   0.0
+          -0.2786  -1.0
+           0.0      0.0
+           0.2786   1.0
+           1.5708   0.0
+           2.8630  -1.0
+           3.1416   0.0
+        </tableData>
+      </table>
+    </product>
+  </function>
+
+  <!-- ========== Airframe drag and download ========== -->
+
+  <function name="aero/airframe/w-rel-fps">
+    <difference>
+      <property> velocities/w-aero-fps </property>
+      <property> aero/wake/airframe-vi-fps </property>
+    </difference>
+  </function>
+
+  <!-- ========== Axes ========== -->
+
+  <axis name="X">
+    <function name="aero/force/airframe-x-lbs">
+      <product>
+        <value> -0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <property> aero/airframe/drag-area-x-ft2 </property>
+        <abs><property> velocities/u-aero-fps </property></abs>
+        <property> velocities/u-aero-fps </property>
+      </product>
+    </function>
+  </axis>
+
+  <axis name="Y">
+    <function name="aero/force/airframe-y-lbs">
+      <product>
+        <value> -0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <property> aero/airframe/drag-area-y-ft2 </property>
+        <abs><property> velocities/v-aero-fps </property></abs>
+        <property> velocities/v-aero-fps </property>
+      </product>
+    </function>
+    <function name="aero/force/fin-y-lbs">
+      <property> aero/fin/side-force-lbs </property>
+    </function>
+    <function name="aero/force/boom-y-lbs">
+      <property> aero/notar/boom-force-lbs </property>
+    </function>
+  </axis>
+
+  <axis name="Z">
+    <function name="aero/force/airframe-z-lbs">
+      <product>
+        <value> -0.5 </value>
+        <property> atmosphere/rho-slugs_ft3 </property>
+        <property> aero/airframe/drag-area-z-ft2 </property>
+        <abs><property> aero/airframe/w-rel-fps </property></abs>
+        <property> aero/airframe/w-rel-fps </property>
+      </product>
+    </function>
+    <function name="aero/force/stab-z-lbs">
+      <product><value> -1.0 </value><property> aero/stab/lift-lbs </property></product>
+    </function>
+  </axis>
+
+  <!-- Moments of the surfaces about the AERORP: side force F at (l aft, h up) gives roll h F and yaw -l F; a body-Z
+       force gives pitch l Fz -->
+  <axis name="ROLL">
+    <function name="aero/moment/fin-roll-lbsft">
+      <product><property> aero/fin/arm-up-ft </property><property> aero/fin/side-force-lbs </property></product>
+    </function>
+    <function name="aero/moment/boom-roll-lbsft">
+      <product><property> aero/notar/boom-arm-up-ft </property><property> aero/notar/boom-force-lbs </property></product>
+    </function>
+  </axis>
+
+  <axis name="PITCH">
+    <function name="aero/moment/stab-pitch-lbsft">
+      <product><property> aero/stab/arm-aft-ft </property><property> aero/force/stab-z-lbs </property></product>
+    </function>
+  </axis>
+
+  <axis name="YAW">
+    <function name="aero/moment/fin-yaw-lbsft">
+      <product><value> -1.0 </value><property> aero/fin/arm-aft-ft </property><property> aero/fin/side-force-lbs </property></product>
+    </function>
+    <function name="aero/moment/boom-yaw-lbsft">
+      <property> aero/notar/boom-yaw-lbsft </property>
+    </function>
+  </axis>
+
+</aerodynamics>

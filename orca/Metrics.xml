@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!-- Orca (NASA QSMR, 450 ft/s design) - Metrics. Structural frame: X aft, Y right, Z up, feet, origin at the rotor hub.
+     Reference area = the rotor disk; the aerodynamics use their own areas (Aero.xml), not these. -->
+
+<metrics>
+  <wingarea unit="FT2">  977.57 </wingarea>  <!-- pi R^2, R 17.64 ft [J20 Table 2] -->
+  <wingspan unit="FT">    35.28 </wingspan>  <!-- rotor diameter, 2 R -->
+  <chord unit="FT">       0.918 </chord>     <!-- mean blade chord, sigma pi R / Nb (Engines/orca_main_rotor.xml) -->
+
+  <!-- The design-gross-weight CG (Mass.xml): the airframe drag acts here; Aero.xml adds each surface's arm from it -->
+  <location name="AERORP" unit="FT">
+    <x>  0.219 </x>
+    <y>  0.0 </y>
+    <z> -4.18 </z>
+  </location>
+
+  <!-- Front seat row, head height (VSP payload box fpax: x -6.37..-3.41, z -8.08..-3.49; head chosen 1 ft below its top) -->
+  <location name="EYEPOINT" unit="FT">
+    <x> -4.89 </x>
+    <y>  0.0 </y>
+    <z> -4.49 </z>
+  </location>
+
+  <location name="VRP" unit="FT">
+    <x> 0.0 </x>
+    <y> 0.0 </y>
+    <z> 0.0 </z>
+  </location>
+</metrics>

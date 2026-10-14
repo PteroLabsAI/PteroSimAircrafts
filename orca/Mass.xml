@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<!-- Orca - Mass properties. Feet, structural frame (X aft, Y right, Z up, origin at the hub).
+     Design gross weight 3912 lb = empty 2516 + fixed useful load 10 + payload 1200 + fuel 186 [J20 Table 2]. Table 2's
+     fuel tank holds 186 lb, so DGW - WE - payload = 196 is 186 of fuel plus 10 lb of fixed useful load (trapped fluids):
+     NASA's sister designs carry the same 10 lb between empty and operating weight [S21 Table 12, SMR column: empty
+     2370, operating 2380]. The 10 lb sits in the empty weight here; the tank (Propulsion.xml) starts full.
+     DGW CG (0.219, 0, -4.18): chosen on the shaft line. NASA publishes no CG; a weight-group spread of Table 2 over
+     NASA's VSP geometry put it 4.18 ft below the hub and 0.77 ft aft, where hover needs ~7 deg of cyclic. The shaft
+     leans 3 deg forward, so 4.18 ft down the shaft is 4.18 tan 3 = 0.219 ft aft of the hub. The empty CG below is
+     solved so the DGW CG lands there: x_e = (3912 x_cg - sum m_i x_i) / 2526.
+     Inertia: the same weight-group spread gave, at DGW about its CG, Ixx 894, Iyy 4265, Izz 3877, Ixz +439 slug ft2
+     (products as the sum of m x z in this frame). The base values below are those minus the seats' and the full tank's
+     parallel-axis terms and the empty mass's own shift; moving the CG 0.55 ft forward changes Iyy by 1 %, ignored.
+     The seats' box inertia (~70 slug ft2 in Ixx) stays in the base. -->
+
+<mass_balance negated_crossproduct_inertia="false">
+
+  <ixx unit="SLUG*FT2"> 688 </ixx>
+  <iyy unit="SLUG*FT2"> 3556 </iyy>
+  <izz unit="SLUG*FT2"> 3255 </izz>
+  <ixz unit="SLUG*FT2"> 329 </ixz>
+
+  <emptywt unit="LBS"> 2526 </emptywt>  <!-- WE 2516 [J20 Table 2] + 10 fixed useful load (see above) -->
+
+  <location name="CG" unit="FT">
+    <x>  0.613 </x>
+    <y>  0.035 </y>
+    <z> -3.387 </z>
+  </location>
+
+  <!-- Payload 1200 lb [J20 Table 2] as six 200 lb seats at the centres of NASA's VSP payload boxes:
+       rows x -6.37..-3.41, -2.68..-0.07, 0.74..3.35; seat y 0.22..2.28 each side; z -8.08..-3.49 -->
+  <pointmass name="seat_1_left">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -4.890 </x> <y> -1.25 </y> <z> -5.785 </z> </location>
+  </pointmass>
+  <pointmass name="seat_1_right">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -4.890 </x> <y>  1.25 </y> <z> -5.785 </z> </location>
+  </pointmass>
+  <pointmass name="seat_2_left">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -1.375 </x> <y> -1.25 </y> <z> -5.785 </z> </location>
+  </pointmass>
+  <pointmass name="seat_2_right">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -1.375 </x> <y>  1.25 </y> <z> -5.785 </z> </location>
+  </pointmass>
+  <pointmass name="seat_3_left">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x>  2.045 </x> <y> -1.25 </y> <z> -5.785 </z> </location>
+  </pointmass>
+  <pointmass name="seat_3_right">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x>  2.045 </x> <y>  1.25 </y> <z> -5.785 </z> </location>
+  </pointmass>
+
+</mass_balance>

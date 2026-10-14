@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. The meshes are built by
+  scripts/build_orca.py from NASA's OpenVSP model (meshes/NOTICE) in its own frame, X aft, Y right, Z up, origin at the
+  rotor hub; the loader turns glTF (x, y, z) into (-z, x, y), so the right side lands on +X and the tail on +Y, and every
+  part is yawed +90 deg onto +X forward.
+
+  Fixtures: the glb origin is the rotor hub, the structural origin, 0.219 ft ahead of and 4.18 ft above the CG at the
+  design gross weight with full fuel (Mass.xml after RunIC), so they go to xyz 0.0668 0 1.2741.
+  Rotor: a propeller hangs off its engine's shaft (the thruster location in Propulsion.xml, the hub itself), so it takes
+  no offset. The mesh is levelled and the shaft leans 3 deg forward (Propulsion.xml pitch 87), so it is rolled -3 deg
+  before the yaw (roll, then pitch, then yaw about the fixed axes: a negative roll lowers the mesh's front). Spin: a
+  propeller turns about +axis, given in the vehicle's frame, with its unsigned rpm, clockwise seen from the axis tip;
+  the rotor is sense 1, anticlockwise from above, so its axis is the shaft pointing down, (-sin 3, 0, -cos 3).
+  Thruster: the outer cone of the NOTAR-type thruster, drawn at neutral pedal, turned by fcs/notar/sleeve-turn-deg
+  (Systems/notar.xml) about the boom axis: the hinge is on that axis at the thruster seam, 21.6 ft aft of the hub and
+  3.173 ft below it, and the mesh's origin, the hub, sits from there as the fixtures do from the CG. The angle grows
+  from the right side toward the top, which is a positive turn about +X.
+  Chase: 22 m behind, 15 deg above, chosen for a 12.5 m machine.
+-->
+<visual>
+  <fixture file="meshes/body.glb" xyz="0.0668 0 1.2741" rpy="0 0 90"/>
+  <surface file="meshes/thruster.glb" xyz="6.5837 0 0.9671" rpy="0 0 90" hinge="-6.5169 0 0.3070" axis="1 0 0"
+           source="fcs/notar/sleeve-turn-deg"/>
+  <propeller file="meshes/rotor.glb" xyz="0 0 0" rpy="-3 0 90" motor="main_rotor" axis="-0.052336 0 -0.998630"/>
+
+  <chase xyz="0 0 1" rpy="0 -15 0" length="22"/>
+</visual>

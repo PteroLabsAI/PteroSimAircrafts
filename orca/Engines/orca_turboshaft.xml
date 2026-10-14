@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  Orca turboshaft: NASA's QSMR has two RR300-based engines of 231 hp [J20 Table 2, p.6]. JSBSim drives a rotor from
+  one engine only, so this is ONE turboshaft of 2 x 231 hp: no one-engine-inoperative case (README.md, limits).
+  Shape (power vs N1 and output speed, lapse, spool, TGT) is the AH-1S T53-L-703 file's (jsbsim fork,
+  feature/ah1s-t53-turboshaft), itself the engtm601.xml template: there is no RR300 map. Its rows are rescaled to this
+  engine's output speed and its power to 462 hp. The table's rpm is the output shaft's, rotor rpm x gearratio.
+-->
+
+<turboprop_engine name="orca_turboshaft">
+  <maxpower unit="HP">          462.0  </maxpower>         <!-- 2 x 231 hp [J20 Table 2] -->
+  <psfc unit="LBS/HR/HP">         0.574 </psfc>            <!-- sfc MCP SLS [J20 Table 2]; the text (p.6) says 0.54 -->
+  <idlen1>                       70.0  </idlen1>           <!-- T53 file, no RR300 data -->
+  <maxn1>                       106.0  </maxn1>            <!-- T53 file, no RR300 data -->
+  <n1idle_max_delay>              1.0  </n1idle_max_delay> <!-- engtm601.xml template via the T53 file -->
+  <maxstartingtime>              20.0  </maxstartingtime>  <!-- engtm601.xml template via the T53 file -->
+  <startern1>                    20.0  </startern1>        <!-- engtm601.xml template via the T53 file -->
+  <itt_delay>                     0.05 </itt_delay>        <!-- engtm601.xml template via the T53 file -->
+
+  <function name="EnginePowerVC">
+    <table>
+      <description> Power lapse vs pressure and airspeed: engtm601.xml template via the T53 file, no RR300 data </description>
+      <independentVar lookup="row">atmosphere/P-psf</independentVar>
+      <independentVar lookup="column">velocities/ve-kts</independentVar>
+      <tableData>
+                 0     50    100    150    200    250
+       503   0.357  0.380  0.400  0.425  0.457  0.486
+      1048   0.586  0.589  0.600  0.621  0.650  0.686
+      1328   0.707  0.721  0.731  0.757  0.786  0.821
+      1496   0.779  0.786  0.808  0.821  0.857  0.900
+      1684   0.850  0.857  0.874  0.900  0.943  0.979
+      1896   0.914  0.929  0.946  0.971  1      1.057
+      2135   1      1.011  1.029  1.043  1.083  1.150
+      2213   1.029  1.043  1.057  1.079  1.114  1.171
+      </tableData>
+    </table>
+  </function>
+
+  <table name="EnginePowerRPM_N1" type="internal">
+    <description> Power [HP] vs output rpm and N1: the T53 table, rpm x 6016/6600, power x 462/1800 </description>
+    <!-- 6016 rpm = 100 % N2 output speed of the Model 250 family the RR300 belongs to (chosen: from memory, no
+         RR300 document at hand; it sets only the gear ratio). No 0-rpm row, so the turbine breaks the drive's static
+         friction; zero power at 104.5 % N2 so a declutched turbine cannot run away (both as the T53 file). -->
+    <tableData>
+               0       5      70     93.4   100.6   101.5   102.4   103.3   104.2   105.1   106.0   106.9
+      2406     0     0.33   23.10   132.0   231.0   250.8   277.2   303.6   330.0   349.8   382.8   409.2
+      3610     0     0.33   19.79   151.8   264.0   283.8   310.2   333.3   363.0   389.4   422.4   448.8
+      4813     0     0.33    3.31   158.4   290.4   313.5   336.6   363.0   392.7   415.8   448.8   475.2
+      6016     0     0.08    0.08   148.5   297.0   326.7   346.5   372.9   402.6   429.0   462.0   491.7
+      6287     0     0       0       0       0       0       0       0       0       0       0       0
+    </tableData>
+  </table>
+
+  <table name="ITT_N1" type="internal">
+    <description> TGT [deg C] vs N1 and engine run (0 off / 1 running): the T53 file's, no RR300 data </description>
+    <tableData>
+              0     1
+        0     0     0
+       15   100   100
+       70   180   400
+      103.7 270   820
+      106   280   880
+    </tableData>
+  </table>
+
+  <table name="CombustionEfficiency_N1" type="internal">
+    <description> Constant SFC (Table 2 gives one value; the built-in default assumes max N1 100) </description>
+    <tableData>
+        0   1.0
+      110   1.0
+    </tableData>
+  </table>
+
+</turboprop_engine>
