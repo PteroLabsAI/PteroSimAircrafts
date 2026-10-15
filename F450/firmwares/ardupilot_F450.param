@@ -1,0 +1,9 @@
+# ArduCopter SITL parameters for F450: sim_vehicle.py -v ArduCopter -f quad --model JSON:<host> --add-param-file=<this>.
+# Only what the frame and the motors are; everything else is ArduCopter's own default.
+# With --model JSON current ArduPilot loads no frame defaults, so the frame is set here.
+FRAME_CLASS 1
+FRAME_TYPE 1
+
+# The DJI E305 motor and 9450 propeller at rest, fitted over MOT_SPIN_MIN..MOT_SPIN_MAX: thrust is 0.51 x + 0.49 x^2
+# of the throttle x within 1 % of full thrust. ArduCopter's default 0.65 is off by up to 4 %.
+MOT_THST_EXPO 0.49
