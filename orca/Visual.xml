@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
-  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. The meshes are built by
-  scripts/build_orca.py from NASA's OpenVSP model (meshes/NOTICE) in its own frame, X aft, Y right, Z up, origin at the
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. The meshes are built from
+  NASA's OpenVSP model (meshes/NOTICE) in its own frame, X aft, Y right, Z up, origin at the
   rotor hub; the loader turns glTF (x, y, z) into (-z, x, y), so the right side lands on +X and the tail on +Y, and every
   part is yawed +90 deg onto +X forward.
 

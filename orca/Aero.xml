@@ -24,7 +24,7 @@
      speed, so an average over the slot is biased): vi times the hover radial shape of the mean downwash (blade-element
      momentum theory with Prandtl tip loss), read at the disc radius its wake came from, the wake contracting with
      Landgrebe's tip vortex and the downwash growing by continuity, 1 / c^2; with the drift and the Coleman gradient
-     above about that origin (scripts/bemt_inflow.py writes the block).
+     above about that origin.
      [J20] Johnson 2020; [VSP] NASA's OpenVSP QSMR; [NT]/[NI] NDARC theory 2022 / input 2025. -->
 
 <aerodynamics>
@@ -59,7 +59,7 @@
        Quarter chord x 19.413, mid-span z -2.084: l 19.194, h 2.096.
        Incidence: chosen so the fins carry 70 % of the yaw balance (inside the published 50-90 % [J20 p.6]) at
        NASA's cruise, 105.4 kt at 10000 ft and DGW, with no sideslip: 0.084 rad gave 57.2 % and the fin is linear
-       there, so 0.084 x 0.70 / 0.572 = 0.103 (scripts/validate.py prints 70.0 %). Positive pushes the tail right. -->
+       there, so 0.084 x 0.70 / 0.572 = 0.103 (70.0 % in that trim). Positive pushes the tail right. -->
   <property value="22.41">  aero/fin/area-ft2 </property>
   <property value="19.194"> aero/fin/arm-aft-ft </property>
   <property value="2.096">  aero/fin/arm-up-ft </property>
@@ -289,7 +289,7 @@
     </quotient>
   </function>
 
-  <!-- BEGIN slot segments: written by scripts/bemt_inflow.py 8, do not edit. Derived there: the shape table (BEMT
+  <!-- BEGIN slot segments, derived from: the shape table (BEMT
        with Prandtl tip loss, theta0 19.83 deg for CT 0.00855, the DGW sea-level hover), each segment's
        station in the disc plane, depth below the tip-path plane, Landgrebe contraction there and arm aft of the AERORP.
        Cy vs Cmu: Sampatacos [Mechanika 2018 Table 2], held above 0.5 [Luo, ICAS 2000]. -->

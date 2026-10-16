@@ -16,7 +16,7 @@
   binds straight to its property. H3-120 would mix them onto three servos and need a demixer system to undo it
   (ingenuity's Systems/rotor_control.xml); this model has no swashplate to model, so it gets none.
 
-  Signs, measured (validate.py's trimmed DGW hover at 500 ft, controls then frozen, one step against an unstepped twin,
+  Signs, measured (the trimmed DGW hover at 500 ft, controls then frozen, one step against an unstepped twin,
   dt 1/240 and 1/1000 alike); ArduPilot's outputs are body FRD: + roll = right wing down, + pitch = nose UP, + yaw =
   nose right (AC_AttitudeControl rate loops; SIM_Helicopter.cpp turns + pitch into + pitch acceleration):
     lateral-ctrl-rad +0.01       -> p +0.91 deg/s at 0.05 s, +9.0 at 1 s: roll right            -> as is
@@ -24,11 +24,11 @@
     pedal-cmd-norm +0.1          -> r +0.73 deg/s at 0.05 s, +15.7 at 1 s: nose right           -> as is
     collective-ctrl-rad +0.01    -> climb +0.43 ft/s at 0.2 s, +1.5 at 1 s (and r +5.9 deg/s at 1 s: rotor torque)
   Ranges:
-    cyclic      servo -1..1 = -0.35..0.35 rad, scripts/validate.py's CYCLIC_LIMIT_RAD (the range the model was flown
+    cyclic      servo -1..1 = -0.35..0.35 rad (the range the model was flown
                 with). H1 puts 0.9 x roll on the servo and AP_MotorsHeli_Single caps |(roll, pitch)| at H_CYC_MAX / 4500,
                 so H_CYC_MAX 4500 reaches 0.315 rad (18.0 deg); the 105 kt cruise at 10000 ft trims at 11.6 deg forward
-                and 3.3 deg lateral (12.1 deg together, validate_zt.log).
-    collective  PWM 1000..2000 read as 0..1 = 0..0.5 rad root pitch, scripts/validate.py's COLLECTIVE_RANGE_RAD.
+                and 3.3 deg lateral (12.1 deg together).
+    collective  PWM 1000..2000 read as 0..1 = 0..0.5 rad root pitch.
                 ArduPilot drives 1237..2000 of it (H_COL_MIN..H_COL_MAX = 6.8..28.65 deg, H_COL_ANG_MIN..MAX): zero
                 thrust at 8.80 deg, DGW hover at 20.08 deg (both measured).
     pedal       PWM 1000..2000 (SERVO4_MIN..MAX in the param file; ArduPilot's own 1100..1900 would stop it at +-0.8)

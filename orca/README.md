@@ -22,8 +22,6 @@ Sensors.xml     imu / barometer / gps (sidecar)
 Visual.xml      meshes/: body (fixture), thruster cone (surface on fcs/notar/sleeve-turn-deg), rotor (propeller),
                 chase camera (sidecar)
 firmwares/      ardupilot_orca.param: self-contained ArduCopter heli SITL set
-scripts/        validate.py, bemt_inflow.py, size_notar.py (the model); qsmr_*.vspscript, qsmr_mass.py, uav_*.py,
-                build_orca.py, check_atlas_fit.py (the meshes)
 LICENSE, NOTICE GPL-3.0, sources
 ```
 
@@ -97,7 +95,7 @@ targets; gear springs and damping; vertical drag 48.9 ft2 (CD 0.423) and side dr
 (Helmbold) and arms; boom pressure 49.0 psf (Vj 203 fps), slot width 0.0233 ft (Cmu 0.4) and neutral jet area
 1.709 ft2, both from the segmented boom; fin incidence 0.103 rad (70 % of the anti-torque at cruise); the thruster
 cutout's half-angle 49.29 deg = A_n / (L r_m) and its neutral angle 120 deg = 180 - 60; the 189 hp brake limit; the
-governor's inverse engine map; the boom's downwash (`scripts/bemt_inflow.py`).
+governor's inverse engine map; the boom's downwash.
 
 Reconciled: DGW - WE - payload = 196 lb, but the tank holds 186. The 10 lb difference is fixed useful load, matching
 S21's sister designs (operating weight = empty + 10 lb), so the tank starts full and 10 lb sit in the empty weight.
@@ -106,7 +104,7 @@ Chosen, no evidence: the blades' share of the rotor group's mass (0.6), the hub'
 (10 lb) and speed, the CG on the shaft line, gear stiffness, damping and friction, fin and stabiliser CLmax 1.0, the
 thruster's seam x 21.6, cone radii 0.97 / 0.75 ft, cutout span x 21.85-24.15 and openings +-60 deg, the cutout twice
 the neutral opening, the engine output speed 6016 rpm, the governor gains, 8 slot segments and their self-similar
-contraction, the autopilot in `scripts/validate.py`.
+contraction.
 
 ## Direct-jet thruster
 
@@ -114,7 +112,7 @@ A sleeve valve of two concentric truncated cones [ERF p. 67-1; Bakir 2.3.4], in 
 cone has two openings, left and right, with turning vanes; the outer cone turns one constant-area cutout over them,
 driven by the pedals. Angles are about the thruster axis from +Y (right), 90 up, 180 left.
 
-- `fcs/notar/` geometry, read by the mesh scripts too: `thruster-seam-x-ft` 21.6, `thruster-end-x-ft` 24.5,
+- `fcs/notar/` geometry: `thruster-seam-x-ft` 21.6, `thruster-end-x-ft` 24.5,
   `thruster-axis-z-ft` -3.173, `thruster-radius-front-ft` 0.97, `thruster-radius-aft-ft` 0.75, `cutout-x0-ft` 21.85,
   `cutout-x1-ft` 24.15, `opening-half-angle-deg` alpha 60, `cutout-half-angle-deg` beta 49.29.
 - beta = A_n / (L r_m), L 2.30 ft, r_m 0.864 ft. It needs beta <= alpha <= (180 - beta) / 2 = 65.4, so the right
@@ -128,8 +126,8 @@ driven by the pedals. Angles are about the thruster axis from +Y (right), 90 up,
 
 ## Circulation-control boom
 
-The slot (x 9.29-18.09) is cut into 8 segments, each with its own wake speed, Cmu, Cy and arm (Aero.xml, written by
-`scripts/bemt_inflow.py`): the force goes as Cy(Cmu) w^2 with Cmu ~ 1/w^2, so one slot-average wake speed is biased.
+The slot (x 9.29-18.09) is cut into 8 segments, each with its own wake speed, Cmu, Cy and arm (Aero.xml):
+the force goes as Cy(Cmu) w^2 with Cmu ~ 1/w^2, so one slot-average wake speed is biased.
 A segment's wake speed is vi-fps x shape(r) / c^2 x the Coleman factor, less the boom's own w + q l:
 - shape(r): BEMT hover inflow with Prandtl tip loss [L06 ch. 3] for this blade, as the annulus mean F lambda over
   sqrt(CT/2), the uniform inflow FGRotor reports. Disc mean 0.964, peak 1.10 at 0.82 R, 0 at the tip.
@@ -138,8 +136,8 @@ A segment's wake speed is vi-fps x shape(r) / c^2 x the Coleman factor, less the
 - Eight segments are within 3 % of the converged boom moment (8 to 32 segments: 1600 to 1555 lb ft in hover).
 - Slot width h: Cmu 0.4 [Bakir eq. 3.64; Mechanika 2018; US 4,200,252] at the fastest segment crossflow of the
   trimmed DGW hover (49.4 fps), so no segment in the wake sits below the design point. Vj / w is 4.14 there.
-- Neutral jet area A_n: the trimmed hover's jet moment / (arm x 2 dp), so the DGW sea-level hover trims at pedal 0
-  (`scripts/size_notar.py` iterates h and A_n to a consistent pair).
+- Neutral jet area A_n: the trimmed hover's jet moment / (arm x 2 dp), so the DGW sea-level hover trims at pedal 0;
+  h and A_n are iterated to a consistent pair.
 
 ## Governor
 
@@ -149,7 +147,7 @@ summed demand is pinned. `fcs/throttle-cmd-norm[0]` above 0.5 engages it; below,
 
 ## Results
 
-`python scripts/validate.py` (about 1.5 min) trims each case at dt 1/240 and 1/1000 s; they agree to the printed digit.
+Each case is trimmed at dt 1/240 and 1/1000 s; they agree to the printed digit.
 
 | case | model | NASA [J20] |
 |---|---|---|
@@ -194,18 +192,3 @@ summed demand is pinned. `fcs/throttle-cmd-norm[0]` above 0.5 engages it; below,
 - Departures from NASA's numbers: sfc is 0.574 in J20's Table 2 and 0.54 in its text. NASA's VSP slot is 0.077 ft wide,
   28 % of the hover's fan flow; the sized slot is 0.0233 ft. The VSP jet window is 1.28 ft2; the sleeve opens 1.71 ft2
   at neutral and 3.42 ft2 at full pedal.
-
-## Rebuilding the meshes
-
-From a directory holding NASA's unpacked `qsmr-vsp.zip`, with OpenVSP 3.55 and Blender 4.5:
-
-1. `vspscript -script qsmr_split.vspscript` tessellates the body and the rotor into `qsmr_split/`.
-2. `python uav_atlas.py colour.png height.png normal.png <aircraft folder> features.json` paints the four-view atlas
-   (the slot width comes from `Systems/notar.xml`).
-3. `blender -b --factory-startup -P build_orca.py -- qsmr_split <atlas folder> <out folder> <aircraft folder>` models
-   the fittings and the thruster, unwraps, bakes and writes `orca_body.glb`, `orca_rotor.glb`, `orca_thruster.glb`
-   and `orca.blend`.
-4. `blender -b orca.blend -P check_atlas_fit.py -- features.json` must report 0 misfits.
-
-`qsmr_survey.vspscript` prints the components and sub-surfaces the model's geometry was measured from, and
-`qsmr_mass.py` places J20's weight groups on the body for the CG and inertia.

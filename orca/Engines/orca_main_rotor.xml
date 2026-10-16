@@ -39,7 +39,7 @@
   <!-- Brake = NOTAR fan + gearbox loss (Systems/notar.xml writes it). Sized at the envelope corner: fan at full left
        or right pedal (2 x 1.709 ft2 + slot 0.02332 x 8.803 ft) 89.8 hp at sea level and 100 % speed, x sqrt(rho_SL /
        rho_20000ft) for the constant-pressure boom's faster exit at altitude, x 1.1^3 at 110 % rotor speed = 163.8 hp;
-       + 4 % of (462 + 163.8) = 188.8, rounded up to 189 hp. scripts/validate.py fails if the brake ever saturates. -->
+       + 4 % of (462 + 163.8) = 188.8, rounded up to 189 hp. -->
   <maxbrakepower unit="HP">   189.0 </maxbrakepower>
 
   <!-- Ground effect OFF: FGRotor multiplies the inflow by its ground-effect factor fs inside the inflow lag on every
