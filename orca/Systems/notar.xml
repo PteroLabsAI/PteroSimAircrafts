@@ -21,7 +21,7 @@
        the fully developed wake 2 v_h = 58.0 fps (DGW, sea level) that is 203.1 fps, 1/2 rho V^2 = 49.0 psf (0.34 psi).
        The slot's fastest hover crossflow (Aero.xml segments) is 49.4 fps: Vj / w 4.14, still above 3.5 -->
   <property value="49.02">   fcs/notar/boom-pressure-design-psf </property>
-  <!-- Sized so the pedals rest at neutral in the DGW sea-level hover [ERF]: the trimmed hover (scripts/validate.py, segmented
+  <!-- Sized so the pedals rest at neutral in the DGW sea-level hover [ERF]: the trimmed hover (segmented
        boom, the slot width below) needs a jet moment of 3817 lb ft = 167.5 lb at the 22.787 ft arm (cutout centre
        x 23.0 - CG); 167.5 / (2 x 49.02) = 1.709 ft2, iterated with the slot width. NASA's VSP jet window is 1.28 ft2. -->
   <property value="1.709">   fcs/notar/jet-area-neutral-ft2 </property>
@@ -36,10 +36,10 @@
   <property value="180.0">   fcs/notar/left-opening-centre-deg </property>   <!-- defined by the angle convention -->
   <property value="0.0">     fcs/notar/right-opening-centre-deg </property>  <!-- defined by the angle convention -->
   <!-- chosen: "two large openings" [Bakir], 60 deg ribs top and bottom; needs beta <= alpha <= (180 - beta) / 2 so
-       the right one is shut at neutral (scripts/validate.py checks) -->
+       the right one is shut at neutral -->
   <property value="60.0">    fcs/notar/opening-half-angle-deg </property>
   <!-- derived: the cutout is twice the neutral opening (keeps full left at 2 x neutral; 1.5 x starved the 6000 ft
-       hover of yaw margin), beta = A_n / (L r_m) = 1.709 / (2.30 x 0.8638) = 0.8602 rad (scripts/validate.py checks) -->
+       hover of yaw margin), beta = A_n / (L r_m) = 1.709 / (2.30 x 0.8638) = 0.8602 rad -->
   <property value="49.29">   fcs/notar/cutout-half-angle-deg </property>
   <!-- Sized for Cmu = 0.4, the design optimum [Bakir eq. 3.64, Mechanika 2018, US 4,200,252]: Cmu = 2 (h/D) (Vj/w)^2
        at the fastest segment crossflow of the trimmed DGW hover, w 49.4 fps, D 2 ft: h = 0.4 x 2 / (2 x 4.14^2). So no

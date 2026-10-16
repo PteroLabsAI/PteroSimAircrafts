@@ -36,8 +36,8 @@
   <aerodynamics file="Aero.xml"/>
 
   <!-- NOTAR direct-jet thruster: the sleeve's net exit to the left pushes the tail right. The force acts at the cutout's
-       centre on the thruster axis, x = (cutout-x0 + cutout-x1) / 2, z = thruster-axis-z of Systems/notar.xml
-       (scripts/validate.py checks); the vanes turn the jet sideways, so y gives it no arm. The force is notar.xml's, this
+       centre on the thruster axis, x = (cutout-x0 + cutout-x1) / 2, z = thruster-axis-z of Systems/notar.xml;
+       the vanes turn the jet sideways, so y gives it no arm. The force is notar.xml's, this
        step's pedal with last step's rotor speed. -->
   <external_reactions>
     <force name="notar_jet" frame="BODY" unit="LBS">

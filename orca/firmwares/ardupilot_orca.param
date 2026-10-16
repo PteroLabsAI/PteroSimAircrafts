@@ -6,7 +6,7 @@
 # last block sets are left out of the first. Everything not listed is ArduCopter's own default.
 #
 # Not from NASA: QSMR is a design study with no flight control system. The numbers below come from the JSBSim model,
-# measured with the fork build in validate.py's trimmed DGW hover at 500 ft (controls frozen, one step against an
+# measured in the model's trimmed DGW hover at 500 ft (controls frozen, one step against an
 # unstepped twin, dt 1/240 and 1/1000 alike), or from ArduPilot's own defaults, as each line says.
 #
 # Channel map (channel = SERVOn - 1), the functions a single heli assigns by default, written out so Controls.xml can
@@ -146,7 +146,7 @@ H_TAIL_TYPE 0
 # tail servo over the whole PWM range: SERVO4's 1100..1900 default would stop the pedal at +-0.8
 SERVO4_MIN 1000
 SERVO4_MAX 2000
-# collective: the binding maps PWM 1000..2000 to 0..0.5 rad root pitch (scripts/validate.py's COLLECTIVE_RANGE_RAD);
+# collective: the binding maps PWM 1000..2000 to 0..0.5 rad root pitch (Controls.xml);
 # ArduPilot uses 6.8..28.65 deg of it. The floor: ArduPilot's defaults put COL_ANG_MIN and COL_LAND_MIN 2 deg below
 # their zero thrust (-2 against 0), here 8.8 - 2 = 6.8 deg (-258 lb at 7 deg on the ground), PWM 1000 + 1000 x 6.8 /
 # 28.65. With the floor at 0 deg, STABILIZE's low stick gave -8.8 deg of thrust pitch: the disc pushed the aircraft
@@ -160,7 +160,7 @@ H_COL_ZERO_THRST 8.8
 H_COL_LAND_MIN 6.8
 # measured: DGW sea-level hover at 20.08 deg, (20.08 - 6.8) / (28.65 - 6.8) (learnt from here on)
 H_COL_HOVER 0.61
-# 0.9 x 4500/4500 x 0.35 rad = 18.0 deg of cyclic; the 105 kt cruise at 10000 ft trims at 12.1 deg (validate_zt.log)
+# 0.9 x 4500/4500 x 0.35 rad = 18.0 deg of cyclic; the 105 kt cruise at 10000 ft trims at 12.1 deg
 H_CYC_MAX 4500
 # the model governs its rotor: setpoint mode, full scale clears the governor's 0.5 engage threshold by the most
 H_RSC_MODE 2
