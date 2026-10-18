@@ -195,7 +195,7 @@ def fly_manual(sim, ship, input_mode):
         ship.set(throttle=throttle, yaw=yaw, elevator=elevator, lift=lift, ballonet=ballonet)
         ship.push()
 
-        a = list(sim.aircraft_status())[0]
+        a = next(a for a in sim.aircraft_status() if a.aircraft_name == AIRCRAFT)
         if screen:
             screen.fill((22, 26, 32))
             screen.blit(big.render("throttle %.2f   nacelles %.2f   yaw %+.1f   elevator %+.1f"
