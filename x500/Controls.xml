@@ -11,8 +11,11 @@
   SERVO5-7 as Mount1 roll/pitch/yaw. Each out= is the travel the autopilot's parameters state. PX4 maps
   its stick to that travel about zero, so a travel here has to be symmetric to land on the angle PX4 meant;
   ArduPilot maps linearly across MNT1_*_MIN..MAX, which are these same numbers.
+
+  pilot="stabilize": under Manual a player flies it through PteroSim's multicopter law, which drives the
+  four motors itself, so none of the motor rows names Manual.
 -->
-<control_bindings stack="PX4">
+<control_bindings stack="PX4" pilot="stabilize">
   <binding stack="ArduPilot PX4" channel="0" type="Motor" index="0" label="rotor_0"/>
   <binding stack="ArduPilot PX4" channel="1" type="Motor" index="1" label="rotor_1"/>
   <binding stack="ArduPilot PX4" channel="2" type="Motor" index="2" label="rotor_2"/>
