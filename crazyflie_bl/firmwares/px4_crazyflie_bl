@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+# @name crazyflie_bl
+# @type Multicopter
+#
+# Written from this vehicle's own files, in its engine order (M1..M4, the maker's numbering), so the channel a
+# motor takes here is the channel Controls.xml gives it. Geometry is Propulsion.xml turned from JSBSim's
+# structural frame (X aft, Y right, Z up) into PX4's allocation frame (forward, right, down) and measured from
+# the CG in Mass.xml, which sits 0.2 mm off the motor centre. KM is the propeller's torque over its thrust,
+# CP D / (2 pi CT), signed by <sense>. CT is the thrust this simulation makes at full throttle, solved from the
+# motor and propeller definitions -- 4.2 V, 25400 rpm, 0.270 N a rotor at sea level -- written in grams-force
+# (27.56): PX4 normalises the allocation, so only the ratios matter, but it zeroes any effectiveness row whose
+# entries are all under 0.05 (control_allocator/ControlAllocator.cpp), and in newtons this vehicle's roll,
+# pitch and yaw rows all are. MPC_THR_HOVER is the throttle at which the four carry the 45 g.
+#
+# The rate gains are PX4's Crazyflie 2.1 airframe (4901) carried over: each axis is scaled so its loop crosses
+# over where 4901's does on the brushed Crazyflie, given this vehicle's inertia, arm, thrust slope and 46 ms
+# motors. 4901's gyro filter cutoffs come with them; PX4's defaults cost about 20 degrees of phase margin here.
+#
+
+. ${R}etc/init.d/rc.mc_defaults
+
+param set-default CA_AIRFRAME 0
+param set-default MAV_TYPE 2
+
+param set-default CA_ROTOR_COUNT 4
+param set-default CA_ROTOR0_PX 0.035478
+param set-default CA_ROTOR0_PY 0.035517
+param set-default CA_ROTOR0_PZ -0.012
+param set-default CA_ROTOR0_KM 0.005693
+param set-default CA_ROTOR0_CT 27.56
+param set-default CA_ROTOR1_PX -0.035232
+param set-default CA_ROTOR1_PY 0.035517
+param set-default CA_ROTOR1_PZ -0.012
+param set-default CA_ROTOR1_KM -0.005693
+param set-default CA_ROTOR1_CT 27.56
+param set-default CA_ROTOR2_PX -0.035232
+param set-default CA_ROTOR2_PY -0.035193
+param set-default CA_ROTOR2_PZ -0.012
+param set-default CA_ROTOR2_KM 0.005693
+param set-default CA_ROTOR2_CT 27.56
+param set-default CA_ROTOR3_PX 0.035478
+param set-default CA_ROTOR3_PY -0.035193
+param set-default CA_ROTOR3_PZ -0.012
+param set-default CA_ROTOR3_KM -0.005693
+param set-default CA_ROTOR3_CT 27.56
+
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+
+param set-default MC_ROLLRATE_P 0.062
+param set-default MC_ROLLRATE_I 0.18
+param set-default MC_ROLLRATE_D 0.0018
+param set-default MC_PITCHRATE_P 0.073
+param set-default MC_PITCHRATE_I 0.21
+param set-default MC_PITCHRATE_D 0.0021
+param set-default MC_YAWRATE_P 0.18
+param set-default MC_YAWRATE_I 0.09
+param set-default MC_YAW_P 3
+param set-default IMU_GYRO_CUTOFF 100
+param set-default IMU_DGYRO_CUTOFF 70
+
+param set-default MPC_THR_HOVER 0.525
+param set-default MPC_Z_P 1.5
+param set-default MPC_Z_VEL_P_ACC 8
+param set-default MPC_Z_VEL_I_ACC 6
+
+param set-default SIM_BAT_ENABLE 0
+param set-default COM_ARM_CHK_ESCS 0
+param set-default SYS_HAS_NUM_ASPD 0
+param set-default COM_RC_IN_MODE 4

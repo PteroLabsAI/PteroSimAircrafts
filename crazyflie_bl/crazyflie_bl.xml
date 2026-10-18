@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- Crazyflie 2.1 Brushless, 45 g with Flow-deck v2, AI-deck and a 350 mAh 1S battery. Read README.md before trusting
+     any number. Structural frame: origin at the centre of the four motor axes in the circuit-board plane, x aft,
+     y right, z up, metres. Values marked "train flights" were identified on the training flights (chirp, random,
+     square) of the IDSIA nano-drone benchmark (Busetto et al., arXiv 2512.14450). version="2.0" is the JSBSim
+     config-schema version. -->
+<fdm_config name="crazyflie_bl" version="2.0" release="ALPHA">
+  <fileheader>
+    <author> PteroLabs </author>
+    <license licenseName="GPL-3.0" licenseURL="https://www.gnu.org/licenses/gpl-3.0.html"/>
+    <description> Crazyflie 2.1 Brushless quadrotor, IDSIA benchmark configuration </description>
+  </fileheader>
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion file="Propulsion.xml"/>
+  <!-- No body aerodynamics: the identified model has none. The rotor drag is the propellers' C_INPLANE_FORCE. -->
+  <aerodynamics/>
+</fdm_config>

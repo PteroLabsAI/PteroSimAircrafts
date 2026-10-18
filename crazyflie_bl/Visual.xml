@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. The meshes are
+  Crazyflow's cf21B parts (meshes/NOTICE) in their own frame, x forward, y left, z up, origin at the centre of the
+  four motor axes in the circuit-board plane. The loader turns glTF (x, y, z) into (-z, x, y), which shows the
+  meshes' forward on +Y, so every part is yawed -90 deg onto +X.
+
+  Body: the CG sits 0.123 mm aft of and 0.162 mm left of the motor centre (Mass.xml), so the mesh origin goes to
+  xyz 0.000123 0.000162 0.
+  Propellers: the hub of each is its thruster location in Propulsion.xml, 12.0 mm above the board, where
+  cf21B_500.xml puts it, and each mesh is modelled on its hub: turned 180 deg about its shaft it lands on itself
+  to 0.13-0.16 mm on average, the tessellation's scatter (0.5 mm off the axis it is 0.25-0.63 mm), so it takes no
+  offset.
+  prop_ccw's leading edges are on its counter-clockwise side; it goes on M1 and M3, prop_cw on M2 and M4.
+  Spin: a propeller turns about +axis with its unsigned rpm, clockwise seen from the axis tip. sense +1 is
+  counter-clockwise from above, so -Z; sense -1 is +Z.
+  Chase: 0.6 m behind, 20 deg above, chosen for a 0.14 m machine.
+-->
+<visual>
+  <fixture file="meshes/body.glb" xyz="0.000123 0.000162 0" rpy="0 0 -90"/>
+  <propeller file="meshes/prop_ccw.glb" xyz="0 0 0" rpy="0 0 -90" motor="M1" axis="0 0 -1"/>
+  <propeller file="meshes/prop_cw.glb" xyz="0 0 0" rpy="0 0 -90" motor="M2" axis="0 0 1"/>
+  <propeller file="meshes/prop_ccw.glb" xyz="0 0 0" rpy="0 0 -90" motor="M3" axis="0 0 -1"/>
+  <propeller file="meshes/prop_cw.glb" xyz="0 0 0" rpy="0 0 -90" motor="M4" axis="0 0 1"/>
+
+  <chase xyz="0 0 0" rpy="0 -20 0" length="0.6"/>
+</visual>

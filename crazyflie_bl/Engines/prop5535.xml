@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!-- Bitcraze 55-35 propeller. kF = CT rho D^4 / (4 pi^2), kM = CP rho D^5 / (8 pi^3), rho = 1.19323 kg/m^3.
+     CT(J) = CT0 - CT1 J from the train flights; CP held at the hover value (momentum theory gives
+     dCP/dJ near zero at hover). Outside |J| <= 0.3 and mu <= 1 the tables hold their end values. -->
+<propeller name="55-35" version="1.1">
+  <ixx unit="KG*M2"> 6.0500e-08 </ixx> <!-- kg m^2 rotor + propeller, train flights (Crazyflow cf21B 3.89e-8) -->
+  <diameter unit="M"> 0.055 </diameter> <!-- m, Bitcraze 55-35 propeller (CF 2.1 BL datasheet) -->
+  <numblades> 2 </numblades>
+  <table name="C_THRUST" type="internal"> <!-- kF 3.7261e-08 N/(rad/s)^2, train flights: m*a_z (IMU) against rotor speeds; IDSIA 3.72e-8; kV 2.6465e-06 N/(rad/s * m/s), train flights: thrust loss with axial inflow -->
+    <tableData>
+      -0.30  0.15985
+      +0.00  0.13472
+      +0.30  0.10959
+    </tableData>
+  </table>
+  <table name="C_POWER" type="internal"> <!-- kM 2.1212e-10 N m/(rad/s)^2 = THRUST2TORQUE 0.0056928 m (platform_defaults_cf21bl.h) * kF -->
+    <tableData>
+      -0.30  0.08762
+      +0.30  0.08762
+    </tableData>
+  </table>
+  <!-- In-plane force (H-force and blade flapping lumped), against the air velocity in the disc plane, at the hub:
+       F = -kd Omega v_inplane, i.e. C_H = c mu with mu = v_inplane/(n D) and c = 2 pi kd/(rho D^3).
+       kd 2.7491e-06 N/(rad/s * m/s), train flights: m*a_x,y (IMU) against rotor speed * in-plane hub velocity. -->
+  <table name="C_INPLANE_FORCE" type="internal">
+    <tableData>
+      0.0  0.0
+      1.0  0.087008
+    </tableData>
+  </table>
+</propeller>
