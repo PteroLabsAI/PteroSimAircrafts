@@ -28,4 +28,18 @@
       1.0  0.087008
     </tableData>
   </table>
+  <table name="CT_GROUND_FACTOR" type="internal"> <!-- thrust factor vs hub height along the slipstream over the radius, Cheeseman-Bennett 1/(1-(R/4z)^2) for a single rotor; last row 1 (free air) -->
+    <tableData>
+       0.50  1.33333
+       0.75  1.12500
+       1.00  1.06667
+       1.25  1.04167
+       1.50  1.02857
+       2.00  1.01587
+       3.00  1.00699
+       5.00  1.00251
+       8.00  1.00098
+      20.00  1.00000
+    </tableData>
+  </table>
 </propeller>

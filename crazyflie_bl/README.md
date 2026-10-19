@@ -27,10 +27,10 @@ PX4: `firmwares/px4_crazyflie_bl` is airframe 22101; install it as a SITL airfra
 `PX4_SYS_AUTOSTART=22101`. ArduCopter takes the motors in this model's order with `FRAME_CLASS 1` and
 `FRAME_TYPE 14` (X, numbered clockwise from front right); no parameter file ships for it.
 
-The propeller file uses two FGPropeller features that JSBSim 1.3 does not have: the `C_INPLANE_FORCE` table, and a
-rotor inertia below 1e-6 slug ft² taken as given. JSBSim 1.3 reports the table as unknown and flies without rotor
-drag, and it raises the inertia to 1.36e-6 kg m², 22 times this rotor's, so the motors take about a second to
-respond instead of 46 ms.
+The propeller file uses three FGPropeller features that JSBSim 1.3 does not have: the `C_INPLANE_FORCE` and
+`CT_GROUND_FACTOR` tables, and a rotor inertia below 1e-6 slug ft² taken as given. JSBSim 1.3 reports the tables as
+unknown and flies without rotor drag or ground effect, and it raises the inertia to 1.36e-6 kg m², 22 times this
+rotor's, so the motors take about a second to respond instead of 46 ms.
 
 ## Frames
 
@@ -49,6 +49,7 @@ above. The throttle is the motor voltage over 4.2 V, a duty-cycle ESC on a full 
 | thrust | kF 3.726e-8 N/(rad/s)², thrust loss with climb 2.65e-6 N/(rad/s·m/s), as `C_THRUST(J)` | identified |
 | torque | kM = `THRUST2TORQUE` 0.0056928 m × kF, as `C_POWER` | Bitcraze firmware |
 | rotor drag | kd 2.749e-6 N/(rad/s·m/s), as `C_INPLANE_FORCE` = 0.0870 μ | identified |
+| ground effect | thrust × 1/(1 − (R/4z)²) against z/R, as `CT_GROUND_FACTOR`; standing on its feet z/R ≈ 0.96, +7.6 % | Cheeseman and Bennett 1955, single rotor |
 | motor | Kv 11958 rpm/V, R 1.078 Ω, I0 0, rotor and propeller inertia 6.05e-8 kg m² | identified (datasheet: 10000 rpm/V, 0.52 Ω winding only, 0.40 A) |
 | inertia | 3.23e-5, 3.79e-5, 5.46e-5 kg m² | identified |
 | CG | 0.123 mm aft and 0.162 mm left of the motor centre; height in the board plane | identified trim; height chosen |
@@ -71,7 +72,9 @@ What follows from them: hover at 4.2 V takes 0.529 throttle, 1721 rad/s per roto
 - About a third of the roll and pitch torque in the flight data is not explained by the model, and the CG trim
   moves by about 0.4 mm between sessions. Without a controller its roll and pitch rates part from the real ones
   sooner than a constant-rate guess does.
-- No body drag, vertical included, and no ground effect.
+- No body drag, vertical included.
+- The ground effect is the single-rotor Cheeseman-Bennett curve on thrust only; the four rotors' interaction near the
+  ground and the lower power in ground effect are not modelled.
 - Above about 2.5 V across a motor the three-constant motor model falls behind Bitcraze's thrust-stand fit in the
   firmware (2595 against 2919 rad/s at 4 V), so the top of the thrust range is lower than the real vehicle's.
 - The decks are in the mass but not drawn.
