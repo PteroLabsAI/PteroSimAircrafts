@@ -7,7 +7,7 @@
      AERORP = AVL neutral point (Metrics.xml, x 0.3015 m aft of the nose, 23.1 % gross MAC). Cm_alpha is therefore NOT written:
      JSBSim carries the lift across the AERORP-to-CG arm (12.7 mm at the nominal CG, static margin 4.2 % MAC)
      and reproduces AVL's Cma at any CG. Every moment derivative below is AVL's value ABOUT THE NEUTRAL POINT (run f, OPER > M > X 0.30146),
-     never the value about the MAC quarter chord, or the arm would be counted twice (ATLAS README).
+     never the value about the MAC quarter chord, or the arm would be counted twice.
      Derivatives are AVL body axes (SB, x fwd z down = JSBSim body) at alpha 6 deg, the closest run to the 16 m/s cruise alpha (4.7 deg).
 
      Controls: fcs/elevator-pos-rad > 0 = both elevons trailing edge down (nose down). fcs/aileron-pos-rad > 0 = left elevon TE down,

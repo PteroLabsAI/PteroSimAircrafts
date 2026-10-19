@@ -13,7 +13,7 @@
      and a STRUCTURE contact compresses along the ground normal, so a foot needs no orientation to stand on the tail.
      The all-up CG z 0.0171 (Mass.xml, on the thrust line) is 18.1 mm on the upper-surface side of the wing-cap line
      (z -0.001), so the model rests on the two caps and the upper fin ball's crash contact, 1 deg off vertical.
-     Crash contacts are STRUCTURE type as ATLAS writes them, with the same spring and damping as the feet (chosen). -->
+     Crash contacts are STRUCTURE type, with the same spring and damping as the feet (chosen). -->
 <ground_reactions>
   <!-- left wing-tip tube cap: CAD (664.5, -0.1, -17.0) mm -> X_ac -0.5518, Y -0.6645, Z_ac 0.0010 (down) -->
   <contact type="STRUCTURE" name="foot_wing_left">
