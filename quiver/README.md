@@ -40,8 +40,6 @@ motors' `supply-volts`. Stock JSBSim logs "Unknown table type" for the in-plane 
 
 ## Known limits
 
-- Near empty the pack reads high: the cell resistance is Tattu's published pack bound, likely an AC figure, there is
-  no polarisation, and Tattu's table is a straight line between 0 and 12 %. A real pack reaches 48 V sooner.
 - The ESC is a static map; its own speed loop is not modelled.
 - Apart from the props' in-plane force, the airframe has body drag only: no download and no edgewise inflow.
 - The A8 mini's field of view and the gimbal's rates are defaults, not SIYI's figures. Pointed straight down, its
