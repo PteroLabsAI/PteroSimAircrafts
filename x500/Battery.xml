@@ -11,6 +11,7 @@
   (https://docs.holybro.com/radio/sik-telemetry-radio-v3); and the GPS, Holybro M10, "Less than 200mA @ 5V"
   (https://docs.holybro.com/gps-and-rtk-system/m8n-m9n-m10-gps/standard-m10-m9n-m8n-gps/overview).
   The flight controller's own draw was not found and is not counted.
+  infinite false: it drains as it flies; true holds the charge where it starts, for a test that must not run it down.
 -->
 <battery chemistry="LiPo" series="4" parallel="1" cell_capacity_mah="5000" cell_resistance_mohm="4"
-         initial_charge_percent="100" warn_charge_percent="15" avionics_watts="1.85"/>
+         initial_charge_percent="100" warn_charge_percent="15" avionics_watts="1.85" infinite="false"/>
