@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<!-- 08028-10000KV motor on a duty-cycle ESC: throttle = duty * Vbat / maxvolts. -->
+<!-- 08028-10000KV brushless motor alone. The voltage across it is supply-volts x throttle-pos-norm: the pack of
+     Battery.xml writes supply-volts every step, the ESC in Systems/esc.xml writes throttle-pos-norm. -->
 <brushless_dc_motor name="08028-10000KV">
-  <maxvolts> 4.2 </maxvolts> <!-- V, full 1S LiPo cell -->
-  <velocityconstant> 11958 </velocityconstant> <!-- rpm/V, train flights, rotor speed over 0.5 s windows from PWM*Vbat (datasheet 10000) -->
-  <coilresistance> 1.078 </coilresistance> <!-- ohm, train flights (datasheet 0.52, winding only); includes ESC and wiring -->
-  <noloadcurrent> 0.000 </noloadcurrent> <!-- A, train flights, fit at its lower bound (datasheet 0.40 A at 4 V, no load) -->
+  <maxvolts> 4.2 </maxvolts> <!-- V, the supply until a pack writes supply-volts: a full 1S cell -->
+  <velocityconstant> 12610 </velocityconstant> <!-- rpm/V, identified on the training flights (datasheet 10000) -->
+  <coilresistance> 0.52 </coilresistance> <!-- ohm, the winding: Bitcraze 08028-10000KV page, internal resistance 520 mOhm -->
+  <noloadcurrent> 0.00 </noloadcurrent> <!-- A, identified on the training flights, at its lower bound (datasheet 0.40 A at 4 V) -->
 </brushless_dc_motor>

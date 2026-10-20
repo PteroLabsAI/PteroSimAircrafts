@@ -16,4 +16,6 @@
   <propulsion file="Propulsion.xml"/>
   <!-- No body aerodynamics: the identified model has none. The rotor drag is the propellers' C_INPLANE_FORCE. -->
   <aerodynamics/>
+  <!-- The ESC: commanded duty to motor voltage over the supply. Battery.xml is the pack (a PteroSim sidecar). -->
+  <system file="esc"/>
 </fdm_config>

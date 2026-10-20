@@ -3,7 +3,7 @@
      CT(J) = CT0 - CT1 J from the train flights; CP held at the hover value (momentum theory gives
      dCP/dJ near zero at hover). Outside |J| <= 0.3 and mu <= 1 the tables hold their end values. -->
 <propeller name="55-35" version="1.1">
-  <ixx unit="KG*M2"> 6.0500e-08 </ixx> <!-- kg m^2 rotor + propeller, train flights (Crazyflow cf21B 3.89e-8) -->
+  <ixx unit="KG*M2"> 5.3600e-08 </ixx> <!-- kg m^2 rotor + propeller, train flights with the ESC and pack (Crazyflow cf21B 3.89e-8) -->
   <diameter unit="M"> 0.055 </diameter> <!-- m, Bitcraze 55-35 propeller (CF 2.1 BL datasheet) -->
   <numblades> 2 </numblades>
   <table name="C_THRUST" type="internal"> <!-- kF 3.7261e-08 N/(rad/s)^2, train flights: m*a_z (IMU) against rotor speeds; IDSIA 3.72e-8; kV 2.6465e-06 N/(rad/s * m/s), train flights: thrust loss with axial inflow -->
