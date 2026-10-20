@@ -6,17 +6,15 @@
   ligpower_mn3510_kv630_high_performance_uav_motor_f).
 
   maxvolts is that bench voltage at the ESC's input. A pack in flight writes its own terminal voltage over it
-  (propulsion/engine[n]/supply-volts). The table's current is the ESC's input current, throttle x current-amperes.
-  With the 13x4.4 CF next to it at 14.8 V, table against model:
+  (propulsion/engine[n]/supply-volts). The table's current is the ESC's input current, throttle-pos x current-amperes.
+  Through the ESC (Systems/esc_map.xml) with the 13x4.4 CF next to it at 14.8 V, table against model:
     throttle   rpm           thrust g      input A
-     50 %      4500 / 4402    540 / 536     3.4 / 3.2
-     65 %      5500 / 5646    860 / 881     6.1 / 6.6
-     75 %      6300 / 6458   1100 / 1152    8.8 / 9.8
-     85 %      6800 / 7255   1300 / 1455   11.8 / 13.9
-    100 %      7300 / 8427   1500 / 1963   14.0 / 21.9
-  The top two rows are not reproduced. With this Kv and resistance, the table's own rpm and current put 0.79 and 0.85
-  of the 14.8 V across the motor there: the stand's ESC stops short of full output, which a motor driven at
-  supply x throttle cannot show.
+     50 %      4500 / 4501    540 / 560     3.4 / 3.4
+     65 %      5500 / 5501    860 / 836     6.1 / 6.1
+     75 %      6300 / 6286   1100 / 1092    8.8 / 9.1
+     85 %      6800 / 6814   1300 / 1283   11.8 / 11.5
+    100 %      7300 / 7294   1500 / 1470   14.0 / 14.1
+  Thrust misses where a row's own C_T leaves the propeller's single 0.067: 3.5 % under it at 50 %, 2.9 % over at 65 %.
 -->
 <brushless_dc_motor name="x500_motor_0">
   <velocityconstant> 630 </velocityconstant>

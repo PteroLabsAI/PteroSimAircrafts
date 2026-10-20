@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+  The ESC: throttle command -> fcs/throttle-pos-norm[n], the share of supply-volts it puts across the motor.
+  Each point is V_motor / 14.8 V at a row of T-Motor's MN3510 KV630 test table (Engines/x500_motor_0.xml), from the
+  row's rpm and input current with the motor's Kv 630 and 65 milliohm, input power balanced against an ideal ESC:
+  V_motor = rpm / Kv + I_motor R, I_motor = I_in x 14.8 / V_motor, iterated to its fixed point.
+  The share holds whatever the pack, as an open-loop ESC's duty does, so a sagging pack lowers the motor's volts.
+-->
+<system name="x500 ESC map">
+  <function type="template" name="esc-duty">
+    <interpolate1d>
+      <p>#</p>
+      <v> 0.00 </v> <v> 0.0000 </v>  <!-- no command, no output; nothing measured below 50 % -->
+      <v> 0.50 </v> <v> 0.5118 </v>  <!-- 50 % row: 4500 rpm, 3.4 A -->
+      <v> 0.65 </v> <v> 0.6322 </v>  <!-- 65 % row: 5500 rpm, 6.1 A -->
+      <v> 0.75 </v> <v> 0.7287 </v>  <!-- 75 % row: 6300 rpm, 8.8 A -->
+      <v> 0.85 </v> <v> 0.7945 </v>  <!-- 85 % row: 6800 rpm, 11.8 A -->
+      <v> 1.00 </v> <v> 0.8549 </v>  <!-- 100 % row: 7300 rpm, 14.0 A -->
+    </interpolate1d>
+  </function>
+
+  <channel name="ESC">
+    <fcs_function name="fcs/esc/duty[0]">
+      <function> <property apply="esc-duty">fcs/throttle-cmd-norm[0]</property> </function>
+      <output>fcs/throttle-pos-norm[0]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[1]">
+      <function> <property apply="esc-duty">fcs/throttle-cmd-norm[1]</property> </function>
+      <output>fcs/throttle-pos-norm[1]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[2]">
+      <function> <property apply="esc-duty">fcs/throttle-cmd-norm[2]</property> </function>
+      <output>fcs/throttle-pos-norm[2]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[3]">
+      <function> <property apply="esc-duty">fcs/throttle-cmd-norm[3]</property> </function>
+      <output>fcs/throttle-pos-norm[3]</output>
+    </fcs_function>
+  </channel>
+</system>
