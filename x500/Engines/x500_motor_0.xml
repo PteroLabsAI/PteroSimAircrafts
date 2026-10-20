@@ -1,17 +1,24 @@
 <?xml version="1.0"?>
 <!--
   T-Motor (LIGPOWER) MN3510 KV630, 12N14P, the motor sold for 13-inch blades: velocity constant 630 rpm/V, internal
-  resistance 65 milliohm, idle current 0.5 A at 10 V, 3-4S, 22 A / 495 W continuous (RobotShop copy of the datasheet,
-  ligpower_mn3510_kv630_high_performance_uav_motor_f). With the 13x4.4 CF this model reproduces the datasheet's
-  rows to within a tenth: 4400 rpm and 6 A at half throttle against 4500 and 3.4; 7700 rpm and 1650 g at full
-  against 7300 and 1500.
+  resistance 65 milliohm, idle current 0.5 A at 10 V, 3-4S, 22 A / 495 W continuous. Its test table runs it at 14.8 V
+  (ligpower.com/product/mn3510-kv630-motor-navigator-type.html; RobotShop's copy of the datasheet,
+  ligpower_mn3510_kv630_high_performance_uav_motor_f).
 
-  maxvolts is the calibration knob: a 4S pack is 14.8 V on paper and less under 14 A through an ESC, and the model
-  has no ESC. 13.5 V lands the full-throttle row closest without starving the half-throttle one.
+  maxvolts is that bench voltage at the ESC's input. A pack in flight writes its own terminal voltage over it
+  (propulsion/engine[n]/supply-volts). The table's current is the ESC's input current, throttle-pos x current-amperes.
+  Through the ESC (Systems/esc_map.xml) with the 13x4.4 CF next to it at 14.8 V, table against model:
+    throttle   rpm           thrust g      input A
+     50 %      4500 / 4501    540 / 560     3.4 / 3.4
+     65 %      5500 / 5501    860 / 836     6.1 / 6.1
+     75 %      6300 / 6286   1100 / 1092    8.8 / 9.1
+     85 %      6800 / 6814   1300 / 1283   11.8 / 11.5
+    100 %      7300 / 7294   1500 / 1470   14.0 / 14.1
+  Thrust misses where a row's own C_T leaves the propeller's single 0.067: 3.5 % under it at 50 %, 2.9 % over at 65 %.
 -->
 <brushless_dc_motor name="x500_motor_0">
   <velocityconstant> 630 </velocityconstant>
   <coilresistance> 0.065 </coilresistance>
   <noloadcurrent> 0.5 </noloadcurrent>
-  <maxvolts> 13.5 </maxvolts>
+  <maxvolts> 14.8 </maxvolts>
 </brushless_dc_motor>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  4S1P: "Battery (Recommended) 4S LiPo", DJI E305 User Manual v1.0, Specifications
+  (https://dl.djicdn.com/downloads/e305/en/E305_User_Manual_v1.00_en.pdf).
+  cell_capacity_mah 5000: chosen, DJI gives only 4S.
+  cell_resistance_mohm 4: 1 to 4 milliohm per cell is typical for cells of about 5000 mAh when brand new at room
+  temperature (https://www.rchelicopterfun.com/lipo-internal-resistance.html); chosen at the top of that range.
+  warn_charge_percent 15: PX4's BAT_LOW_THR default, 0.15
+  (https://docs.px4.io/main/en/advanced_config/parameter_reference.html#BAT_LOW_THR).
+  avionics_watts 1.85: 0.37 A at 5 V from the receiver, FrSky R-XSR, "Operating Current: 70mA@5V"
+  (https://www.frsky-rc.com/product/r-xsr/); the telemetry radio, Holybro SiK V3, "Transmit current: 100 mA at 20 dBm"
+  (https://docs.holybro.com/radio/sik-telemetry-radio-v3); and the GPS, Holybro M10, "Less than 200mA @ 5V"
+  (https://docs.holybro.com/gps-and-rtk-system/m8n-m9n-m10-gps/standard-m10-m9n-m8n-gps/overview).
+  The flight controller's own draw was not found and is not counted.
+  infinite false: it drains as it flies; true holds the charge where it starts, for a test that must not run it down.
+-->
+<battery chemistry="LiPo" series="4" parallel="1" cell_capacity_mah="5000" cell_resistance_mohm="4"
+         initial_charge_percent="100" warn_charge_percent="15" avionics_watts="1.85" infinite="false"/>

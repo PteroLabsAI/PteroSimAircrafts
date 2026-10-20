@@ -1,8 +1,15 @@
 <?xml version="1.0"?>
-<!--bldc_engine name="DJI E305"-->
-  <brushless_dc_motor name="DJI E305">
-  <velocityconstant> 960 </velocityconstant>
-  <coilresistance>0.117</coilresistance>
-  <noloadcurrent>0.45</noloadcurrent>
-  <maxvolts> 14.63 </maxvolts>
+<!--
+  DJI E305 tuned propulsion system: the 2312E motor on the 420 LITE ESC with the 9450 propeller and a 4S LiPo
+  (E305 User Manual v1.0, 2015.5, Specifications, https://dl.djicdn.com/downloads/e305/en/E305_User_Manual_v1.00_en.pdf).
+  maxvolts is the voltage DJI rates the system's thrust at, at the ESC's input. A pack in flight writes its own
+  terminal voltage over it (propulsion/engine[n]/supply-volts).
+  DJI gives no resistance or idle current for the 2312E, and no test of it was found: those two values are not sourced.
+  With them and DJI_9450.xml at 14.8 V, full throttle gives 1280 g against DJI's 850 g per rotor; 850 g comes at 0.80.
+-->
+<brushless_dc_motor name="DJI E305">
+  <velocityconstant> 800 </velocityconstant>  <!-- rpm/V, "KV 800 rpm/V", E305 manual -->
+  <coilresistance> 0.117 </coilresistance>    <!-- Ohm, not found: the stock JSBSim F450 value, which names no source -->
+  <noloadcurrent> 0.45 </noloadcurrent>       <!-- A, not found: the stock JSBSim F450 value, which names no source -->
+  <maxvolts> 14.8 </maxvolts>                 <!-- V, "Max. Thrust 850 g/rotor (14.8 V, Sea Level)", E305 manual -->
 </brushless_dc_motor>
