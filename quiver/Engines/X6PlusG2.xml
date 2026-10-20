@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<brushless_dc_motor name="Hobbywing XRotor X6 Plus G2 14S">
+  <!-- Hobbywing nameplate 150 KV -->
+  <velocityconstant> 150 </velocityconstant>
+  <!-- R and I0: loss balance P_in = P_out + I0*rpm/Kv + R*I^2 at Kv 150 over the 54 V table; lump motor, ESC, cable -->
+  <coilresistance> 0.0943 </coilresistance>
+  <noloadcurrent> 1.532 </noloadcurrent>
+  <!-- 14S rated voltage of the Hobbywing table; Systems/esc_map.xml turns the throttle command into V_motor / 54 -->
+  <maxvolts> 54 </maxvolts>
+</brushless_dc_motor>

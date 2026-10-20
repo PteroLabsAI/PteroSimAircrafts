@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+  <propulsion>
+    <!-- Shaft axes at the CAD motor centres (+-446.74, +-446.74), height of the prop CoM plane 56.27 mm (equipment/propulsion/assembly.py) -->
+    <!-- Order and senses as F450 / ArduPilot quad X: 0 FR, 1 BL CCW from above (sense 1); 2 FL, 3 BR CW (sense -1) -->
+    <engine file="X6PlusG2" name="front right">
+      <thruster file="MFP2480">
+        <location unit="M">
+          <x> -0.44674 </x>
+          <y> 0.44674 </y>
+          <z> 0.05627 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X6PlusG2" name="aft left">
+      <thruster file="MFP2480">
+        <location unit="M">
+          <x> 0.44674 </x>
+          <y> -0.44674 </y>
+          <z> 0.05627 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X6PlusG2" name="front left">
+      <thruster file="MFP2480">
+        <location unit="M">
+          <x> -0.44674 </x>
+          <y> -0.44674 </y>
+          <z> 0.05627 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X6PlusG2" name="aft right">
+      <thruster file="MFP2480">
+        <location unit="M">
+          <x> 0.44674 </x>
+          <y> 0.44674 </y>
+          <z> 0.05627 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+  </propulsion>

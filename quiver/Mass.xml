@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+  <mass_balance>
+    <!-- Dev-Kit Engineering Report, Weight & Payload Summary: empty, battery excluded -->
+    <emptywt unit="KG"> 9.65 </emptywt>
+    <!-- empty CG and inertia about it: the parts at their assembled-CAD positions; 1.937 kg remainder as a body box, chosen -->
+    <location name="CG" unit="M">
+      <x> -0.0074 </x>
+      <y> -0.0017 </y>
+      <z> -0.0362 </z>
+    </location>
+    <ixx unit="KG*M2"> 0.8828 </ixx>
+    <iyy unit="KG*M2"> 0.8577 </iyy>
+    <izz unit="KG*M2"> 1.4569 </izz>
+    <!-- JSBSim default sign: ixy = Pxy, ixz = -Pxz, iyz = Pyz in body axes -->
+    <ixy unit="KG*M2"> -0.0005 </ixy>
+    <ixz unit="KG*M2"> -0.0046 </ixz>
+    <iyz unit="KG*M2"> 0.0022 </iyz>
+    <pointmass name="battery">
+      <!-- 30 Ah Tattu 4.0 14S, Dev-Kit report; the 20 Ah pack is 7.90 -->
+      <weight unit="KG"> 11.40 </weight>
+      <!-- cylinder with the Ixx and mean Iyy/Izz of the 3410_battery bbox, 331 x 250 x 146 mm (20 Ah: same shape, chosen); scales with weight -->
+      <form shape="cylinder">
+        <radius unit="M"> 0.1182 </radius>
+        <length unit="M"> 0.331 </length>
+      </form>
+      <!-- bbox centre of 3410_battery in the assembled CAD: X -125..125, Y -191..140, Z -123..23 mm -->
+      <location unit="M">
+        <x> 0.0255 </x>
+        <y> 0 </y>
+        <z> -0.050 </z>
+      </location>
+    </pointmass>
+  </mass_balance>

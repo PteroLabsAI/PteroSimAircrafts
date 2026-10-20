@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+  The Dev-Kit's long-endurance pack: Tattu 4.0 30000 mAh 14S1P 53.2 V HV smart battery, 11.4 kg (Dev-Kit Engineering Report).
+  chemistry  LiHV: Tattu's own static SOC table for this pack (Batteries/LiHV.xml here), 3.20..4.30 V per cell.
+  cell_resistance_mohm  Tattu's product page gives "Internal Resistance <=15mOhm" for the pack, AC or DC unstated; 15 / 14 cells.
+             It is a bound: published DC/AC ratios for pouch cells run 1.6..2.6 (Barai 2018), so the DC figure may be higher.
+  avionics_watts  the datasheet typicals of Arrow's avionics list: S2L 2.0, US-D1 2.0, MR82 2.5, TF03 0.75, F9P 1.25, M9N 0.5,
+             A8 mini 5.0, HM30 air 2.8, Pi 5 4.0, 2 GigaBlox Nano 0.52, db201 0.49 = 21.8 W at the loads. The Pix32 v6 and
+             CubeNode ETH publish no draw and are not in it; the DC-DC losses are not either.
+  warn_charge_percent  Tattu's alarm voltage, "48.3V(3.45V/cell)" (manual, technical specifications), on its own SOC table:
+             3.20..3.49 V is 0..12 %, so 3.45 V is (3.45 - 3.20) / (3.49 - 3.20) x 12 = 10.3 %.
+  Sources: Tattu's product page and user manual for this pack, Arrow's Dev-Kit Engineering Report, each part's datasheet.
+-->
+<battery chemistry="LiHV" series="14" parallel="1" cell_capacity_mah="30000" cell_resistance_mohm="1.07"
+         initial_charge_percent="100" avionics_watts="21.8" warn_charge_percent="10.3" infinite="false"/>

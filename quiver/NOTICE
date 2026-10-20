@@ -1,0 +1,44 @@
+This aircraft is a JSBSim model of Arrow Air's Quiver Dev-Kit quadcopter, written by PteroLabs in 2026 from Arrow
+Air's open hardware design.
+
+Quiver is Arrow Air's design: Project Quiver, https://github.com/Arrow-air/project-quiver, licensed under the CERN
+Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0). This folder is a modification of that Source
+and is distributed under the same licence; see LICENSE in this folder for its text. Modified by PteroLabs,
+2026-10-20: the design was turned into a simulation model, and nothing here changes the hardware.
+
+From Project Quiver, commit 9ef9efc80db1 (2026-09-29):
+
+  meshes/: built from the assembly's STEP files (visible parts), converted to glTF.
+
+  Positions and dimensions in Metrics.xml, Mass.xml, Gear.xml, Propulsion.xml, Sensors.xml and Visual.xml: the CAD
+  source under src/quiver/ (each file's comments name the assembly it comes from).
+
+  Masses: the Dev-Kit Engineering Report, Weight & Payload Summary.
+
+  The propeller blade geometry behind Engines/MFP2480.xml: the prop's STEP file (3112_propeller.step).
+
+  firmwares/ardupilot_quiver.param: Arrow's standard-params.param (commit a14970474c, 2026-06-17), with the changes
+  SITL needs; each change is marked in the file.
+
+Other sources:
+
+  Hobbywing XRotor X6 Plus G2 spec sheet and its 14S static load table with the MFP 24x8.0 prop: motor constants,
+  thrust, torque and current (Engines/, Systems/esc_map.xml).
+
+  Tattu 4.0 30000mAh 14S1P 53.2V HV smart battery: the product page (capacity, internal resistance bound) and the
+  Tattu 4.0 14S smart battery user manual (charge limit, alarm voltage, static SOC table) (Battery.xml,
+  Batteries/LiHV.xml).
+    https://www.tattuworld.com/products/tattu-4-0-30000mah-14s1p-53-2v-hv-35c-smart-uav-lipo-battery.html
+    https://cdn.tattuworld.com/uploads/soft/20260812/1-260Q21P604505.pdf
+
+  The datasheets of the avionics in Arrow's equipment list (RPLidar S2L, NanoRadar MR82, Ainstein US-D1, Benewake
+  TF03, Holybro DroneCAN F9P, Matek M9N, SIYI A8 mini and HM30, Raspberry Pi 5, BotBlox GigaBlox Nano, BlueMark
+  db201) for the avionics power in Battery.xml.
+
+  Barai et al. (2018) for the ratio of DC to AC resistance in pouch cells, cited in Battery.xml.
+
+Chosen, with no source, and marked so where they appear: the body's drag coefficients, the motor bell's inertia, the
+blade polar of the prop's BEMT tables, the mass not covered by the CAD parts, the pads' friction, the gimbal's rate
+and lag, the ESC map below its first table row.
+
+Hobbywing, Tattu, SIYI and the other product names are their owners' trademarks.

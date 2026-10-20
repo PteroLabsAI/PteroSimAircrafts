@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- A high-voltage cell's resting volts by charge: Tattu 4.0 14S Smart Battery User Manual, "SOC Display" (printed page 11),
+     https://cdn.tattuworld.com/uploads/soft/20260812/1-260Q21P604505.pdf: "The voltage value is only for static SOC reference."
+     Each of its eight bins is a pair of points at its edges, as the table gives them; 4.30 V full is Tattu's charge limit. -->
+<chemistry>
+    <point charge_percent="0" cell_volts="3.20"/>
+    <point charge_percent="12" cell_volts="3.49"/>
+    <point charge_percent="13" cell_volts="3.50"/>
+    <point charge_percent="24" cell_volts="3.58"/>
+    <point charge_percent="25" cell_volts="3.59"/>
+    <point charge_percent="37" cell_volts="3.64"/>
+    <point charge_percent="38" cell_volts="3.65"/>
+    <point charge_percent="49" cell_volts="3.70"/>
+    <point charge_percent="50" cell_volts="3.71"/>
+    <point charge_percent="62" cell_volts="3.85"/>
+    <point charge_percent="63" cell_volts="3.86"/>
+    <point charge_percent="74" cell_volts="3.98"/>
+    <point charge_percent="75" cell_volts="3.99"/>
+    <point charge_percent="87" cell_volts="4.13"/>
+    <point charge_percent="88" cell_volts="4.14"/>
+    <point charge_percent="100" cell_volts="4.30"/>
+</chemistry>

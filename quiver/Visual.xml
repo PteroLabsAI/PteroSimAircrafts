@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  What this vehicle looks like. Metres and degrees, X forward, Y right, Z up, relative to the CG.
+  Meshes from Arrow Air's Quiver CAD (CERN-OHL-S-2.0), exported Z up and +Y forward, so glTF -z is forward.
+-->
+<visual>
+  <!-- CAD origin (centre of the plate stack) relative to the CG with the 30 Ah battery -->
+  <fixture file="meshes/quiver_body.glb" xyz="0.0104 0.0008 0.0437" rpy="0 0 0"/>
+
+  <!-- The SIYI A8 mini's ball: its bbox centre in X/Y (Sensors.xml), at the ball's height near the bbox bottom (CAD Z -190 of -212..-131 mm);
+       its mesh is part of the body, so only the camera turns. Rate and tau are x500's, not the A8's -->
+  <gimbal name="gimbal_1" xyz="0.1515 0.0672 -0.146" rpy="0 0 0" rate="120 120 120" tau="0.1"/>
+
+  <!-- Each mesh is centred on its hub at 53.8 mm, 2.5 mm under the thruster plane; handedness read from the blade pitch -->
+  <propeller file="meshes/quiver_prop_ccw.glb" xyz="0 0 -0.0025" rpy="0 0 0" motor="front right" axis="0 0 1"/>
+  <propeller file="meshes/quiver_prop_ccw.glb" xyz="0 0 -0.0025" rpy="0 0 0" motor="aft left" axis="0 0 1"/>
+  <propeller file="meshes/quiver_prop_cw.glb" xyz="0 0 -0.0025" rpy="0 0 0" motor="front left" axis="0 0 -1"/>
+  <propeller file="meshes/quiver_prop_cw.glb" xyz="0 0 -0.0025" rpy="0 0 0" motor="aft right" axis="0 0 -1"/>
+
+  <!-- chosen: ~3.5 prop spans back so the whole 1.37 m airframe fits the frame -->
+  <chase xyz="0 0 0.3" rpy="0 -15 0" length="5"/>
+</visual>
