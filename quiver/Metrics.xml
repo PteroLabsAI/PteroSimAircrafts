@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+  <metrics>
+    <!-- frontal projected area, props excluded, measured on the assembled CAD; reference only, Aero.xml sets its own areas -->
+    <wingarea unit="M2"> 0.1173 </wingarea>
+    <!-- reference only: span across the prop tips, 2 x 446.74 mm + 24 in -->
+    <wingspan unit="M"> 1.503 </wingspan>
+    <!-- reference only: plate size, plates/assembly.py -->
+    <chord unit="M"> 0.300 </chord>
+    <wing_incidence unit="DEG"> 0 </wing_incidence>
+    <htailarea unit="M2"> 0 </htailarea>
+    <htailarm unit="M"> 0 </htailarm>
+    <vtailarea unit="M2"> 0 </vtailarea>
+    <vtailarm unit="M"> 0 </vtailarm>
+    <!-- centroid of the frontal projection; structural frame = CAD plate-stack centre, x aft, y right, z up -->
+    <location name="AERORP" unit="M">
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> -0.0845 </z>
+    </location>
+    <!-- EYEPOINT and VRP at the CAD origin, the plate-stack centre -->
+    <location name="EYEPOINT" unit="M">
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 0 </z>
+    </location>
+    <location name="VRP" unit="M">
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 0 </z>
+    </location>
+  </metrics>

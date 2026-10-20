@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+  <aerodynamics>
+    <!-- Drag only, per body axis: F = -1/2 rho V|V| CD A. Rotor H-force, download and edgewise inflow are not modelled. -->
+    <function name="aero/sqft-per-sqm">
+      <value> 10.7639 </value>
+    </function>
+    <!-- chosen, no evidence: bluff bodies and cylinders at Re 1e4..1e5 sit near 1 (cube ~1.05, cylinder ~1.2, Hoerner) -->
+    <function name="aero/coefficient/CD-body">
+      <value> 1.0 </value>
+    </function>
+    <!-- projected areas, props excluded, measured on the assembled CAD -->
+    <function name="aero/area-front-sqft">
+      <product> <value> 0.1173 </value> <property>aero/sqft-per-sqm</property> </product>
+    </function>
+    <function name="aero/area-side-sqft">
+      <product> <value> 0.1289 </value> <property>aero/sqft-per-sqm</property> </product>
+    </function>
+    <function name="aero/area-plan-sqft">
+      <product> <value> 0.2043 </value> <property>aero/sqft-per-sqm</property> </product>
+    </function>
+    <axis name="X">
+      <function name="aero/force/X-drag">
+        <product>
+          <value> -0.5 </value>
+          <property>atmosphere/rho-slugs_ft3</property>
+          <property>velocities/u-aero-fps</property>
+          <abs> <property>velocities/u-aero-fps</property> </abs>
+          <property>aero/coefficient/CD-body</property>
+          <property>aero/area-front-sqft</property>
+        </product>
+      </function>
+    </axis>
+    <axis name="Y">
+      <function name="aero/force/Y-drag">
+        <product>
+          <value> -0.5 </value>
+          <property>atmosphere/rho-slugs_ft3</property>
+          <property>velocities/v-aero-fps</property>
+          <abs> <property>velocities/v-aero-fps</property> </abs>
+          <property>aero/coefficient/CD-body</property>
+          <property>aero/area-side-sqft</property>
+        </product>
+      </function>
+    </axis>
+    <axis name="Z">
+      <function name="aero/force/Z-drag">
+        <product>
+          <value> -0.5 </value>
+          <property>atmosphere/rho-slugs_ft3</property>
+          <property>velocities/w-aero-fps</property>
+          <abs> <property>velocities/w-aero-fps</property> </abs>
+          <property>aero/coefficient/CD-body</property>
+          <property>aero/area-plan-sqft</property>
+        </product>
+      </function>
+    </axis>
+  </aerodynamics>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+  <ground_reactions>
+    <!-- Foam pad bottoms: CAD (+-273.40, +-217, -547.89) mm, landing_gear/assembly.py. Friction as F450. -->
+    <!-- chosen: spring for 8.6 mm sag at 21.05 kg, damper for zeta 0.70; at dt 1/240, 17.55 kg it is 4.2x under m/dt, roll 5.8x, pitch 9.4x -->
+    <contact type="STRUCTURE" name="Front_Left">
+      <location unit="M">
+        <x> -0.217 </x>
+        <y> -0.2734 </y>
+        <z> -0.54789 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <spring_coeff unit="N/M"> 6000 </spring_coeff>
+      <damping_coeff unit="N/M/SEC"> 250 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="Front_Right">
+      <location unit="M">
+        <x> -0.217 </x>
+        <y> 0.2734 </y>
+        <z> -0.54789 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <spring_coeff unit="N/M"> 6000 </spring_coeff>
+      <damping_coeff unit="N/M/SEC"> 250 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="Aft_Left">
+      <location unit="M">
+        <x> 0.217 </x>
+        <y> -0.2734 </y>
+        <z> -0.54789 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <spring_coeff unit="N/M"> 6000 </spring_coeff>
+      <damping_coeff unit="N/M/SEC"> 250 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="Aft_Right">
+      <location unit="M">
+        <x> 0.217 </x>
+        <y> 0.2734 </y>
+        <z> -0.54789 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <spring_coeff unit="N/M"> 6000 </spring_coeff>
+      <damping_coeff unit="N/M/SEC"> 250 </damping_coeff>
+    </contact>
+  </ground_reactions>

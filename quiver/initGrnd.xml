@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<initialize name="Quiver on the ground">
+  <vt unit="M/S"> 0.0 </vt>
+  <!-- site and heading of the F450 template initGrnd.xml; arbitrary -->
+  <latitude type="geodetic" unit="DEG"> 44.725801 </latitude>
+  <longitude unit="DEG"> -93.075866 </longitude>
+  <elevation unit="M"> 285.2111 </elevation>
+  <!-- CG height at rest on the pads, 30 Ah, after 60 s settled in plain JSBSim -->
+  <altitudeAGL unit="M"> 0.496 </altitudeAGL>
+  <psi unit="DEG"> 90.0 </psi>
+</initialize>
