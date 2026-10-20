@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+  Which channel from the autopilot drives what on this vehicle. A sidecar: JSBSim never reads this file.
+
+  The motors take the low channels in Bitcraze's numbering, which is the order Propulsion.xml lists them in:
+  M1 front right, M2 rear right, M3 rear left, M4 front left, M1 and M3 counter-clockwise seen from above.
+  The PX4 airframe (firmwares/px4_crazyflie_bl) places its rotors in this order. ArduCopter takes the same
+  order with FRAME_CLASS 1 and FRAME_TYPE 14 (X, motors numbered clockwise from front right, 1 and 3
+  counter-clockwise), so the rows name both.
+-->
+<control_bindings stack="PX4">
+  <binding stack="ArduPilot PX4" channel="0" type="Motor" index="0" label="M1 front right"/>
+  <binding stack="ArduPilot PX4" channel="1" type="Motor" index="1" label="M2 rear right"/>
+  <binding stack="ArduPilot PX4" channel="2" type="Motor" index="2" label="M3 rear left"/>
+  <binding stack="ArduPilot PX4" channel="3" type="Motor" index="3" label="M4 front left"/>
+</control_bindings>

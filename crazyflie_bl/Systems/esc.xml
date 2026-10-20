@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!-- Duty-cycle ESC whose losses (switches, wiring, connector) are one series resistance, R_esc = 0.586 ohm,
+     identified on the training flights.
+     In: fcs/throttle-cmd-norm[i], the duty. Out: fcs/throttle-pos-norm[i], the motor's voltage over supply-volts.
+     V_motor = duty V_supply - R_esc I with the motor's own current I = (V_motor - rpm/Kv)/R_w, solved together:
+     throttle-pos = (R_w duty + R_esc (rpm/Kv)/V_supply) / (R_w + R_esc). R_w = 0.52 ohm and Kv = 12610 rpm/V are
+     the motor's (Engines/bl08028.xml) and change with it. The motor has no inductance, so feeding back last step's
+     current-amperes instead would close an algebraic loop that oscillates once R_esc nears R_w.
+     Out: propulsion/engine[i]/esc-input-duty, the duty: the switch draws that share of the motor's current from the pack. -->
+<system name="esc">
+  <channel name="ESC">
+    <fcs_function name="esc-m1">
+      <function>
+        <quotient>
+          <sum>
+            <product> <value> 0.52 </value> <property> fcs/throttle-cmd-norm[0] </property> </product>
+            <quotient>
+              <product> <value> 0.586 </value> <property> propulsion/engine[0]/propeller-rpm </property> </product>
+              <product> <value> 12610 </value> <property> propulsion/engine[0]/supply-volts </property> </product>
+            </quotient>
+          </sum>
+          <value> 1.106 </value>
+        </quotient>
+      </function>
+      <clipto> <min> 0 </min> <max> 1 </max> </clipto>
+      <output> fcs/throttle-pos-norm[0] </output>
+    </fcs_function>
+    <fcs_function name="esc-input-m1">
+      <function> <property> fcs/throttle-cmd-norm[0] </property> </function>
+      <output> propulsion/engine[0]/esc-input-duty </output>
+    </fcs_function>
+    <fcs_function name="esc-m2">
+      <function>
+        <quotient>
+          <sum>
+            <product> <value> 0.52 </value> <property> fcs/throttle-cmd-norm[1] </property> </product>
+            <quotient>
+              <product> <value> 0.586 </value> <property> propulsion/engine[1]/propeller-rpm </property> </product>
+              <product> <value> 12610 </value> <property> propulsion/engine[1]/supply-volts </property> </product>
+            </quotient>
+          </sum>
+          <value> 1.106 </value>
+        </quotient>
+      </function>
+      <clipto> <min> 0 </min> <max> 1 </max> </clipto>
+      <output> fcs/throttle-pos-norm[1] </output>
+    </fcs_function>
+    <fcs_function name="esc-input-m2">
+      <function> <property> fcs/throttle-cmd-norm[1] </property> </function>
+      <output> propulsion/engine[1]/esc-input-duty </output>
+    </fcs_function>
+    <fcs_function name="esc-m3">
+      <function>
+        <quotient>
+          <sum>
+            <product> <value> 0.52 </value> <property> fcs/throttle-cmd-norm[2] </property> </product>
+            <quotient>
+              <product> <value> 0.586 </value> <property> propulsion/engine[2]/propeller-rpm </property> </product>
+              <product> <value> 12610 </value> <property> propulsion/engine[2]/supply-volts </property> </product>
+            </quotient>
+          </sum>
+          <value> 1.106 </value>
+        </quotient>
+      </function>
+      <clipto> <min> 0 </min> <max> 1 </max> </clipto>
+      <output> fcs/throttle-pos-norm[2] </output>
+    </fcs_function>
+    <fcs_function name="esc-input-m3">
+      <function> <property> fcs/throttle-cmd-norm[2] </property> </function>
+      <output> propulsion/engine[2]/esc-input-duty </output>
+    </fcs_function>
+    <fcs_function name="esc-m4">
+      <function>
+        <quotient>
+          <sum>
+            <product> <value> 0.52 </value> <property> fcs/throttle-cmd-norm[3] </property> </product>
+            <quotient>
+              <product> <value> 0.586 </value> <property> propulsion/engine[3]/propeller-rpm </property> </product>
+              <product> <value> 12610 </value> <property> propulsion/engine[3]/supply-volts </property> </product>
+            </quotient>
+          </sum>
+          <value> 1.106 </value>
+        </quotient>
+      </function>
+      <clipto> <min> 0 </min> <max> 1 </max> </clipto>
+      <output> fcs/throttle-pos-norm[3] </output>
+    </fcs_function>
+    <fcs_function name="esc-input-m4">
+      <function> <property> fcs/throttle-cmd-norm[3] </property> </function>
+      <output> propulsion/engine[3]/esc-input-duty </output>
+    </fcs_function>
+  </channel>
+</system>

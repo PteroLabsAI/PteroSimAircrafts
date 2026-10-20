@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!-- Bitcraze numbering and spin (firmware power_distribution_quadrotor.c; Bitcraze propeller pages: CCW on M1 and M3).
+     Arm 35.355 mm per axis = firmware ARM_LENGTH 0.050 m (platform_defaults_cf21bl.h) / sqrt 2; IDSIA L = 35.35 mm.
+     Hub 12.0 mm above the CG: the propeller's mid-plane on the meshes as Crazyflow's cf21B_500.xml places them
+     (meshes/NOTICE), the hub's underside 0.5 mm above the motor bell.
+     Thrust axis up (pitch 90). sense +1 = counter-clockwise seen from above. -->
+<propulsion>
+  <engine file="bl08028" name="M1">  <!-- M1: FLU (+0.0354, -0.0354) m, front right, CCW seen from above -->
+    <thruster file="prop5535">
+      <location unit="M"> <x> -0.035355 </x> <y> +0.035355 </y> <z> 0.012 </z> </location>
+      <orient unit="DEG"> <roll> 0 </roll> <pitch> 90 </pitch> <yaw> 0 </yaw> </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+  <engine file="bl08028" name="M2">  <!-- M2: FLU (-0.0354, -0.0354) m, rear right, CW seen from above -->
+    <thruster file="prop5535">
+      <location unit="M"> <x> +0.035355 </x> <y> +0.035355 </y> <z> 0.012 </z> </location>
+      <orient unit="DEG"> <roll> 0 </roll> <pitch> 90 </pitch> <yaw> 0 </yaw> </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+  <engine file="bl08028" name="M3">  <!-- M3: FLU (-0.0354, +0.0354) m, rear left, CCW seen from above -->
+    <thruster file="prop5535">
+      <location unit="M"> <x> +0.035355 </x> <y> -0.035355 </y> <z> 0.012 </z> </location>
+      <orient unit="DEG"> <roll> 0 </roll> <pitch> 90 </pitch> <yaw> 0 </yaw> </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+  <engine file="bl08028" name="M4">  <!-- M4: FLU (+0.0354, +0.0354) m, front left, CW seen from above -->
+    <thruster file="prop5535">
+      <location unit="M"> <x> -0.035355 </x> <y> -0.035355 </y> <z> 0.012 </z> </location>
+      <orient unit="DEG"> <roll> 0 </roll> <pitch> 90 </pitch> <yaw> 0 </yaw> </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+</propulsion>
