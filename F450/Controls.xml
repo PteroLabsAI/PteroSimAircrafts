@@ -3,8 +3,9 @@
   Which channel from the autopilot drives what on this vehicle.
 
     stack (on control_bindings)  which autopilot is flying it now; Manual when a player flies it
-    pilot (on control_bindings)  how a player flies it under Manual: stabilize, PteroSim's multicopter
-                                 law, or direct, the sticks straight to the rows that drive under Manual
+    pilot (on control_bindings)  who flies it when a player does, under Manual: multicopter, PteroSim's
+                                 multicopter law, whose mode is chosen in flight, or direct, the sticks
+                                 straight to the rows that drive under Manual
     stack (on a binding)         which autopilots that row is for; several may be named, and naming
                                  none means every one of them
     channel                      the number the autopilot sends
@@ -18,7 +19,7 @@
   order, so those rows name both. BetaFlight's mixer counts them starting from the rear right, so it
   gets its own four rows.
 -->
-<control_bindings stack="PX4" pilot="stabilize">
+<control_bindings stack="PX4" pilot="multicopter">
   <binding stack="ArduPilot PX4" channel="0" type="Motor" index="0" label="front right"/>
   <binding stack="ArduPilot PX4" channel="1" type="Motor" index="1" label="aft left"/>
   <binding stack="ArduPilot PX4" channel="2" type="Motor" index="2" label="front left"/>
