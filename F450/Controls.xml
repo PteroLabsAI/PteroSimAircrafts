@@ -11,6 +11,7 @@
     channel                      the number the autopilot sends
     type                         what it drives: Motor, Elevator, Aileron, Rudder, Flaps, Gripper, Servo
     index                        which one of them, counting from zero in the order Propulsion.xml lists
+    gripper                      for a Gripper, the <gripper> of Visual.xml it works, by name
     in / out                     the range in and the range out, two numbers each; absent means 0 to 1
     invert                       1 to reverse the direction, for a linkage fitted the other way round
     label                        a name for the panel; it changes nothing
@@ -26,7 +27,7 @@
   <binding stack="ArduPilot PX4" channel="3" type="Motor" index="3" label="aft right"/>
 
   <!-- A gripper opens as well as closes, so this channel takes a two-sided input range. -->
-  <binding stack="ArduPilot PX4" channel="4" type="Gripper" index="0" in="-1 1" label="Gripper"/>
+  <binding stack="ArduPilot PX4" channel="4" type="Gripper" gripper="gripper" in="-1 1" label="Gripper"/>
 
   <binding stack="BetaFlight" channel="0" type="Motor" index="3" label="aft right"/>
   <binding stack="BetaFlight" channel="1" type="Motor" index="0" label="front right"/>
