@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- The downloaded X-15 cannot be split safely: its disconnected islands include
+     cabin/fuselage geometry. Keep one baked visual mesh until it is authored with
+     dedicated control-surface meshes. -->
+<visual>
+  <fixture file="meshes/x15_airframe.glb" xyz="-8.763 0 0" rpy="0 0 90"/>
+</visual>
