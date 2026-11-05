@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<fdm_config name="X1 SkyRacer" version="2.0" release="ALPHA">
+  <fileheader>
+    <author> PteroLabs </author>
+    <description> X1 Racing two-seat hybrid-electric flying car: 4 ducts with a coaxial fan pair each, 2 ducted pushers, no control surfaces </description>
+    <note> Concept-level model: geometry from the X1 SkyRacer concept model, power figures from the designer; not test data </note>
+  </fileheader>
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <aerodynamics file="Aero.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion file="Propulsion.xml"/>
+  <!-- generator, accumulator, propane burn, power priority and motor drives between the autopilot's throttles and the motors -->
+  <system file="power"/>
+</fdm_config>

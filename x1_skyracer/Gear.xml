@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+  <ground_reactions>
+    <!-- four 8 in wheels under the sponsons, no brakes, no steering (X1 concept model); spring and damper chosen, no evidence -->
+    <contact type="BOGEY" name="Wheel_FL">
+      <location unit="IN">
+        <x> -26.77 </x>
+        <y> -33.86 </y>
+        <z> 0 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 20000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2500 </damping_coeff>
+      <max_steer unit="DEG"> 0 </max_steer>
+      <brake_group> NONE </brake_group>
+      <retractable> 0 </retractable>
+    </contact>
+    <contact type="BOGEY" name="Wheel_FR">
+      <location unit="IN">
+        <x> -26.77 </x>
+        <y> 33.86 </y>
+        <z> 0 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 20000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2500 </damping_coeff>
+      <max_steer unit="DEG"> 0 </max_steer>
+      <brake_group> NONE </brake_group>
+      <retractable> 0 </retractable>
+    </contact>
+    <contact type="BOGEY" name="Wheel_RL">
+      <location unit="IN">
+        <x> 14.96 </x>
+        <y> -33.86 </y>
+        <z> 0 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 20000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2500 </damping_coeff>
+      <max_steer unit="DEG"> 0 </max_steer>
+      <brake_group> NONE </brake_group>
+      <retractable> 0 </retractable>
+    </contact>
+    <contact type="BOGEY" name="Wheel_RR">
+      <location unit="IN">
+        <x> 14.96 </x>
+        <y> 33.86 </y>
+        <z> 0 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 20000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2500 </damping_coeff>
+      <max_steer unit="DEG"> 0 </max_steer>
+      <brake_group> NONE </brake_group>
+      <retractable> 0 </retractable>
+    </contact>
+    <!-- hard points that touch first when the craft lands off its wheels: nose, tail, duct bottoms, canopy -->
+    <contact type="STRUCTURE" name="NOSE_TIP">
+      <location unit="IN">
+        <x> -107.87 </x>
+        <y> 0 </y>
+        <z> 23.62 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="TAIL">
+      <location unit="IN">
+        <x> 107.87 </x>
+        <y> 0 </y>
+        <z> 36.61 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="DUCT_FL">
+      <location unit="IN">
+        <x> -59.06 </x>
+        <y> -92.91 </y>
+        <z> 12.99 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="DUCT_FR">
+      <location unit="IN">
+        <x> -59.06 </x>
+        <y> 92.91 </y>
+        <z> 12.99 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="DUCT_RL">
+      <location unit="IN">
+        <x> 47.24 </x>
+        <y> -92.91 </y>
+        <z> 38.19 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="DUCT_RR">
+      <location unit="IN">
+        <x> 47.24 </x>
+        <y> 92.91 </y>
+        <z> 38.19 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="CANOPY_TOP">
+      <location unit="IN">
+        <x> -35.43 </x>
+        <y> 0 </y>
+        <z> 50 </z>
+      </location>
+      <static_friction> 1.0 </static_friction>
+      <dynamic_friction> 0.8 </dynamic_friction>
+      <spring_coeff unit="LBS/FT"> 40000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5000 </damping_coeff>
+    </contact>
+  </ground_reactions>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+  <metrics>
+    <!-- both wings to the centreline, tips on the duct-wall mid line (X1 concept model geometry) -->
+    <wingarea unit="M2"> 4.7829 </wingarea>
+    <wingspan unit="M"> 2.2472 </wingspan>
+    <!-- area-weighted mean aerodynamic chord of the two wings -->
+    <chord unit="M"> 1.0694 </chord>
+    <!-- race CG (full propane and ballast): Aero.xml moments are taken about it -->
+    <location name="AERORP" unit="IN">
+      <x> 7.12 </x>
+      <y> 0 </y>
+      <z> 29.19 </z>
+    </location>
+    <!-- driver's eye, left seat (concept model camera) -->
+    <location name="EYEPOINT" unit="IN">
+      <x> -35.43 </x>
+      <y> -12.6 </y>
+      <z> 42.52 </z>
+    </location>
+    <!-- concept model origin: on the ground under the craft centre -->
+    <location name="VRP" unit="IN">
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 0 </z>
+    </location>
+  </metrics>

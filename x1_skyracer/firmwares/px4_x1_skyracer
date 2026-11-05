@@ -1,0 +1,116 @@
+#!/bin/sh
+#
+# @name X1 SkyRacer
+#
+# @type Standard VTOL
+# @class VTOL
+#
+# A Standard VTOL that never leaves multicopter mode: eight lift fans in four coaxial ducts fly it, and the two
+# pushers give the forward acceleration it would otherwise get by pitching down (VT_FWD_THRUST_EN, VT_PITCH_MIN 0).
+# It has no wing to fly on and no control surfaces, so a front transition in the air is cancelled as soon as it starts.
+# Rotor n is engine n of the JSBSim model and output channel n. Positions are metres from the race-weight CG
+# (3500 lb), forward-right-down; KM > 0 is counter-clockwise seen from above.
+#
+
+. ${R}etc/init.d/rc.vtol_defaults
+
+param set-default VT_TYPE 2
+param set-default CA_AIRFRAME 2
+param set-default CA_SV_CS_COUNT 0
+
+# From the fan model: CT is the static thrust at full command, 997 lbf an upper fan, 795 lbf a lower fan, 592 lbf a pusher;
+# KM is torque over thrust, 0.148 m upper and 0.184 m lower (its own motor balances the pair's torque at equal command).
+# CT is in kN: PX4 uses only the ratios, but zeroes every mix entry under 1e-3 (ControlAllocationPseudoInverse.cpp),
+# and in newtons all roll and pitch entries of this vehicle are.
+param set-default CA_ROTOR_COUNT 10
+param set-default CA_ROTOR0_PX 1.6810         # FL upper, CCW
+param set-default CA_ROTOR0_PY -1.7219
+param set-default CA_ROTOR0_PZ 0.2263
+param set-default CA_ROTOR0_KM 0.148
+param set-default CA_ROTOR0_CT 4.435
+param set-default CA_ROTOR1_PX 1.6810         # FL lower, CW
+param set-default CA_ROTOR1_PY -1.7219
+param set-default CA_ROTOR1_PZ 0.2964
+param set-default CA_ROTOR1_KM -0.184
+param set-default CA_ROTOR1_CT 3.536
+param set-default CA_ROTOR2_PX 1.6810         # FR upper, CW
+param set-default CA_ROTOR2_PY 1.7219
+param set-default CA_ROTOR2_PZ 0.2263
+param set-default CA_ROTOR2_KM -0.148
+param set-default CA_ROTOR2_CT 4.435
+param set-default CA_ROTOR3_PX 1.6810         # FR lower, CCW
+param set-default CA_ROTOR3_PY 1.7219
+param set-default CA_ROTOR3_PZ 0.2964
+param set-default CA_ROTOR3_KM 0.184
+param set-default CA_ROTOR3_CT 3.536
+param set-default CA_ROTOR4_PX -1.0190        # RL upper, CW
+param set-default CA_ROTOR4_PY -1.7219
+param set-default CA_ROTOR4_PZ -0.4135
+param set-default CA_ROTOR4_KM -0.148
+param set-default CA_ROTOR4_CT 4.435
+param set-default CA_ROTOR5_PX -1.0190        # RL lower, CCW
+param set-default CA_ROTOR5_PY -1.7219
+param set-default CA_ROTOR5_PZ -0.3437
+param set-default CA_ROTOR5_KM 0.184
+param set-default CA_ROTOR5_CT 3.536
+param set-default CA_ROTOR6_PX -1.0190        # RR upper, CCW
+param set-default CA_ROTOR6_PY 1.7219
+param set-default CA_ROTOR6_PZ -0.4135
+param set-default CA_ROTOR6_KM 0.148
+param set-default CA_ROTOR6_CT 4.435
+param set-default CA_ROTOR7_PX -1.0190        # RR lower, CW
+param set-default CA_ROTOR7_PY 1.7219
+param set-default CA_ROTOR7_PZ -0.3437
+param set-default CA_ROTOR7_KM -0.184
+param set-default CA_ROTOR7_CT 3.536
+
+# The pushers (y -+0.705, z -0.1585) are declared as pure forward thrust on the centreline: at their real y PX4
+# hands them part of the hover yaw, which a pusher at rest cannot give both ways, and its yaw desaturation then
+# cancels the command (ControlAllocationSequentialDesaturation.cpp). Their 0.18 m above the CG is left to the rate loop.
+param set-default CA_ROTOR8_PX -2.0904        # pusher left
+param set-default CA_ROTOR8_PY 0
+param set-default CA_ROTOR8_PZ 0
+param set-default CA_ROTOR8_AX 1
+param set-default CA_ROTOR8_AZ 0
+param set-default CA_ROTOR8_CT 2.633
+param set-default CA_ROTOR9_PX -2.0904        # pusher right
+param set-default CA_ROTOR9_PY 0
+param set-default CA_ROTOR9_PZ 0
+param set-default CA_ROTOR9_AX 1
+param set-default CA_ROTOR9_AZ 0
+param set-default CA_ROTOR9_CT 2.633
+
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+param set-default PWM_MAIN_FUNC5 105
+param set-default PWM_MAIN_FUNC6 106
+param set-default PWM_MAIN_FUNC7 107
+param set-default PWM_MAIN_FUNC8 108
+param set-default PWM_MAIN_FUNC9 109
+param set-default PWM_MAIN_FUNC10 110
+
+param set-default THR_MDL_FAC 1               # static thrust fits (1-e)u + eu^2 with e 1.01-1.02
+param set-default MPC_THR_HOVER 0.49          # 3500 lbf over 4 x 997 + 4 x 795 lbf
+
+# Pushers instead of pitching down, except when landing. SC = 3500 lbf / (2 x 592 lbf), so the pushers give the
+# acceleration of the pitch they replace.
+param set-default VT_FWD_THRUST_EN 1
+param set-default VT_FWD_THRUST_SC 2.96
+
+# A front transition would stop the lift fans: it times out into a quadchute at once, and Return never asks for one.
+param set-default VT_TRANS_TIMEOUT 0.1
+param set-default RTL_TYPE 0
+
+# Provisional: each attitude gain is a third of its rate loop's crossover (roll 5.4, pitch 3.0, yaw 1.6 rad/s), worked
+# out from the design inertia, the thrust above and a 0.15 s fan spool lag; PX4's own attitude gains outrun these loops.
+param set-default MC_ROLL_P 1.8
+param set-default MC_PITCH_P 1.0
+param set-default MC_YAWRATE_K 4              # only 2 rad/s^2 of yaw per unit torque; x4 crosses over at 1.6 rad/s
+param set-default MC_YAW_P 0.5
+
+param set-default SIM_BAT_ENABLE 0
+param set-default COM_ARM_CHK_ESCS 0
+param set-default SYS_HAS_NUM_ASPD 0
+param set-default COM_RC_IN_MODE 4

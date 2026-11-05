@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<propeller version="1.1" name="X1 lift fan, lower, in the upper fan's wake">
+  <!-- Blades designed for the X1 concept model, not the manufacturer's fan: 17 twisted NACA 4409 blades, chord 38-61 mm, pitch 42-29 deg root to tip, r 0.175-0.5475 m in a 44 in duct -->
+  <!-- design point: hover at race weight in a rear duct, upper tip Mach 0.5, loading rising as sqrt(r), lift coefficient 0.9 root to 0.7 tip; the lower fan straightens the upper's swirl at 0.72 of its speed -->
+  <!-- solid CFRP blades 1600 kg/m3 0.254 + aluminium hub ring 2700 kg/m3 0.102 kg m2; the motor rotor is not included -->
+  <ixx unit="KG*M2"> 0.3552 </ixx>
+  <diameter unit="M"> 1.0950 </diameter>
+  <numblades> 17 </numblades>
+  <!-- Blade element + momentum per annulus: both fans of the duct share one axial velocity, the lower one runs in the upper one's swirl, -->
+  <!-- lower/upper speed 0.72 (torque balance); no tip loss (10 mm gap); wake area ratio 0.72 = the concept model's 1.13 duct gain; three 35 mm stator struts as drag, CD 2.5 (NACA TN 3038); -->
+  <!-- NACA 4409 polars: thin-airfoil zero-lift angle, Abbott & von Doenhoff slope, stall and standard-roughness drag trends, element Reynolds number, Korn/Lock drag rise; tables at this fan's tip Mach 0.36; -->
+  <!-- the thrust includes this fan's share, by power, of the duct lip thrust less the strut drag (28 % of the duct's at J = 0) -->
+  <table name="C_THRUST" type="internal">
+    <tableData>
+       0.000    0.88429
+       0.050    0.86331
+       0.100    0.84253
+       0.150    0.82196
+       0.200    0.80157
+       0.250    0.78138
+       0.300    0.76136
+       0.350    0.74149
+       0.400    0.72178
+       0.450    0.70221
+       0.500    0.68277
+       0.550    0.66344
+       0.600    0.64422
+       0.650    0.62509
+       0.700    0.60605
+       0.750    0.58709
+       0.800    0.56819
+    </tableData>
+  </table>
+  <table name="C_POWER" type="internal">
+    <tableData>
+       0.000    0.93823
+       0.050    0.93792
+       0.100    0.93712
+       0.150    0.93572
+       0.200    0.93379
+       0.250    0.93130
+       0.300    0.92822
+       0.350    0.92459
+       0.400    0.92033
+       0.450    0.91552
+       0.500    0.91004
+       0.550    0.90399
+       0.600    0.89726
+       0.650    0.88989
+       0.700    0.88186
+       0.750    0.87312
+       0.800    0.86373
+    </tableData>
+  </table>
+  <!-- same model at J = 0 against helical tip Mach (sea-level Reynolds number with it), 1 at Mach 0.36 -->
+  <table name="CT_MACH" type="internal">
+    <tableData>
+       0.150    0.979
+       0.200    0.982
+       0.250    0.986
+       0.300    0.992
+       0.350    0.999
+       0.400    1.007
+       0.450    1.016
+       0.500    1.028
+       0.550    1.047
+       0.600    1.077
+       0.650    1.127
+    </tableData>
+  </table>
+  <table name="CP_MACH" type="internal">
+    <tableData>
+       0.150    0.975
+       0.200    0.978
+       0.250    0.982
+       0.300    0.989
+       0.350    0.998
+       0.400    1.009
+       0.450    1.024
+       0.500    1.042
+       0.550    1.070
+       0.600    1.123
+       0.650    1.231
+    </tableData>
+  </table>
+  <!-- ram drag: the duct turns the edgewise air it swallows, half of mdot x V on each fan; mdot from the same model at J = 0 -->
+  <!-- read by PteroLabs' JSBSim fork (PteroLabsAI/jsbsim, 74748c2e and later); stock JSBSim logs "Unknown table type" and applies no in-plane force -->
+  <table name="C_INPLANE_FORCE" type="internal">
+    <tableData>
+       0.000    0.00000
+      10.000    5.04033
+    </tableData>
+  </table>
+</propeller>

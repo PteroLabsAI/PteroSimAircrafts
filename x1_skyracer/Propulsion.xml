@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+  <propulsion>
+    <!-- Rotor planes and spin from the X1 concept model. Engine index = rotor index; Systems/power.xml drives them. -->
+    <!-- Lift fans thrust up (pitch 90), pushers forward. sense 1 = right-handed about the thrust axis: lift CCW from above, pusher CW from behind. -->
+    <!-- Pusher axes at y +-0.705 m, outboard of the concept model's +-0.45 m, so the 26 in bore clears the tail boom by 2 cm. -->
+    <engine file="X1_lift_motor_upper" name="FL upper">
+      <thruster file="X1_lift_fan_upper">
+        <location unit="IN">
+          <x> -59.06 </x>
+          <y> -67.79 </y>
+          <z> 20.28 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_lower" name="FL lower">
+      <thruster file="X1_lift_fan_lower">
+        <location unit="IN">
+          <x> -59.06 </x>
+          <y> -67.79 </y>
+          <z> 17.52 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_upper" name="FR upper">
+      <thruster file="X1_lift_fan_upper">
+        <location unit="IN">
+          <x> -59.06 </x>
+          <y> 67.79 </y>
+          <z> 20.28 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_lower" name="FR lower">
+      <thruster file="X1_lift_fan_lower">
+        <location unit="IN">
+          <x> -59.06 </x>
+          <y> 67.79 </y>
+          <z> 17.52 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_upper" name="RL upper">
+      <thruster file="X1_lift_fan_upper">
+        <location unit="IN">
+          <x> 47.24 </x>
+          <y> -67.79 </y>
+          <z> 45.47 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_lower" name="RL lower">
+      <thruster file="X1_lift_fan_lower">
+        <location unit="IN">
+          <x> 47.24 </x>
+          <y> -67.79 </y>
+          <z> 42.72 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_upper" name="RR upper">
+      <thruster file="X1_lift_fan_upper">
+        <location unit="IN">
+          <x> 47.24 </x>
+          <y> 67.79 </y>
+          <z> 45.47 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_lift_motor_lower" name="RR lower">
+      <thruster file="X1_lift_fan_lower">
+        <location unit="IN">
+          <x> 47.24 </x>
+          <y> 67.79 </y>
+          <z> 42.72 </z>
+        </location>
+        <orient unit="DEG">
+          <roll> 0 </roll>
+          <pitch> 90 </pitch>
+          <yaw> 0 </yaw>
+        </orient>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_pusher_motor" name="pusher left">
+      <thruster file="X1_pusher_fan">
+        <location unit="IN">
+          <x> 89.42 </x>
+          <y> -27.76 </y>
+          <z> 35.43 </z>
+        </location>
+        <sense> -1 </sense>
+      </thruster>
+    </engine>
+    <engine file="X1_pusher_motor" name="pusher right">
+      <thruster file="X1_pusher_fan">
+        <location unit="IN">
+          <x> 89.42 </x>
+          <y> 27.76 </y>
+          <z> 35.43 </z>
+        </location>
+        <sense> 1 </sense>
+      </thruster>
+    </engine>
+    <!-- propane: 200 lb (rule book maximum) shared by tank volume, vessels 80 % full (X1 concept model); Systems/power.xml burns it -->
+    <tank type="FUEL">
+      <location unit="IN">
+        <x> -5.91 </x>
+        <y> -33.86 </y>
+        <z> 15.75 </z>
+      </location>
+      <capacity unit="LBS"> 76.2 </capacity>
+      <contents unit="LBS"> 60.9 </contents>
+      <density unit="LBS/GAL"> 4.24 </density>
+    </tank>
+    <tank type="FUEL">
+      <location unit="IN">
+        <x> -5.91 </x>
+        <y> 33.86 </y>
+        <z> 15.75 </z>
+      </location>
+      <capacity unit="LBS"> 76.2 </capacity>
+      <contents unit="LBS"> 60.9 </contents>
+      <density unit="LBS/GAL"> 4.24 </density>
+    </tank>
+    <tank type="FUEL">
+      <location unit="IN">
+        <x> -4.13 </x>
+        <y> 0 </y>
+        <z> 22.05 </z>
+      </location>
+      <capacity unit="LBS"> 97.7 </capacity>
+      <contents unit="LBS"> 78.1 </contents>
+      <density unit="LBS/GAL"> 4.24 </density>
+    </tank>
+  </propulsion>

@@ -1,0 +1,43 @@
+This aircraft is a JSBSim model of the X1 SkyRacer, the flying car race design by Mac McAlpine for X1 Racing, written
+by PteroLabs in 2026 and published here with the designer's permission. X1 Racing does not endorse PteroSim.
+X1RACING is a trademark of X1 Racing League.
+
+The design:
+  https://buildflyingcars.com/x1-skyracer/
+  https://github.com/projectmaximumboost/x1skyracer
+  https://x1racing.com
+
+The flight model -- x1_skyracer.xml, the files it assembles, Engines/, Systems/, Controls.xml, Sensors.xml, Visual.xml
+and firmwares/ -- is PteroLabs' work, distributed under the GNU General Public License v3.0; see LICENSE in this folder
+for its text. Its numbers come from:
+
+  The designer's X1 SkyRacer flight model kit (X1_SkyRacer_PteroSim.zip, October 2026) and the concept model it is
+  generated from: the geometry, rotor positions and spins, sensor mounts, tanks, wheels, 1.13 duct gain and 600 lbf
+  pusher thrust.
+
+  The designer's data for this model (2026-10-21): the mass list and its 7.895 % reduction to race weight, the
+  generator's 1500 hp continuous and 2000 hp burst, and how the generator lags demand while the accumulator covers it.
+
+  X1 Racing Rule Book v1.0: the 3,500 lb take-off weight, 500 lb of ballast, 200 lb of propane, the 10 kWh accumulator
+  limit, the duct sizes and the fan layout.
+
+  AVL 3.52, Drela and Youngren: the stability derivatives in Aero.xml, from a vortex-lattice model of the concept
+  model's wings, body and pusher shrouds.
+
+  Hoerner, Fluid-Dynamic Drag and Fluid-Dynamic Lift; Raymer, Aircraft Design; NACA TN 3038: the stall, the flat plate
+  past it, and the drag build-up.
+
+  Abbott and von Doenhoff, Theory of Wing Sections: the NACA 4409 polars behind the fan tables.
+
+  EMRAX 268 and 348 data sheets: the drives' current limit, as a ratio of peak to continuous torque.
+
+Chosen, with no source, and marked so where they appear: the 800 V bus, the motor losses, the fan blades and the motors
+sized for them, the stall angles, the interference drag, the generator's time constant, the accumulator's taper and the
+wheels' spring and damper. README.md lists the model's known limits.
+
+The meshes (meshes/) are built from the flight model kit's generator scripts, with X1 Racing's livery, and are not
+under the GPL: the design's published sources state no licence of their own, and the geometry, the livery and the X1
+name remain their owners'. They are used here by the designer's permission. Changes made here: the body was generated at
+a higher resolution, unwrapped and baked to base colour and ORM textures; a cockpit opening with seats was cut under
+the canopy; the pushers moved out to y +-0.705 m, where their 26 in bores clear the tail boom; the fan blades and hubs
+are PteroLabs' redesign.

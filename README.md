@@ -40,6 +40,7 @@ so JSBSim loads the new definition.
 | <img src="docs/previews/quadtailsitter.jpg" width="320" alt="Quad tailsitter"> | `quadtailsitter` | Quad tailsitter | A tailsitter VTOL: it takes off and lands vertically, then flies forward like a fixed-wing aircraft. |
 | <img src="docs/previews/standard_vtol.jpg" width="320" alt="Standard VTOL"> | `standard_vtol` | Standard VTOL | A fixed-wing VTOL with four lift rotors and a separate pusher propeller. |
 | <img src="docs/previews/tiltrotor.jpg" width="320" alt="Tiltrotor"> | `tiltrotor` | Tiltrotor | A convertible aircraft with tilting nacelles: rotor mode for take-off and fixed-wing mode for forward flight. |
+| <img src="docs/previews/x1_skyracer.jpg" width="320" alt="X1 SkyRacer"> | `x1_skyracer` | X1 SkyRacer | Mac McAlpine's two-seat flying car race design for X1 Racing: a propane series hybrid with eight lift fans in four coaxial ducts, two pushers and no control surfaces, with ArduPlane and PX4 profiles. |
 | <img src="docs/previews/x500.jpg" width="320" alt="X500"> | `x500` | X500 | An X500 quadcopter with a CGO3 camera gimbal, PX4 and ArduPilot profiles, and a Python manual-flight pilot. |
 | <img src="docs/previews/ZLT-NT.jpg" width="320" alt="Zeppelin NT"> | `ZLT-NT` | Zeppelin NT | A Zeppelin NT airship with three steerable engine nacelles, plus manual and automatic flight scripts. |
 
@@ -72,3 +73,7 @@ Third-party licences and notices remain in the directories of the relevant aircr
   under the CERN Open Hardware Licence v2, Strongly Reciprocal (CERN-OHL-S-2.0), and is distributed under it.
   Its meshes come from that project's STEP files, its geometry and masses from its CAD and Dev-Kit report, and its
   ArduCopter setup from its parameter file (Arrow Air does not endorse PteroSim). `quiver/NOTICE` lists every source.
+- `x1_skyracer` is a JSBSim model of Mac McAlpine's [X1 SkyRacer](https://buildflyingcars.com/x1-skyracer/), the race
+  design for [X1 Racing](https://x1racing.com), open at [its repository](https://github.com/projectmaximumboost/x1skyracer).
+  Its meshes and livery come from the designer's flight model kit and are used with the designer's permission (X1 Racing
+  does not endorse PteroSim). `x1_skyracer/NOTICE` lists every source.
