@@ -1,0 +1,1103 @@
+<?xml version="1.0"?>
+<!-- X1 hybrid power: propane OPFPLG generator + accumulator on an 800 V bus feeding ten motor drives. -->
+<!-- Designer's figures: 1500 hp continuous, 2000 hp burst; the generator follows demand slowly (boost and frequency), the accumulator covers the rest. -->
+<!-- The autopilot writes fcs/throttle-cmd-norm[i]; this system writes fcs/throttle-pos-norm[i], the drive duty the motor sees. -->
+<system name="X1 power">
+  <!-- generator continuous electrical output, designer -->
+  <property value="1500">propulsion/x1/gen-max-hp</property>
+  <!-- generator + accumulator burst, designer -->
+  <property value="2000">propulsion/x1/burst-max-hp</property>
+  <!-- accumulator energy, the concept model's 10 kWh (designer wrote "10 kW") -->
+  <property value="10">propulsion/x1/accum-usable-kwh</property>
+  <!-- held back from burst for the power-off landing, rule book 3.6 (concept model) -->
+  <property value="2">propulsion/x1/accum-reserve-kwh</property>
+  <!-- accumulator peak power, concept model: what is left when the propane runs out -->
+  <property value="1000">propulsion/x1/accum-peak-hp</property>
+  <!-- recharge from generator surplus, concept model -->
+  <property value="200">propulsion/x1/charge-max-hp</property>
+  <!-- the accumulator's controller tapers charge near full and discharge near its limits over this band; chosen, no evidence -->
+  <property value="0.1">propulsion/x1/accum-taper-kwh</property>
+  <!-- 745.7 W/hp / (0.60 thermal efficiency x 46.35 MJ/kg propane LHV) x 2.2046 lb/kg x 3600 s/h, concept model figures -->
+  <property value="0.21281">propulsion/x1/lb-per-hp-hr</property>
+  <!-- 800 V bus / 745.7 W per hp -->
+  <property value="1.07282">propulsion/x1/hp-per-amp</property>
+  <!-- 745.7 W per hp / 3.6e6 J per kWh -->
+  <property value="2.071389e-04">propulsion/x1/kwh-per-hp-s</property>
+  <!-- inverter current limit as duty above/below back-EMF: 2 x rated current (EMRAX 268/348 peak/continuous torque) x coil R / bus V -->
+  <property value="0.0600">propulsion/x1/drive-headroom</property>
+  <!-- no-load rpm at full duty: velocityconstant x maxvolts of Engines/X1_lift_motor_upper.xml, X1_lift_motor_lower.xml, X1_pusher_motor.xml -->
+  <property value="4073.9">propulsion/x1/upper-noload-rpm</property>
+  <property value="2933.2">propulsion/x1/lower-noload-rpm</property>
+  <property value="6645.1">propulsion/x1/pusher-noload-rpm</property>
+
+  <channel name="Demand">
+    <!-- electrical hp each drive would draw at its command, steady, J = 0, sea level: the motor + fan files solved for torque balance -->
+    <fcs_function name="propulsion/x1/demand-hp[0]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.7787
+             0.20      3.8030
+             0.30     11.2784
+             0.40     25.4489
+             0.50     48.6026
+             0.60     83.1411
+             0.70    131.6521
+             0.80    196.9079
+             0.90    282.0249
+             1.00    390.9937
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[1]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[1]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.5605
+             0.20      2.7539
+             0.30      8.1816
+             0.40     18.4449
+             0.50     35.1720
+             0.60     60.0564
+             0.70     94.8612
+             0.80    141.4712
+             0.90    201.9713
+             1.00    278.7263
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[2]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[2]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.7787
+             0.20      3.8030
+             0.30     11.2784
+             0.40     25.4489
+             0.50     48.6026
+             0.60     83.1411
+             0.70    131.6521
+             0.80    196.9079
+             0.90    282.0249
+             1.00    390.9937
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[3]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[3]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.5605
+             0.20      2.7539
+             0.30      8.1816
+             0.40     18.4449
+             0.50     35.1720
+             0.60     60.0564
+             0.70     94.8612
+             0.80    141.4712
+             0.90    201.9713
+             1.00    278.7263
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[4]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[4]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.7787
+             0.20      3.8030
+             0.30     11.2784
+             0.40     25.4489
+             0.50     48.6026
+             0.60     83.1411
+             0.70    131.6521
+             0.80    196.9079
+             0.90    282.0249
+             1.00    390.9937
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[5]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[5]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.5605
+             0.20      2.7539
+             0.30      8.1816
+             0.40     18.4449
+             0.50     35.1720
+             0.60     60.0564
+             0.70     94.8612
+             0.80    141.4712
+             0.90    201.9713
+             1.00    278.7263
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[6]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[6]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.7787
+             0.20      3.8030
+             0.30     11.2784
+             0.40     25.4489
+             0.50     48.6026
+             0.60     83.1411
+             0.70    131.6521
+             0.80    196.9079
+             0.90    282.0249
+             1.00    390.9937
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[7]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[7]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.5605
+             0.20      2.7539
+             0.30      8.1816
+             0.40     18.4449
+             0.50     35.1720
+             0.60     60.0564
+             0.70     94.8612
+             0.80    141.4712
+             0.90    201.9713
+             1.00    278.7263
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[8]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[8]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.4892
+             0.20      2.3978
+             0.30      7.1183
+             0.40     16.2126
+             0.50     30.6247
+             0.60     52.1743
+             0.70     83.0649
+             0.80    123.0841
+             0.90    175.7640
+             1.00    244.2040
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/demand-hp[9]">
+      <function>
+        <table>
+          <independentVar lookup="row">fcs/throttle-cmd-norm[9]</independentVar>
+          <tableData>
+             0.00      0.0000
+             0.10      0.4892
+             0.20      2.3978
+             0.30      7.1183
+             0.40     16.2126
+             0.50     30.6247
+             0.60     52.1743
+             0.70     83.0649
+             0.80    123.0841
+             0.90    175.7640
+             1.00    244.2040
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/lift-demand-hp">
+      <function>
+        <product>
+          <property>atmosphere/sigma</property>
+          <sum>
+            <property>propulsion/x1/demand-hp[0]</property>
+            <property>propulsion/x1/demand-hp[1]</property>
+            <property>propulsion/x1/demand-hp[2]</property>
+            <property>propulsion/x1/demand-hp[3]</property>
+            <property>propulsion/x1/demand-hp[4]</property>
+            <property>propulsion/x1/demand-hp[5]</property>
+            <property>propulsion/x1/demand-hp[6]</property>
+            <property>propulsion/x1/demand-hp[7]</property>
+          </sum>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/push-demand-hp">
+      <function>
+        <product>
+          <property>atmosphere/sigma</property>
+          <sum>
+            <property>propulsion/x1/demand-hp[8]</property>
+            <property>propulsion/x1/demand-hp[9]</property>
+          </sum>
+        </product>
+      </function>
+    </fcs_function>
+  </channel>
+
+  <channel name="Power plant">
+    <fcs_function name="propulsion/x1/fuel-lbs">
+      <function>
+        <sum>
+          <property>propulsion/tank[0]/contents-lbs</property>
+          <property>propulsion/tank[1]/contents-lbs</property>
+          <property>propulsion/tank[2]/contents-lbs</property>
+        </sum>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/fuel-ok">
+      <function>
+        <gt>
+          <property>propulsion/x1/fuel-lbs</property>
+          <value> 0 </value>
+        </gt>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/charge-taper">
+      <function>
+        <quotient>
+          <property>propulsion/x1/accum-used-kwh</property>
+          <property>propulsion/x1/accum-taper-kwh</property>
+        </quotient>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+    </fcs_function>
+    <!-- the generator aims at the commanded demand plus recharge, up to its rating, while there is propane -->
+    <fcs_function name="propulsion/x1/gen-target-hp">
+      <function>
+        <product>
+          <property>propulsion/x1/fuel-ok</property>
+          <min>
+            <property>propulsion/x1/gen-max-hp</property>
+            <sum>
+              <property>propulsion/x1/lift-demand-hp</property>
+              <property>propulsion/x1/push-demand-hp</property>
+              <product>
+                <property>propulsion/x1/charge-max-hp</property>
+                <property>propulsion/x1/charge-taper</property>
+              </product>
+            </sum>
+          </min>
+        </product>
+      </function>
+    </fcs_function>
+    <!-- thermally limited free-piston generator: first-order response, time constant 2 s chosen, no evidence (ask X1) -->
+    <lag_filter name="propulsion/x1/gen-hp">
+      <input>propulsion/x1/gen-target-hp</input>
+      <c1> 0.5 </c1>
+    </lag_filter>
+    <!-- electrical hp the drives took last step: duty x bus volts x motor current -->
+    <fcs_function name="propulsion/x1/bus-hp">
+      <function>
+        <product>
+          <property>propulsion/x1/hp-per-amp</property>
+          <sum>
+            <product>
+              <property>propulsion/x1/duty[0]</property>
+              <property>propulsion/engine[0]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[1]</property>
+              <property>propulsion/engine[1]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[2]</property>
+              <property>propulsion/engine[2]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[3]</property>
+              <property>propulsion/engine[3]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[4]</property>
+              <property>propulsion/engine[4]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[5]</property>
+              <property>propulsion/engine[5]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[6]</property>
+              <property>propulsion/engine[6]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[7]</property>
+              <property>propulsion/engine[7]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[8]</property>
+              <property>propulsion/engine[8]/current-amperes</property>
+            </product>
+            <product>
+              <property>propulsion/x1/duty[9]</property>
+              <property>propulsion/engine[9]/current-amperes</property>
+            </product>
+          </sum>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/shaft-hp">
+      <function>
+        <sum>
+          <property>propulsion/engine[0]/power-hp</property>
+          <property>propulsion/engine[1]/power-hp</property>
+          <property>propulsion/engine[2]/power-hp</property>
+          <property>propulsion/engine[3]/power-hp</property>
+          <property>propulsion/engine[4]/power-hp</property>
+          <property>propulsion/engine[5]/power-hp</property>
+          <property>propulsion/engine[6]/power-hp</property>
+          <property>propulsion/engine[7]/power-hp</property>
+          <property>propulsion/engine[8]/power-hp</property>
+          <property>propulsion/engine[9]/power-hp</property>
+        </sum>
+      </function>
+    </fcs_function>
+    <!-- accumulator: + discharging, - charging -->
+    <fcs_function name="propulsion/x1/accum-hp">
+      <function>
+        <difference>
+          <property>propulsion/x1/bus-hp</property>
+          <property>propulsion/x1/gen-hp</property>
+        </difference>
+      </function>
+    </fcs_function>
+    <!-- none drawn at the start of a run: a motor's current is unset before its first step, and a reset keeps this property -->
+    <fcs_function name="propulsion/x1/accum-used-kwh">
+      <function>
+        <ifthen>
+          <gt>
+            <property>simulation/sim-time-sec</property>
+            <value> 0 </value>
+          </gt>
+          <sum>
+            <property>propulsion/x1/accum-used-kwh</property>
+            <product>
+              <property>propulsion/x1/accum-hp</property>
+              <property>propulsion/x1/kwh-per-hp-s</property>
+              <property>simulation/dt</property>
+            </product>
+          </sum>
+          <value> 0 </value>
+        </ifthen>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max>propulsion/x1/accum-usable-kwh</max>
+      </clipto>
+    </fcs_function>
+    <!-- 1 while the accumulator is above its landing reserve, falling to 0 over the taper band -->
+    <fcs_function name="propulsion/x1/burst-taper">
+      <function>
+        <quotient>
+          <difference>
+            <property>propulsion/x1/accum-usable-kwh</property>
+            <property>propulsion/x1/accum-reserve-kwh</property>
+            <property>propulsion/x1/accum-used-kwh</property>
+          </difference>
+          <property>propulsion/x1/accum-taper-kwh</property>
+        </quotient>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+    </fcs_function>
+    <!-- the same towards empty, for the landing on the reserve -->
+    <fcs_function name="propulsion/x1/empty-taper">
+      <function>
+        <quotient>
+          <difference>
+            <property>propulsion/x1/accum-usable-kwh</property>
+            <property>propulsion/x1/accum-used-kwh</property>
+          </difference>
+          <property>propulsion/x1/accum-taper-kwh</property>
+        </quotient>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+    </fcs_function>
+    <!-- with propane: generator + accumulator above its reserve, up to the burst rating; without: generator run-down + what the accumulator holds -->
+    <fcs_function name="propulsion/x1/hp-avail">
+      <function>
+        <sum>
+          <property>propulsion/x1/gen-hp</property>
+          <product>
+            <property>propulsion/x1/fuel-ok</property>
+            <property>propulsion/x1/burst-taper</property>
+            <min>
+              <property>propulsion/x1/accum-peak-hp</property>
+              <difference>
+                <property>propulsion/x1/burst-max-hp</property>
+                <property>propulsion/x1/gen-hp</property>
+              </difference>
+            </min>
+          </product>
+          <product>
+            <difference>
+              <value> 1 </value>
+              <property>propulsion/x1/fuel-ok</property>
+            </difference>
+            <property>propulsion/x1/empty-taper</property>
+            <property>propulsion/x1/accum-peak-hp</property>
+          </product>
+        </sum>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/fuel-flow-pph">
+      <function>
+        <product>
+          <property>propulsion/x1/gen-hp</property>
+          <property>propulsion/x1/lb-per-hp-hr</property>
+        </product>
+      </function>
+    </fcs_function>
+    <!-- at the current burn -->
+    <fcs_function name="propulsion/x1/endurance-min">
+      <function>
+        <quotient>
+          <product>
+            <value> 60 </value>
+            <property>propulsion/x1/fuel-lbs</property>
+          </product>
+          <property>propulsion/x1/fuel-flow-pph</property>
+        </quotient>
+      </function>
+    </fcs_function>
+    <!-- the tanks drain in proportion to what they hold -->
+    <fcs_function name="propulsion/x1/tank0-next-lbs">
+      <function>
+        <max>
+          <value> 0 </value>
+          <difference>
+            <property>propulsion/tank[0]/contents-lbs</property>
+            <product>
+              <property>propulsion/x1/fuel-flow-pph</property>
+              <value> 0.000277778 </value>
+              <property>simulation/dt</property>
+              <quotient>
+                <property>propulsion/tank[0]/contents-lbs</property>
+                <property>propulsion/x1/fuel-lbs</property>
+              </quotient>
+            </product>
+          </difference>
+        </max>
+      </function>
+      <output>propulsion/tank[0]/contents-lbs</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/tank1-next-lbs">
+      <function>
+        <max>
+          <value> 0 </value>
+          <difference>
+            <property>propulsion/tank[1]/contents-lbs</property>
+            <product>
+              <property>propulsion/x1/fuel-flow-pph</property>
+              <value> 0.000277778 </value>
+              <property>simulation/dt</property>
+              <quotient>
+                <property>propulsion/tank[1]/contents-lbs</property>
+                <property>propulsion/x1/fuel-lbs</property>
+              </quotient>
+            </product>
+          </difference>
+        </max>
+      </function>
+      <output>propulsion/tank[1]/contents-lbs</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/tank2-next-lbs">
+      <function>
+        <max>
+          <value> 0 </value>
+          <difference>
+            <property>propulsion/tank[2]/contents-lbs</property>
+            <product>
+              <property>propulsion/x1/fuel-flow-pph</property>
+              <value> 0.000277778 </value>
+              <property>simulation/dt</property>
+              <quotient>
+                <property>propulsion/tank[2]/contents-lbs</property>
+                <property>propulsion/x1/fuel-lbs</property>
+              </quotient>
+            </product>
+          </difference>
+        </max>
+      </function>
+      <output>propulsion/tank[2]/contents-lbs</output>
+    </fcs_function>
+  </channel>
+
+  <channel name="Drives">
+    <!-- lift first: when the power is short every lift drive gets the same share of its demand, the pushers what is left -->
+    <fcs_function name="propulsion/x1/lift-scale">
+      <function>
+        <min>
+          <value> 1 </value>
+          <quotient>
+            <property>propulsion/x1/hp-avail</property>
+            <property>propulsion/x1/lift-demand-hp</property>
+          </quotient>
+        </min>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/push-scale">
+      <function>
+        <min>
+          <value> 1 </value>
+          <quotient>
+            <max>
+              <value> 0 </value>
+              <difference>
+                <property>propulsion/x1/hp-avail</property>
+                <property>propulsion/x1/lift-demand-hp</property>
+              </difference>
+            </max>
+            <property>propulsion/x1/push-demand-hp</property>
+          </quotient>
+        </min>
+      </function>
+    </fcs_function>
+    <!-- per drive: allowed hp -> duty through the inverse of its demand table, then the inverter's current limit around back-EMF -->
+    <fcs_function name="propulsion/x1/allowed-hp[0]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[0]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[0]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[0]/propeller-rpm</property>
+              <property>propulsion/x1/upper-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[0]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.7787   0.10
+                    3.8030   0.20
+                   11.2784   0.30
+                   25.4489   0.40
+                   48.6026   0.50
+                   83.1411   0.60
+                  131.6521   0.70
+                  196.9079   0.80
+                  282.0249   0.90
+                  390.9937   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[0]/propeller-rpm</property>
+                <property>propulsion/x1/upper-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[0]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[1]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[1]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[1]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[1]/propeller-rpm</property>
+              <property>propulsion/x1/lower-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[1]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.5605   0.10
+                    2.7539   0.20
+                    8.1816   0.30
+                   18.4449   0.40
+                   35.1720   0.50
+                   60.0564   0.60
+                   94.8612   0.70
+                  141.4712   0.80
+                  201.9713   0.90
+                  278.7263   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[1]/propeller-rpm</property>
+                <property>propulsion/x1/lower-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[1]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[2]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[2]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[2]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[2]/propeller-rpm</property>
+              <property>propulsion/x1/upper-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[2]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.7787   0.10
+                    3.8030   0.20
+                   11.2784   0.30
+                   25.4489   0.40
+                   48.6026   0.50
+                   83.1411   0.60
+                  131.6521   0.70
+                  196.9079   0.80
+                  282.0249   0.90
+                  390.9937   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[2]/propeller-rpm</property>
+                <property>propulsion/x1/upper-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[2]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[3]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[3]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[3]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[3]/propeller-rpm</property>
+              <property>propulsion/x1/lower-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[3]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.5605   0.10
+                    2.7539   0.20
+                    8.1816   0.30
+                   18.4449   0.40
+                   35.1720   0.50
+                   60.0564   0.60
+                   94.8612   0.70
+                  141.4712   0.80
+                  201.9713   0.90
+                  278.7263   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[3]/propeller-rpm</property>
+                <property>propulsion/x1/lower-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[3]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[4]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[4]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[4]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[4]/propeller-rpm</property>
+              <property>propulsion/x1/upper-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[4]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.7787   0.10
+                    3.8030   0.20
+                   11.2784   0.30
+                   25.4489   0.40
+                   48.6026   0.50
+                   83.1411   0.60
+                  131.6521   0.70
+                  196.9079   0.80
+                  282.0249   0.90
+                  390.9937   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[4]/propeller-rpm</property>
+                <property>propulsion/x1/upper-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[4]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[5]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[5]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[5]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[5]/propeller-rpm</property>
+              <property>propulsion/x1/lower-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[5]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.5605   0.10
+                    2.7539   0.20
+                    8.1816   0.30
+                   18.4449   0.40
+                   35.1720   0.50
+                   60.0564   0.60
+                   94.8612   0.70
+                  141.4712   0.80
+                  201.9713   0.90
+                  278.7263   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[5]/propeller-rpm</property>
+                <property>propulsion/x1/lower-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[5]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[6]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[6]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[6]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[6]/propeller-rpm</property>
+              <property>propulsion/x1/upper-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[6]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.7787   0.10
+                    3.8030   0.20
+                   11.2784   0.30
+                   25.4489   0.40
+                   48.6026   0.50
+                   83.1411   0.60
+                  131.6521   0.70
+                  196.9079   0.80
+                  282.0249   0.90
+                  390.9937   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[6]/propeller-rpm</property>
+                <property>propulsion/x1/upper-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[6]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[7]">
+      <function>
+        <product>
+          <property>propulsion/x1/lift-scale</property>
+          <property>propulsion/x1/demand-hp[7]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[7]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[7]/propeller-rpm</property>
+              <property>propulsion/x1/lower-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[7]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.5605   0.10
+                    2.7539   0.20
+                    8.1816   0.30
+                   18.4449   0.40
+                   35.1720   0.50
+                   60.0564   0.60
+                   94.8612   0.70
+                  141.4712   0.80
+                  201.9713   0.90
+                  278.7263   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[7]/propeller-rpm</property>
+                <property>propulsion/x1/lower-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[7]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[8]">
+      <function>
+        <product>
+          <property>propulsion/x1/push-scale</property>
+          <property>propulsion/x1/demand-hp[8]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[8]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[8]/propeller-rpm</property>
+              <property>propulsion/x1/pusher-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[8]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.4892   0.10
+                    2.3978   0.20
+                    7.1183   0.30
+                   16.2126   0.40
+                   30.6247   0.50
+                   52.1743   0.60
+                   83.0649   0.70
+                  123.0841   0.80
+                  175.7640   0.90
+                  244.2040   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[8]/propeller-rpm</property>
+                <property>propulsion/x1/pusher-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[8]</output>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/allowed-hp[9]">
+      <function>
+        <product>
+          <property>propulsion/x1/push-scale</property>
+          <property>propulsion/x1/demand-hp[9]</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="propulsion/x1/duty[9]">
+      <function>
+        <max>
+          <difference>
+            <quotient>
+              <property>propulsion/engine[9]/propeller-rpm</property>
+              <property>propulsion/x1/pusher-noload-rpm</property>
+            </quotient>
+            <property>propulsion/x1/drive-headroom</property>
+          </difference>
+          <min>
+            <table>
+              <independentVar lookup="row">propulsion/x1/allowed-hp[9]</independentVar>
+              <tableData>
+                    0.0000   0.00
+                    0.4892   0.10
+                    2.3978   0.20
+                    7.1183   0.30
+                   16.2126   0.40
+                   30.6247   0.50
+                   52.1743   0.60
+                   83.0649   0.70
+                  123.0841   0.80
+                  175.7640   0.90
+                  244.2040   1.00
+              </tableData>
+            </table>
+            <sum>
+              <quotient>
+                <property>propulsion/engine[9]/propeller-rpm</property>
+                <property>propulsion/x1/pusher-noload-rpm</property>
+              </quotient>
+              <property>propulsion/x1/drive-headroom</property>
+            </sum>
+          </min>
+        </max>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1 </max>
+      </clipto>
+      <output>fcs/throttle-pos-norm[9]</output>
+    </fcs_function>
+  </channel>
+</system>

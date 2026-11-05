@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<brushless_dc_motor name="X1 lift motor, lower fan">
+  <!-- Sized, no manufacturer data: rated 268 hp at 2845 rpm so that the rear lower fan reaches full duty with the upper one, at the torque-balanced 0.72 of its speed -->
+  <!-- 800 V bus, chosen; 3 % copper and 1 % iron/friction loss at the rated point, chosen (aviation PM motors run 94-97 %) -->
+  <maxvolts unit="VOLTS"> 800 </maxvolts>
+  <velocityconstant> 3.6665 </velocityconstant>
+  <coilresistance unit="OHMS"> 0.09238 </coilresistance>
+  <noloadcurrent unit="AMPERES"> 2.678 </noloadcurrent>
+</brushless_dc_motor>
