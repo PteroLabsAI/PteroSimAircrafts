@@ -30,8 +30,10 @@
 #   touchdown 1.6 ft/s, disarmed 3 s later. At 6000 ft the same (hover PWM 1586, 1523 at SL).
 
 # ---- frame
-# quad; FRAME_TYPE's default is X: the rotors sit at +-12.365 ft on both axes (Propulsion.xml)
+# X: the rotors sit at +-12.365 ft on both axes (Propulsion.xml). FRAME_TYPE 1 is
+# ArduCopter's default, but older sim_vehicle.py loads copter.parm (FRAME_TYPE 0) first
 FRAME_CLASS 1
+FRAME_TYPE 1
 
 # ---- the turbines: SERVOn_MAX (default 1900) from boot, armed or not; 0.9 clears the
 # governor's 0.5 engage (Controls.xml says why)

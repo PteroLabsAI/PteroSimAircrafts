@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<!-- The combiner gearbox [S18 Fig 3]: Systems/stork_drive.xml sets its throttle to the turboshafts' shaft power, so it makes none of its own -->
+<!-- The combiner gearbox [S18 Fig 3]: Systems/stork_drive.xml sets its throttle to the power reaching the shaft (the turboshafts', and
+     windmilling rotors 2-4's), so it makes none of its own -->
 <electric_engine name="stork_combiner">
-  <power unit="HP"> 638.82 </power>  <!-- 2 x maxpower of Engines/stork_turboshaft.xml, so the throttle stays within 0..1 -->
+  <power unit="HP"> 638.82 </power>  <!-- 2 x maxpower of Engines/stork_turboshaft.xml: the turbines alone fill 0..1; windmilling in a fast descent can pass 1, which FGElectric takes as it is -->
 </electric_engine>
