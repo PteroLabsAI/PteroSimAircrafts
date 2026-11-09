@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <!-- The shaft and its two turboshafts: a governor on the rotors' common rpm wants (rotor torques of the last step + PID trim) x speed + losses,
      the engines share it as throttles (N1 demands), engine 0 (the combiner) passes their power to rotor 1's transmission, rotors 2-4 and the
-     losses go on its brake. fcs/throttle-cmd-norm[0] above engage-norm engages it; below, both idle at no power and the rotors coast.
-     HUD, per engine n = 1, 2: propulsion/engine[n]/n1, itt-c, power-hp, fuel-flow-rate-pps; fcs/drive/tq-pct[n]. -->
+     losses go on its brake. fcs/throttle-cmd-norm[0] above engage-norm engages it; below, both idle at no power and the rotors coast. -->
 <system name="Stork drive">
 
   <property value="573.4">  fcs/drive/nominal-rpm </property>     <!-- Engines/stork_rotor_master.xml -->
@@ -154,7 +153,7 @@
       </test>
       <test logic="AND" value="1.0">
         fcs/drive/active-norm GT 0.5
-        fcs/drive/demand-hp GE fcs/drive/available-hp
+        fcs/drive/demand-hp GE fcs/drive/available-hp-last
         fcs/drive/rpm-error GT 0.0
       </test>
       <test logic="AND" value="1.0">   <!-- a spool-up: no integral on the way, or it overshoots 9 % -->
@@ -195,6 +194,11 @@
       </clipto>
     </fcs_function>
 
+    <!-- The clip demand-hp got: pid-inhibit runs before it, so it must compare last step's demand with last step's limit -->
+    <fcs_function name="fcs/drive/available-hp-last">
+      <function><property> fcs/drive/available-hp </property></function>
+    </fcs_function>
+
     <!-- Overrunning clutches [S18 p.5]: an engine gives its power or nothing -->
     <fcs_function name="fcs/drive/delivered-hp[1]">
       <function><max><value> 0.0 </value><property> propulsion/engine[1]/power-hp </property></max></function>
@@ -231,12 +235,23 @@
       <output> fcs/throttle-pos-norm[2] </output>
     </fcs_function>
 
+    <!-- The turbines' power, and what windmilling rotors 2-4 give the shared shaft past the losses: the brake below cannot drive -->
     <fcs_function name="fcs/drive/combiner-throttle">
       <function>
         <quotient>
           <sum>
             <property> fcs/drive/delivered-hp[1] </property>
             <property> fcs/drive/delivered-hp[2] </property>
+            <max>
+              <value> 0.0 </value>
+              <product>
+                <value> -1.0 </value>
+                <sum>
+                  <property> fcs/drive/rotors-2-4-hp </property>
+                  <property> fcs/drive/loss-hp </property>
+                </sum>
+              </product>
+            </max>
           </sum>
           <property> fcs/drive/combiner-hp </property>
         </quotient>
@@ -244,7 +259,7 @@
       <output> fcs/throttle-pos-norm[0] </output>
     </fcs_function>
 
-    <!-- Rotors 2-4 and the losses on rotor 1's brake. A brake cannot drive: a windmilling rotor's torque is lost past the losses -->
+    <!-- Rotors 2-4 and the losses on rotor 1's brake, when they take power; when they give it, the combiner passes it on above -->
     <fcs_function name="fcs/drive/brake">
       <function>
         <quotient>
@@ -259,24 +274,6 @@
         </quotient>
       </function>
       <output> propulsion/engine[0]/brake-ctrl-norm </output>
-    </fcs_function>
-
-    <!-- Torque gauge: 100 % is MRP at 100 % turbine speed (chosen) -->
-    <fcs_function name="fcs/drive/tq-pct[1]">
-      <function>
-        <quotient>
-          <product><value> 100.0 </value><property> fcs/drive/delivered-hp[1] </property></product>
-          <product><property> fcs/drive/engine-mrp-hp </property><property> fcs/drive/speed-norm </property></product>
-        </quotient>
-      </function>
-    </fcs_function>
-    <fcs_function name="fcs/drive/tq-pct[2]">
-      <function>
-        <quotient>
-          <product><value> 100.0 </value><property> fcs/drive/delivered-hp[2] </property></product>
-          <product><property> fcs/drive/engine-mrp-hp </property><property> fcs/drive/speed-norm </property></product>
-        </quotient>
-      </function>
     </fcs_function>
 
   </channel>

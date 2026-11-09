@@ -16,8 +16,7 @@ Propulsion.xml  the combiner gearbox on rotor 1, the two turboshafts on rotors 2
 Aero.xml        airframe drag (NASA's D/q); no lift or moment
 Engines/        stork_turboshaft (305 hp MRP, 319 hp CRP), stork_combiner, stork_shaft, stork_rotor_master and
                 stork_rotor_slave (FGRotor)
-Systems/        stork_drive.xml: rotor rpm governor, load sharing between the turbines, one-engine-out rating,
-                torque gauges
+Systems/        stork_drive.xml: rotor rpm governor, load sharing between the turbines, one-engine-out rating
 Controls.xml    ArduCopter quad X outputs -> JSBSim bindings (sidecar)
 Sensors.xml     imu / barometer / gps (sidecar)
 Visual.xml      meshes/<livery>/: body (fixture), four rotors (propellers), chase camera (sidecar)
