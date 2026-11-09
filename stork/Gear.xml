@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!-- Skids as four STRUCTURE contacts at the ends of the straight tubes [VSP LandingGear-020_skids: x -5.435..3.929, y +-3.45, tube
+     bottom z -7.384]. Static load at the DGW CG x -0.083: front pair 3735 x 4.012 / 9.364 = 1600 lb, rear pair 2135 lb.
+     Springs: chosen for 0.1 ft of static deflection, no source: load per contact / 0.1. The contacts sit that far below the tube, so
+     at DGW the drawn skids rest on the ground. Damping: chosen 0.6 of critical on each contact's share, 2 x 0.6 x sqrt(k W / g).
+     Friction: chosen, as Orca (metal skid on concrete has no NASA number). -->
+
+<ground_reactions>
+
+  <contact name="SKID_FRONT_RIGHT" type="STRUCTURE">
+    <location unit="FT"> <x> -5.435 </x> <y>  3.45 </y> <z> -7.484 </z> </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="LBS/FT">      8000 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">  535 </damping_coeff>
+  </contact>
+
+  <contact name="SKID_FRONT_LEFT" type="STRUCTURE">
+    <location unit="FT"> <x> -5.435 </x> <y> -3.45 </y> <z> -7.484 </z> </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="LBS/FT">      8000 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">  535 </damping_coeff>
+  </contact>
+
+  <contact name="SKID_REAR_RIGHT" type="STRUCTURE">
+    <location unit="FT"> <x> 3.929 </x> <y>  3.45 </y> <z> -7.484 </z> </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="LBS/FT">     10675 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">  714 </damping_coeff>
+  </contact>
+
+  <contact name="SKID_REAR_LEFT" type="STRUCTURE">
+    <location unit="FT"> <x> 3.929 </x> <y> -3.45 </y> <z> -7.484 </z> </location>
+    <static_friction>  0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="LBS/FT">     10675 </spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">  714 </damping_coeff>
+  </contact>
+
+</ground_reactions>

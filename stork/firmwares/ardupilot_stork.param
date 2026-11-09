@@ -1,0 +1,127 @@
+# ArduCopter SITL parameters for stork (NASA's six-seat Quad TS concept, collective control):
+#   sim_vehicle.py -v ArduCopter -f quad --model JSON:<host> --add-param-file=<this file>
+# Fly the physics at 1 kHz: at 240 Hz ArduCopter refuses to arm (gyro rate, main loop slow).
+# Only what differs from ArduCopter's own defaults (b7ba8bca). With --model JSON the binary
+# loads no frame file, so the frame is here.
+# ArduPilot reads this file 98 characters at a time (AP_Param.cpp): keep every line shorter.
+#
+# Not from NASA: its reports have no flight control law. The numbers are measured on the FDM
+# alone (hover trim at 200 ft, 1 kHz; JSBSim 1.3.1 and PteroSim's build agree within 0.4 %),
+# or flown in SITL, or say chosen.
+#
+# Plant per unit of ArduPilot output. One unit of roll, pitch or yaw is +-0.5 of full thrust
+# on each motor (AP_MotorsMatrix::normalise_rpy_factors); full thrust 2225 lb (below),
+# 7380 lb/rad at hover: +-0.151 rad on each rotor. Fitted to steps against a frozen twin, SL:
+#   roll   18.3 rad/s per rad of mix, tau 0.37 s, 50 rad/s2 at once -> 5.5 rad/s, 15 rad/s2
+#   pitch  22.7 rad/s per rad of mix, tau 0.72 s, 35 rad/s2 at once -> 6.9 rad/s, 10.6 rad/s2
+#   yaw    2.5 rad/s2 per rad of pedal, no steady rate within 3 s   -> 0.38 rad/s2
+# Thrust has no lag in FGRotor: it jumps with collective, then falls 30 % as the inflow
+# catches up (Pitt-Peters 0.0656 s).
+#
+# Filters are all ArduCopter's own: INS_GYRO_FILTER and ATC_RAT_*_FLTT/FLTD at 20 Hz sit
+# 25 x above the rate loop, and the model has no vibration.
+#
+# Checked in SITL (arducopter b7ba8bca, JSON in lockstep to JSBSim at 1 kHz): GUIDED take-off
+# to 30 ft, 60 s LOITER, ALT_HOLD steps, LAND.
+#   hover height 0.03..0.05 m peak to peak, attitude within 0.05 roll and 0.10 pitch deg,
+#   position 0.025 m
+#   5 deg stick steps reach 90 % in about 0.65 s, overshoot 8 % roll and 12 % pitch;
+#   a 10 deg/s yaw stop overshoots 3 deg
+#   touchdown 1.6 ft/s, disarmed 3 s later. At 6000 ft the same (hover PWM 1586, 1523 at SL).
+
+# ---- frame
+# X: the rotors sit at +-12.365 ft on both axes (Propulsion.xml)
+FRAME_CLASS 1
+FRAME_TYPE 1
+
+# ---- the turbines: SERVOn_MAX (default 1900) from boot, armed or not; 0.9 clears the
+# governor's 0.5 engage (Controls.xml says why)
+SERVO5_FUNCTION 136
+
+# ---- thrust curve; MOT_PWM_MIN/MAX stay 1000/2000, read as 0.1175..0.5 rad (Controls.xml)
+# measured: thrust crosses zero at 0.1545 rad; 0.10 = 0.1557 rad, +2.4 lb.
+# MOT_SPIN_ARM's default 0.10 sits there too
+MOT_SPIN_MIN 0.10
+# measured: fitted over 0.1557..0.4809 rad (MOT_SPIN_MAX's default 0.95, 2225 lb) on one
+# rotor with the shaft governed; worst error 2.4 % of full thrust, the same at 6200 ft
+MOT_THST_EXPO 0.326
+# measured: DGW sea level 0.3174 rad, PWM 1523, through that curve; SITL learnt 0.411..0.412,
+# and 0.408 at 6000 ft
+MOT_THST_HOVER 0.416
+
+# ---- attitude
+# half the 5 rad/s rate loop, damping 0.7 (Orca's rule). The default 4.5 with the default
+# rate gains diverged in pitch within 12 s of take-off (SITL)
+ATC_ANG_RLL_P 2.5
+ATC_ANG_PIT_P 2.5
+# half the 2 rad/s yaw rate loop
+ATC_ANG_YAW_P 1.0
+
+# ---- rate. Designed P = (tau w - 1) / K at w = 1 / (3 tau_flap) = 5 rad/s,
+# tau_flap = 16 / (Lock 4 x 60 rad/s) (as Orca): roll 0.15, pitch 0.38.
+# Flown at 0.35 of the values below, LOITER whirled the lean vector with a 2.5 s period up
+# to 40 deg; at 0.5 it rang 2 deg after a brake; 0.7 to 2 are clean, nothing above 2 tried.
+# So these are 2 x the first design that held, with that margin both ways (chosen)
+ATC_RAT_RLL_P 0.64
+# I = P as ArduCopter's own defaults; D = P x 0.04 s as Orca
+ATC_RAT_RLL_I 0.64
+ATC_RAT_RLL_D 0.026
+ATC_RAT_PIT_P 0.76
+ATC_RAT_PIT_I 0.76
+ATC_RAT_PIT_D 0.032
+# w / 0.38 at w = 2 rad/s (chosen: a slow plant that saturates early). Half of it still
+# flew, the yaw stop overshooting 4.8 deg against 3
+ATC_RAT_YAW_P 5.3
+# P / 3 s (chosen)
+ATC_RAT_YAW_I 1.8
+
+# ---- limits. Half the acceleration left before a motor reaches zero thrust from hover
+# (0.83 unit), Orca's rule: 15, 10.6, 0.38 rad/s2 x 0.83 / 2.
+# At 100 deg/s2 roll and pitch a LAND with 4.5 m/s of drift limit-cycled at +-30 deg (SITL)
+ATC_ACC_R_MAX 360
+ATC_ACC_P_MAX 250
+# full pedal reaches 22 deg/s in 1.13 s, 19 deg/s2: the same number from the other side
+ATC_ACC_Y_MAX 9
+# chosen: stops in 1.7 s and 12.5 deg at that acceleration, and leaves the mixer room in
+# hover. A saturated yaw ignores it
+ATC_RATE_Y_MAX 15
+PILOT_Y_RATE 15
+# chosen, no evidence: the nose follows the route slowly, 90 deg in 9 s. Flown: peak
+# 12.8 deg/s and 2.3 deg past the new leg's bearing, against 18.4 and 3.5 at 15
+ATC_RATE_WPY_MAX 10
+
+# ---- the route: a passenger machine, 10 deg of tilt or less in cruise, turns and stops.
+# Names and units from AC_WPNav.cpp, AC_PosControl.cpp, AC_Loiter.cpp at b7ba8bca.
+# Every number below was flown in SITL (AUTO, GUIDED, LOITER, hover), calm and in 4 m/s
+# with gusts. The defaults flew 17 deg in AUTO, 27.5 in GUIDED, 27 in LOITER.
+# chosen: the cruise asked for, default 10; GUIDED and RTL take it too. 20 flew the same
+# tilt on the same mission, 194 m to stop against 111 at 15
+WP_SPD 15
+# physics: a 90 deg corner adds the two legs' accelerations, tilt = atan(1.41 a / g)
+# = 8.2 deg, flown 8.5. At the default jerk 1.2 flew 11.8; the default 2.5 flew 17.8
+WP_ACC 1.0
+# measured against the default 1: same stop distance (111 against 109 m from 15 m/s),
+# peak 8.5 against 10.4 deg, largest change in a second 5.2 against 8.7 deg, rebound after
+# a stop 0.5 against 2.4 deg. Below the documented 1, not clamped (AC_WPNav.cpp)
+WP_JERK 0.5
+# the same for GUIDED's position path, which reads this and not WP_JERK. 40 m leg,
+# default 5: 12.7 deg, 16.3 in a second; 1: 8.7, 7.9; 0.5: 6.8, 4.2.
+# Below the documented 1, not clamped (AC_PosControl.cpp)
+PSC_JERK_NE 0.5
+# chosen: a guard for what the shaping above does not cover; it never acted in the flights
+# here. A hard path (WP_ACC 5, jerk 5) flew 17.9 deg with it and 32.4 without
+PSC_ANGLE_MAX 15
+# measured: LAND reads its height above home, so on a roof 30 m above the start it never
+# slowed and touched at 1.5 m/s. Now 0.5 all the way: fly to a waypoint 10 m above the pad,
+# which takes WP_SPD_DN's 1.5, then NAV_LAND. An emergency LAND from 60 m takes 2 minutes
+LAND_SPD_HIGH_MS 0.5
+# measured with the next line, LOITER full stick to 10 m/s and release: push 9.3, stop
+# 8.5 deg, stopped in 45 m. At 10 deg and 1.2 it flew 13.5 deg
+LOIT_ANG_MAX 7
+# as above; the defaults (20 deg, 2.5) flew 27 deg and stopped in 14 m
+LOIT_BRK_ACC_M 0.5
+
+# Left at the default on purpose: ATC_ANGLE_MAX 30, MOT_SPOOL_TIME 0.5, PSC's position and
+# velocity gains (the excess tilt came from the path, not from them); climb 2.5, descent
+# 1.5, final 0.5 m/s; the waypoint radius of 2 m; the cornering limit, twice WP_ACC, which
+# a 90 deg corner's 1.41 x WP_ACC never reaches.

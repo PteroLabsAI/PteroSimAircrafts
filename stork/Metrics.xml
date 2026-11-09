@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<!-- Stork metrics. The aerodynamics use their own drag areas (Aero.xml), not these references. -->
+
+<metrics>
+  <wingarea unit="FT2"> 1054.1 </wingarea>  <!-- the four disks, 4 pi R^2, R 9.159 ft [VSP Diameter 18.318] -->
+  <wingspan unit="FT">    43.05 </wingspan> <!-- tip to tip, 2 (12.365 + 9.159) [VSP] -->
+  <chord unit="FT">        0.623 </chord>   <!-- blade chord, Engines/stork_rotor_master.xml -->
+
+  <!-- Centre of the drag areas in Aero.xml: Sum(D/q x) / Sum(D/q), so one drag force about it carries every arm:
+       fuselage 1.4 ft2 at the cabin centroid (-0.638, -2.218) [VSP]; hubs 4.8 and the rest 0.65 at the rotors'
+       mean (0, 3.895) [VSP]; gear 0.35 at its mean (-0.864, -6.266) [VSP, the file's 40/40/20 share] -->
+  <location name="AERORP" unit="FT">
+    <x> -0.166 </x>
+    <y>  0.0 </y>
+    <z>  2.213 </z>
+  </location>
+
+  <!-- Front seat row, head height: VSP fseats box x -5.773..-3.058, z -4.563..-1.275 (chosen: head at the top of the box) -->
+  <location name="EYEPOINT" unit="FT">
+    <x> -4.415 </x>
+    <y>  0.0 </y>
+    <z> -1.275 </z>
+  </location>
+
+  <location name="VRP" unit="FT">
+    <x> 0.0 </x>
+    <y> 0.0 </y>
+    <z> 0.0 </z>
+  </location>
+</metrics>

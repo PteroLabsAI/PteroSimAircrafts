@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<!-- Airframe drag as NASA's D/q [S18 Table 3] along the air velocity, at the areas' centre (Metrics.xml AERORP). No airframe lift
+     or moment: NDARC sets them to zero [L6 Fuselage dCLda, CM0, dCMda, dCYdb, CN0, dCNdb]. The same area in every direction
+     (chosen: NDARC's fuselage CDV and CDS are 0, a real side or vertical area is not published). Hover download is not
+     modelled: NASA's vertical D/q is the hubs' 4 x 1.2 ft2 with fuselage CDV 0 [L6], under the wake's 3.5 psf at most 17 lb,
+     0.45 % of the weight. -->
+
+<aerodynamics>
+
+  <property value="1.4">  aero/drag/fuselage-ft2 </property>  <!-- [S18 Table 3] -->
+  <property value="4.8">  aero/drag/hubs-ft2 </property>      <!-- 4 hubs with support arms [S18 Table 3]; CD_hub 0.0045 x disk [L6] -->
+  <property value="0.35"> aero/drag/gear-ft2 </property>      <!-- [L6 LandingGear DoQ] -->
+  <property value="0.65"> aero/drag/rest-ft2 </property>      <!-- total 7.2 [S18 Table 3] less the above: pylons [L6 CD_pylon] -->
+
+  <axis name="DRAG">
+    <function name="aero/force/drag-lbs">
+      <description> Airframe drag </description>
+      <product>
+        <property> aero/qbar-psf </property>
+        <sum>
+          <property> aero/drag/fuselage-ft2 </property>
+          <property> aero/drag/hubs-ft2 </property>
+          <property> aero/drag/gear-ft2 </property>
+          <property> aero/drag/rest-ft2 </property>
+        </sum>
+      </product>
+    </function>
+  </axis>
+
+</aerodynamics>
