@@ -14,6 +14,7 @@
   <property value="0.00019040"> fcs/drive/hp-per-lbsft-rpm </property>  <!-- 2 pi / 60 / 550 -->
   <property value="0.5">    fcs/drive/engage-norm </property>     <!-- chosen: throttle command that engages it -->
   <property value="57.0">   fcs/drive/error-clip-rpm </property>  <!-- chosen: 10 % of nominal -->
+  <property value="3000.0"> fcs/drive/trim-limit-lbsft </property> <!-- chosen: about the hover shaft torque, 2300 lb ft -->
 
   <channel name="drive">
 
@@ -53,6 +54,7 @@
       </function>
     </fcs_function>
 
+    <!-- By N1, not set-running: PteroSim rewrites set-running from the engine command before every step -->
     <switch name="fcs/drive/running-norm[1]">
       <default value="0.0"/>
       <test value="1.0"> propulsion/engine[1]/n1 GE fcs/drive/idle-n1 </test>
@@ -156,6 +158,16 @@
         fcs/drive/demand-hp GE fcs/drive/available-hp-last
         fcs/drive/rpm-error GT 0.0
       </test>
+      <test logic="AND" value="1.0">   <!-- the trim on its own clip: FGPID clips its output, not its integral -->
+        fcs/drive/active-norm GT 0.5
+        fcs/drive/trim-lbsft GE fcs/drive/trim-limit-lbsft
+        fcs/drive/rpm-error GT 0.0
+      </test>
+      <test logic="AND" value="1.0">
+        fcs/drive/active-norm GT 0.5
+        fcs/drive/trim-lbsft LE -fcs/drive/trim-limit-lbsft
+        fcs/drive/rpm-error LT 0.0
+      </test>
       <test logic="AND" value="1.0">   <!-- a spool-up: no integral on the way, or it overshoots 9 % -->
         fcs/drive/active-norm GT 0.5
         fcs/drive/rpm-error GE fcs/drive/error-clip-rpm
@@ -169,7 +181,7 @@
       <kp> 92.4 </kp>
       <ki> 28.0 </ki>
       <trigger> fcs/drive/pid-inhibit </trigger>
-      <clipto><min> -3000.0 </min><max> 3000.0 </max></clipto>  <!-- chosen: about the hover shaft torque, 2300 lb ft -->
+      <clipto><min> -fcs/drive/trim-limit-lbsft </min><max> fcs/drive/trim-limit-lbsft </max></clipto>
     </pid>
 
     <fcs_function name="fcs/drive/demand-hp">
