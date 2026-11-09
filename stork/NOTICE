@@ -1,0 +1,33 @@
+This aircraft is a JSBSim model of NASA's six-seat Quadrotor, one of NASA's reference vehicles for Urban Air
+Mobility, in its turboshaft version (Quad TS) with collective control and flapping rotors. PteroLabs wrote it in 2026
+and named it Stork; its meshes are built from NASA's OpenVSP model. NASA does not endorse PteroSim.
+
+The flight model (stork.xml, the files it assembles, Engines/ and Systems/) is PteroLabs' work, distributed under
+the GNU General Public License v3.0; see LICENSE in this folder for its text. Its numbers come from:
+
+  Silva, Johnson, Antcliff and Patterson, AIAA 2018-3847, Table 3, column Quad TS: design gross weight, empty
+  weight, payload, fuel tank, rotor radius, tip speed, solidity, drag areas, engine power, and the hover, cruise and
+  maximum speed performance the model is checked against.
+
+  Johnson, Silva and Solis, "Concept Vehicles for VTOL Air Taxi Operations", AHS 2018 (NTRS 20180003381): the
+  rotor design, its twist and pitch-flap coupling.
+    https://ntrs.nasa.gov/citations/20180003381
+
+  NASA's NDARC input files for the concept (quadrotor6.list, quadrotor6.run, gen500.list): blade count, lift-curve
+  slope, flap frequency, Lock number, tip loss, hub and landing gear drag, fixed useful load, passenger weight,
+  rotation senses, and the GEN500 engine's ratings, lapse and fuel flow.
+
+  Johnson, NDARC theory, NASA/TP-2015-218751: hinge offset and blade inertia from the flap frequency and Lock
+  number, engine scaling and lapse, fuel flow at part power, the one-engine-inoperative rating.
+
+  NASA's OpenVSP model of the Quadrotor (meshes/NOTICE): all geometry, the rotor and skid positions, the mass parts
+  behind the centre of gravity and the inertia, the fuel tank.
+
+Chosen, with no source, and marked so where they appear: the skid springs, damping and friction, the collective's
+upper stop, the transmission inertia, the shaft governor's gains and engage point, the airframe drag area being the
+same in every direction, and the engines' N1, ITT and start values, which are template values as on Orca.
+README.md lists the model's known limits.
+
+The ArduPilot parameter file (firmwares/ardupilot_stork.param) sets ArduPilot parameters to PteroLabs' values for
+this vehicle. ArduPilot is distributed under the GNU General Public License v3.0.
+    https://github.com/ArduPilot/ardupilot

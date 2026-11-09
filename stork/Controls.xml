@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. Which ArduCopter quad X output drives what (channel = SERVOn - 1). AP_MotorsMatrix assigns
+  Motor1..4 to SERVO1..4 by itself; firmwares/ardupilot_stork.param adds SERVO5:
+
+    SERVO1 Motor1 (33)  front right CCW  -> channel 0 -> propulsion/engine[0]/collective-ctrl-rad
+    SERVO2 Motor2 (34)  rear left CCW    -> channel 1 -> propulsion/engine[3]/collective-ctrl-rad
+    SERVO3 Motor3 (35)  front left CW    -> channel 2 -> propulsion/engine[1]/collective-ctrl-rad
+    SERVO4 Motor4 (36)  rear right CW    -> channel 3 -> propulsion/engine[2]/collective-ctrl-rad
+    SERVO5 Max (136)    always PWM 1900  -> channel 4 -> Motor index 0, i.e. fcs/throttle-cmd-norm[0]: both turbines' governor
+
+  The turbines, why a held channel: a quad frame has no RSC, and the shaft needs 4.9 s from rest to 99 % rpm (measured). SERVOn_FUNCTION 136
+  outputs SERVOn_MAX from boot, armed or not (SRV_Channel_aux.cpp), so the rotors reach speed at flat pitch before the EKF lets the machine arm
+  (41 s in SITL) and stay governed after it disarms, and ArduCopter's thrust curve holds from its first command. A row tied to arming would run
+  the collective to PWM 1940 at 340 rpm (it lifted off at 423 rpm and still made the height), and nothing here needs Lua. ArduCopter
+  cannot shut the engines down. The engine binding, not property=: PteroSim writes each engine's FCS throttle from its engine command every
+  step, over any property binding. Engines 1 and 2, the turbines, need no binding: Systems/stork_drive.xml writes their throttles, and
+  PteroSim starts every engine.
+
+  Signs, measured on the FDM alone (trimmed hover at 200 ft, controls frozen, +0.01 rad on one rotor against an unstepped twin, 1 kHz). Moment at 0.05 s, lb ft; ArduPilot's outputs are body FRD, + roll = right down, + pitch = nose UP, + yaw = nose right, and
+  AP_MotorsMatrix's X factors want these signs for + output on the motor:
+    Motor1 engine[0]  roll -822  pitch +859  yaw +56  (- + +): as wanted
+    Motor2 engine[3]  roll +813  pitch -870  yaw +56  (+ - +): as wanted
+    Motor3 engine[1]  roll +806  pitch +864  yaw -57  (+ + -): as wanted
+    Motor4 engine[2]  roll -810  pitch -873  yaw -57  (- - -): as wanted
+  So Propulsion.xml's sense +1 (CCW seen from above) is ArduPilot's CCW pair, and engine order is not ArduPilot's order.
+  Range: PWM 1000..2000 reads 0..1 = 0.1175..0.5 rad, the FDM's own stops (stork.xml), all of it thrust a rotor can use on its own; held
+  by the engine limit past about 0.42 rad with all four at it (droops to 489 rpm and 6929 lb in total at the stop, sea level). Zero thrust
+  at 0.155 rad = PWM 1097; DGW hover at sea level 0.3173 rad = PWM 1522, at 6200 ft 0.3416 rad = PWM 1586.
+-->
+<control_bindings stack="ArduPilot">
+  <binding stack="ArduPilot" channel="0" property="propulsion/engine[0]/collective-ctrl-rad" in="0 1" out="0.1175 0.5" label="front_right"/>
+  <binding stack="ArduPilot" channel="1" property="propulsion/engine[3]/collective-ctrl-rad" in="0 1" out="0.1175 0.5" label="rear_left"/>
+  <binding stack="ArduPilot" channel="2" property="propulsion/engine[1]/collective-ctrl-rad" in="0 1" out="0.1175 0.5" label="front_left"/>
+  <binding stack="ArduPilot" channel="3" property="propulsion/engine[2]/collective-ctrl-rad" in="0 1" out="0.1175 0.5" label="rear_right"/>
+  <binding stack="ArduPilot" channel="4" type="Motor" index="0" in="0 1" out="0 1" label="turbine"/>
+</control_bindings>

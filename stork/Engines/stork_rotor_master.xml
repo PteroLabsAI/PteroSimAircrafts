@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<!-- Rotor 1, on the combiner gearbox: holds the shaft's transmission. The rotor's numbers repeat in stork_rotor_slave.xml and
+     must stay equal. No delta-3 element in FGRotor: stork.xml's FCS adds it as cyclic. -->
+
+<rotor name="stork_rotor_master">
+
+  <diameter unit="FT">        18.318 </diameter>    <!-- [VSP Diameter]; [S18] radius 9.2 -->
+  <numblades>                     3 </numblades>    <!-- [L6 run nBlade]; the VSP blades geom draws 5 -->
+  <nominalrpm>                573.4 </nominalrpm>   <!-- Vtip 550 ft/s [S18] / 9.159 ft -->
+  <minrpm>                      1.0 </minrpm>       <!-- FGRotor's floor -->
+  <maxrpm>                   1146.8 </maxrpm>       <!-- 2 x nominal: not a limit, high enough that an overspeed shows -->
+  <gearratio>                87.966 </gearratio>    <!-- power turbine Nspec 50440 rpm (Engines/stork_turboshaft.xml) / nominalrpm -->
+  <gearloss unit="HP">          0.0 </gearloss>     <!-- the drive's losses go through the brake, Systems/stork_drive.xml -->
+  <gearmoment unit="SLUG*FT2"> 17.8 </gearmoment>   <!-- chosen: FGRotor's own 0.1 x polar moment, no engine data -->
+
+  <chord unit="FT">           0.6234 </chord>       <!-- sigma pi R / Nb, sigma 0.065 [S18], thrust-weighted, as a rectangular blade -->
+  <liftcurveslope>            5.7 </liftcurveslope> <!-- [L6 dclda] -->
+  <twist unit="RAD">       -0.20944 </twist>        <!-- -12 deg linear for the flapping rotor [J18 p.7, L6 list comment, VSP Twist curve]; L6 twistL -13 is the hingeless one -->
+  <hingeoffset unit="FT">     0.3574 </hingeoffset> <!-- flapfreq 1.03 [L6]: e/R = x / (1 + x), x = 2/3 (nu^2 - 1) [NT p.120] -->
+  <tiplossfactor>             0.97 </tiplossfactor> <!-- [L6 tiploss] -->
+
+  <flappingmoment unit="SLUG*FT2"> 14.86 </flappingmoment> <!-- Lock number 4 at SLS [L6 gamma; NT p.120]: rho a c R^4 / 4 -->
+  <massmoment>                     2.532 </massmoment>     <!-- slug ft: e S = Ib (nu^2 - 1), so FGRotor's hub moment is NDARC's Khub [NT p.120] -->
+  <polarmoment unit="SLUG*FT2">   178.3 </polarmoment>     <!-- all four rotors on this shaft, 4 x 3 x Ib -->
+
+  <inflowlag>                 0.0656 </inflowlag>   <!-- Pitt-Peters 0.849 / (4 lambda Omega), lambda sqrt(CT/2) 0.0539 at DGW, 6000 ft -->
+
+  <maxbrakepower unit="HP">   800.0 </maxbrakepower> <!-- rotors 2-4 and the losses charged here; chosen above both engines' 639 hp, so it never saturates -->
+
+  <!-- Ground effect off: [S18] sizes out of ground effect, and FGRotor's 1 s height filter starts at 0, a spurious effect after an
+       air start. -->
+  <groundeffectexp>            0.0 </groundeffectexp>
+
+</rotor>

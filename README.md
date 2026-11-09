@@ -39,6 +39,7 @@ so JSBSim loads the new definition.
 | <img src="docs/previews/quiver.jpg" width="320" alt="Arrow Air Quiver"> | `quiver` | Arrow Air Quiver | Arrow Air's 25 kg open-hardware quadcopter with its CAD as meshes, Hobbywing X6 Plus G2 motors, the 14S Tattu 4.0 pack modelled from Tattu's data, a SIYI A8 mini gimbal and Arrow's own ArduCopter parameters. |
 | <img src="docs/previews/quadtailsitter.jpg" width="320" alt="Quad tailsitter"> | `quadtailsitter` | Quad tailsitter | A tailsitter VTOL: it takes off and lands vertically, then flies forward like a fixed-wing aircraft. |
 | <img src="docs/previews/standard_vtol.jpg" width="320" alt="Standard VTOL"> | `standard_vtol` | Standard VTOL | A fixed-wing VTOL with four lift rotors and a separate pusher propeller. |
+| <img src="docs/previews/stork.jpg" width="320" alt="Stork"> | `stork` | Stork | A six-seat air taxi modelled on NASA's Quadrotor reference vehicle: four articulated rotors on one cross-shafted drive, two turboshafts, collective control only, meshes built from NASA's OpenVSP model in four liveries, and an ArduCopter quad profile. |
 | <img src="docs/previews/tiltrotor.jpg" width="320" alt="Tiltrotor"> | `tiltrotor` | Tiltrotor | A convertible aircraft with tilting nacelles: rotor mode for take-off and fixed-wing mode for forward flight. |
 | <img src="docs/previews/x1_skyracer.jpg" width="320" alt="X1 SkyRacer"> | `x1_skyracer` | X1 SkyRacer | Mac McAlpine's two-seat flying car race design for X1 Racing: a propane series hybrid with eight lift fans in four coaxial ducts, two pushers and no control surfaces, with ArduPlane and PX4 profiles. |
 | <img src="docs/previews/x500.jpg" width="320" alt="X500"> | `x500` | X500 | An X500 quadcopter with a CGO3 camera gimbal, PX4 and ArduPilot profiles, and a Python manual-flight pilot. |
@@ -77,3 +78,6 @@ Third-party licences and notices remain in the directories of the relevant aircr
   design for [X1 Racing](https://x1racing.com), open at [its repository](https://github.com/projectmaximumboost/x1skyracer).
   Its meshes and livery come from the designer's flight model kit and are used with the designer's permission (X1 Racing
   does not endorse PteroSim). `x1_skyracer/NOTICE` lists every source.
+- `stork` is a JSBSim model of NASA's six-seat Quadrotor reference vehicle in its turboshaft version, written from
+  NASA's published design data (Silva et al., AIAA 2018-3847; Johnson, Silva and Solis 2018; NASA's NDARC files) with
+  meshes built from NASA's OpenVSP model of it (NASA does not endorse PteroSim). `stork/NOTICE` lists every source.

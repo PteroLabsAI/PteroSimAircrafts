@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
+
+<!-- Stork: a model of NASA's six-seat Quadrotor reference air taxi, turboshaft variant with collective control and flapping
+     rotors. Frame: feet, X aft, Y right, Z up, origin at the VSP file's Center-Of-Mass marker. -->
+<fdm_config name="stork" release="ALPHA" version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
+
+  <fileheader>
+    <author> PteroLabs </author>
+    <filecreationdate> 2026-11-05 </filecreationdate>
+    <description>
+      Rotor 1 front right, 2 front left, 3 rear right, 4 rear left. DGW 3735 lb, 6000 ft ISA design condition.
+      References:
+        [S18] Silva, Johnson, Antcliff, Patterson, AIAA 2018-3847, Table 3 column Quad TS
+        [L6]  NASA NDARC model Concept-Quadrotor6: quadrotor6.list, quadrotor6.run, gen500.list
+        [VSP] NASA OpenVSP model quadcollflap.vsp3
+        [J18] Johnson, Silva, Solis, Concept Vehicles for VTOL Air Taxi Operations, AHS 2018 (NTRS 20180003381), quadrotor rotor design
+        [NT]  Johnson, NDARC theory, NASA/TP-2015-218751
+    </description>
+  </fileheader>
+
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion file="Propulsion.xml"/>
+  <aerodynamics file="Aero.xml"/>
+
+  <!-- Inputs: propulsion/engine[0..3]/collective-ctrl-rad, root pitch at r = 0, clipped here to the stops. The stops also
+       keep an unset 0 rad, far under zero thrust, off the rotor. -->
+  <flight_control name="Stork FCS">
+    <property value="0.1175"> fcs/collective-stop-min-rad </property> <!-- zero thrust 0.75 |twist| B = 8.73 deg, less 2 deg (chosen, as Orca's stop) -->
+    <!-- Pitch-flap coupling delta-3 45 deg [J18 p.7]: Kp = tan 45 = 1, flapping relative to the shaft halved in cruise, as J18 says. FGRotor has no delta-3: this is
+         longitudinal cyclic = Kp / (1 + Kp) x (a1 relative to the shaft + the cyclic) = half the flap-back. Lateral left out: delta-3 turns flap-back partly
+         sideways, which real counter-rotating pairs cancel and FGRotor, which ignores the rotation sense there, would add. -->
+    <property value="0.5">    fcs/delta3-gain </property>
+    <property value="0.5">   fcs/collective-stop-max-rad </property>  <!-- chosen, 28.65 deg, none published: above hover stall CT/sigma 0.15 [L6] at 24.8 deg (FGRotor has no stall), the 142 kt rear rotors need 25 -->
+    <channel name="collective stops">
+      <pure_gain name="fcs/collective-stopped-rad[0]">
+        <input> propulsion/engine[0]/collective-ctrl-rad </input>
+        <gain> 1.0 </gain>
+        <clipto><min> fcs/collective-stop-min-rad </min><max> fcs/collective-stop-max-rad </max></clipto>
+        <output> propulsion/engine[0]/collective-ctrl-rad </output>
+      </pure_gain>
+      <pure_gain name="fcs/collective-stopped-rad[1]">
+        <input> propulsion/engine[1]/collective-ctrl-rad </input>
+        <gain> 1.0 </gain>
+        <clipto><min> fcs/collective-stop-min-rad </min><max> fcs/collective-stop-max-rad </max></clipto>
+        <output> propulsion/engine[1]/collective-ctrl-rad </output>
+      </pure_gain>
+      <pure_gain name="fcs/collective-stopped-rad[2]">
+        <input> propulsion/engine[2]/collective-ctrl-rad </input>
+        <gain> 1.0 </gain>
+        <clipto><min> fcs/collective-stop-min-rad </min><max> fcs/collective-stop-max-rad </max></clipto>
+        <output> propulsion/engine[2]/collective-ctrl-rad </output>
+      </pure_gain>
+      <pure_gain name="fcs/collective-stopped-rad[3]">
+        <input> propulsion/engine[3]/collective-ctrl-rad </input>
+        <gain> 1.0 </gain>
+        <clipto><min> fcs/collective-stop-min-rad </min><max> fcs/collective-stop-max-rad </max></clipto>
+        <output> propulsion/engine[3]/collective-ctrl-rad </output>
+      </pure_gain>
+    </channel>
+    <channel name="pitch-flap coupling">
+      <fcs_function name="fcs/delta3-cyclic-rad[0]">
+        <function><product><property> fcs/delta3-gain </property><sum>
+          <property> propulsion/engine[0]/a1-rad </property><property> propulsion/engine[0]/longitudinal-ctrl-rad </property></sum></product></function>
+        <output> propulsion/engine[0]/longitudinal-ctrl-rad </output>
+      </fcs_function>
+      <fcs_function name="fcs/delta3-cyclic-rad[1]">
+        <function><product><property> fcs/delta3-gain </property><sum>
+          <property> propulsion/engine[1]/a1-rad </property><property> propulsion/engine[1]/longitudinal-ctrl-rad </property></sum></product></function>
+        <output> propulsion/engine[1]/longitudinal-ctrl-rad </output>
+      </fcs_function>
+      <fcs_function name="fcs/delta3-cyclic-rad[2]">
+        <function><product><property> fcs/delta3-gain </property><sum>
+          <property> propulsion/engine[2]/a1-rad </property><property> propulsion/engine[2]/longitudinal-ctrl-rad </property></sum></product></function>
+        <output> propulsion/engine[2]/longitudinal-ctrl-rad </output>
+      </fcs_function>
+      <fcs_function name="fcs/delta3-cyclic-rad[3]">
+        <function><product><property> fcs/delta3-gain </property><sum>
+          <property> propulsion/engine[3]/a1-rad </property><property> propulsion/engine[3]/longitudinal-ctrl-rad </property></sum></product></function>
+        <output> propulsion/engine[3]/longitudinal-ctrl-rad </output>
+      </fcs_function>
+    </channel>
+  </flight_control>
+
+  <system file="stork_drive"/>
+
+</fdm_config>
