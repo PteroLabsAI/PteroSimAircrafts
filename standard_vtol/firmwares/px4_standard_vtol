@@ -38,6 +38,8 @@ param set-default CA_ROTOR4_PY -0
 param set-default CA_ROTOR4_PZ -0
 param set-default CA_ROTOR4_KM -0.05
 param set-default CA_ROTOR4_CT 104.7
+param set-default CA_ROTOR4_AX 1
+param set-default CA_ROTOR4_AZ 0
 
 param set-default CA_SV_CS_COUNT 3
 param set-default CA_SV_CS0_TYPE 12
