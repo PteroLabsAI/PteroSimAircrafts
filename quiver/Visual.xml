@@ -7,9 +7,13 @@
   <!-- CAD origin (centre of the plate stack) relative to the CG with the 30 Ah battery -->
   <fixture file="meshes/quiver_body.glb" xyz="0.0104 0.0008 0.0437" rpy="0 0 0"/>
 
-  <!-- The SIYI A8 mini's ball: its bbox centre in X/Y (Sensors.xml), at the ball's height near the bbox bottom (CAD Z -190 of -212..-131 mm);
-       its mesh is part of the body, so only the camera turns. Rate and tau are x500's, not the A8's -->
-  <gimbal name="gimbal_1" xyz="0.1515 0.0672 -0.146" rpy="0 0 0" rate="120 120 120" tau="0.1"/>
+  <!-- The SIYI A8 mini where its roll and pitch axes cross, the camera's centre: CAD X 66.44 right, Y 152.25 forward,
+       Z -196.62 mm up, plus the fixture above. Its base stays in the body; arm, fork and camera are centred here. The yaw motor's axis is 9.73 mm
+       aft of this point, so a yawed arm slides off the motor by up to twice that. Rate and tau are x500's, not the A8's -->
+  <gimbal name="gimbal_1" xyz="0.16265 0.06724 -0.15292" rpy="0 0 0" rate="120 120 120" tau="0.1"/>
+  <fixture file="meshes/quiver_gimbal_yaw.glb" xyz="0 0 0" rpy="0 0 0" parent="gimbal_1.yaw"/>
+  <fixture file="meshes/quiver_gimbal_roll.glb" xyz="0 0 0" rpy="0 0 0" parent="gimbal_1.roll"/>
+  <fixture file="meshes/quiver_gimbal_head.glb" xyz="0 0 0" rpy="0 0 0" parent="gimbal_1"/>
 
   <!-- Each mesh is centred on its hub at 53.8 mm, 2.5 mm under the thruster plane; handedness read from the blade pitch -->
   <propeller file="meshes/quiver_prop_ccw.glb" xyz="0 0 -0.0025" rpy="0 0 0" motor="front right" axis="0 0 1"/>
