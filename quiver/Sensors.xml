@@ -3,10 +3,9 @@
   A sidecar: JSBSim never reads this file. Metres and degrees, X forward / Y right / Z up from the CG, the frame Visual.xml
   states. The set is F450's: imu, gps, barometer, temperature; rates are the components' own defaults, as there.
   gimbal_camera  the SIYI A8 mini under the nose, right of centre (Dev-Kit report: "repositioned to the right side"), on
-          Visual.xml's gimbal_1 at the centre of its bbox in the assembled CAD (3270_camera.step: X 36..96, Y 114..168,
-          Z -212..-131 mm, X right, Y forward, Z up, from the plate centre) less the CG JSBSim loads with the 30 Ah pack
-          (structural 0.0104, -0.0008, -0.0437 m). Field of view left at the component's default.
-          The lens 4 cm ahead of the ball's centre, past its 27 mm front face (Y 168 of the bbox). Streamed so a GCS shows it (RTP/H.264, 5600 + 2 x instance).
+          Visual.xml's gimbal_1, the camera's centre. Field of view left at the component's default.
+          The lens on the camera's front face, 15.5 mm ahead of its centre (the camera body of 3270_camera.step spans CAD
+          Y 136.75..167.75 mm). Streamed so a GCS shows it (RTP/H.264, 5600 + 2 x instance).
   No depth camera, no airspeed: ArduCopter reads none, and the Dev-Kit carries neither.
 -->
 <sensors>
@@ -14,5 +13,5 @@
   <sensor type="gps" name="gps"/>
   <sensor type="barometer" name="barometer"/>
   <sensor type="temperature" name="temperature"/>
-  <sensor type="camera" name="gimbal_camera" xyz="0.04 0 0" parent="gimbal_1" stream="true"/>
+  <sensor type="camera" name="gimbal_camera" xyz="0.0155 0 0" parent="gimbal_1" stream="true"/>
 </sensors>
