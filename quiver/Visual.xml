@@ -7,9 +7,11 @@
   <!-- CAD origin (centre of the plate stack) relative to the CG with the 30 Ah battery -->
   <fixture file="meshes/quiver_body.glb" xyz="0.0104 0.0008 0.0437" rpy="0 0 0"/>
 
-  <!-- The SIYI A8 mini where its roll and pitch axes cross, the camera's centre: CAD X 66.44 right, Y 152.25 forward,
-       Z -196.62 mm up, plus the fixture above. Its base stays in the body; arm, fork and camera are centred here. The yaw motor's axis is 9.73 mm
-       aft of this point, so a yawed arm slides off the motor by up to twice that. Rate and tau are x500's, not the A8's -->
+  <!-- The SIYI A8 mini (3270_camera.step) where its roll and pitch axes cross, at the centres of the roll motor's disc on
+       the arm and the pitch motors' discs on the fork, which is the camera's centre: CAD X 66.44 right, Y 152.25 forward,
+       Z -196.62 mm up, plus the fixture above. Its base stays in the body; arm, fork and camera are centred here.
+       The yaw motor's axis is 9.73 mm aft of this point, so a yawed arm slides off the motor by up to twice that.
+       Rate and tau are x500's, not the A8's -->
   <gimbal name="gimbal_1" xyz="0.16265 0.06724 -0.15292" rpy="0 0 0" rate="120 120 120" tau="0.1"/>
   <fixture file="meshes/quiver_gimbal_yaw.glb" xyz="0 0 0" rpy="0 0 0" parent="gimbal_1.yaw"/>
   <fixture file="meshes/quiver_gimbal_roll.glb" xyz="0 0 0" rpy="0 0 0" parent="gimbal_1.roll"/>
