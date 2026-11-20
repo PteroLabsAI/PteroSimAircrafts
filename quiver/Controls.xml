@@ -11,7 +11,7 @@
   PWMToMotor), so 1050..1950 arrives as 0.05..0.95 and is stretched back onto 0..1. PX4 already sends its motors as
   0..1 between its own PWM minimum and maximum, which is the same span.
 -->
-<control_bindings stack="ArduPilot">
+<control_bindings stack="ArduPilot" pilot="multicopter">
   <binding stack="ArduPilot" channel="0" type="Motor" index="0" in="0.05 0.95" out="0 1" label="front right"/>
   <binding stack="ArduPilot" channel="1" type="Motor" index="1" in="0.05 0.95" out="0 1" label="aft left"/>
   <binding stack="ArduPilot" channel="2" type="Motor" index="2" in="0.05 0.95" out="0 1" label="front left"/>
