@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<brushless_dc_motor name="X1 pusher motor">
+  <!-- Sized, no manufacturer data: rated 234 hp at 6446 rpm so that full throttle gives the concept model's 600 lbf static thrust per pusher -->
+  <!-- 800 V bus, chosen; 3 % copper and 1 % iron/friction loss at the rated point, chosen (aviation PM motors run 94-97 %) -->
+  <maxvolts unit="VOLTS"> 800 </maxvolts>
+  <velocityconstant> 8.3063 </velocityconstant>
+  <coilresistance unit="OHMS"> 0.10543 </coilresistance>
+  <noloadcurrent unit="AMPERES"> 2.347 </noloadcurrent>
+</brushless_dc_motor>

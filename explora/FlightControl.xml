@@ -2,7 +2,7 @@
 <!-- Thin FCS: ArduPlane does the mixing and sends one output per elevon (SERVO5_FUNCTION 77 ElevonLeft, SERVO6_FUNCTION 78
      ElevonRight, param). Controls.xml lands them on fcs/servo-0/1-cmd-norm, the way standard_vtol binds its ArduPlane elevons.
      This file turns the two servo commands into surface angles and then into the fcs/elevator-pos-rad and fcs/aileron-pos-rad
-     that Aero.xml consumes (ATLAS pattern; JSBSim has no native fcs/aileron-pos-rad, it is created by the output below).
+     that Aero.xml consumes (JSBSim has no native fcs/aileron-pos-rad; the output below creates it).
 
      Signs. ArduPlane's elevon mixer (ArduPlane/servos.cpp, Plane::channel_function_mixer, called with k_aileron, k_elevator,
      k_elevon_left, k_elevon_right): left = elevator - aileron, right = elevator + aileron, and its comment says "the order is

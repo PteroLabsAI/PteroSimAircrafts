@@ -57,5 +57,4 @@ flies heavy and the engines carry it, as the real one does.
 `ZLT-NT.xml` and `Systems/` are the flight model, `Controls.xml` maps the nine channels onto
 it, `Visual.xml` hangs the meshes and says what moves each one: the three fins of the
 inverted-Y tail, the two side pods, the tail spinner. `meshes/` and `textures/` are built from
-the source hull by `Scripts/zlt_nt/` in the simulator's repository -- run those only when the
-source model changes.
+the source hull.

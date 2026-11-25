@@ -8,8 +8,9 @@
 # (X aft, Y right, Z up) into PX4's allocation frame (forward, right, down); the CG is at the origin
 # (Mass.xml), so the two share one centre. KM follows <sense>, which is what tells the allocator which
 # rotor fights which in yaw. CT is the thrust this simulation actually makes, solved from the motor
-# and propeller definitions at the speed they balance -- 10506 rpm, 15.7 N a rotor -- and not from a
-# datasheet, because it is the simulation the allocator has to match.
+# and propeller definitions at full throttle on the motor's 14.8 V, at the speed they balance --
+# 10366 rpm, 12.5 N a rotor -- and not from a datasheet, because it is the simulation the allocator
+# has to match.
 #
 
 . ${R}etc/init.d/rc.mc_defaults
@@ -22,22 +23,22 @@ param set-default CA_ROTOR0_PX 0.1651
 param set-default CA_ROTOR0_PY 0.1651
 param set-default CA_ROTOR0_PZ -0.025
 param set-default CA_ROTOR0_KM 0.05
-param set-default CA_ROTOR0_CT 15.72
+param set-default CA_ROTOR0_CT 12.54
 param set-default CA_ROTOR1_PX -0.1651
 param set-default CA_ROTOR1_PY -0.1651
 param set-default CA_ROTOR1_PZ -0.025
 param set-default CA_ROTOR1_KM 0.05
-param set-default CA_ROTOR1_CT 15.72
+param set-default CA_ROTOR1_CT 12.54
 param set-default CA_ROTOR2_PX 0.1651
 param set-default CA_ROTOR2_PY -0.1651
 param set-default CA_ROTOR2_PZ -0.025
 param set-default CA_ROTOR2_KM -0.05
-param set-default CA_ROTOR2_CT 15.72
+param set-default CA_ROTOR2_CT 12.54
 param set-default CA_ROTOR3_PX -0.1651
 param set-default CA_ROTOR3_PY 0.1651
 param set-default CA_ROTOR3_PZ -0.025
 param set-default CA_ROTOR3_KM -0.05
-param set-default CA_ROTOR3_CT 15.72
+param set-default CA_ROTOR3_CT 12.54
 
 param set-default PWM_MAIN_FUNC1 101
 param set-default PWM_MAIN_FUNC2 102

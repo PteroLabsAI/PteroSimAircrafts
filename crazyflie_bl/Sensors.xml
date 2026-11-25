@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees, X forward / Y right / Z up, the same frame Visual.xml states. An attribute absent here
+  means the component's own default. The vehicle carries no GPS receiver (it positions itself with the Flow
+  deck or an external system); the receiver here serves the autopilots' position modes.
+-->
+<sensors>
+  <sensor type="imu" name="imu"/>
+  <sensor type="barometer" name="barometer"/>
+  <sensor type="gps" name="gps"/>
+</sensors>

@@ -15,7 +15,7 @@
   property row on a free channel and give that channel a function in the firmware: propulsion/magneto_cmd
   (0 off, 3 both), fcs/left-brake-cmd-norm, fcs/right-brake-cmd-norm.
 -->
-<control_bindings stack="PX4">
+<control_bindings stack="PX4" pilot="direct">
   <binding stack="PX4" channel="0" type="Motor" index="0" in="0 1" out="0 1" label="io320"/>
   <binding stack="PX4" channel="1" type="Elevator" in="-1 1" out="-1 1" label="elevator"/>
   <binding stack="PX4" channel="2" type="Aileron" in="-1 1" out="-1 1" label="aileron"/>
@@ -28,4 +28,10 @@
   <binding stack="ArduPilot" channel="3" type="Rudder" in="-1 1" out="-1 1" label="rudder"/>
   <binding stack="ArduPilot" channel="3" property="fcs/steer-cmd-norm" in="-1 1" out="-1 1" invert="1" label="nosewheel"/>
   <binding stack="ArduPilot" channel="4" type="Flaps" in="0 1" out="0 1" label="flaps"/>
+  <!-- Manual sends the sticks +1 right, forward (nose down) and right: only JSBSim's rudder, +1 yaw left, is inverted. -->
+  <binding stack="Manual" channel="0" type="Aileron" in="-1 1" out="-1 1" label="aileron"/>
+  <binding stack="Manual" channel="1" type="Elevator" in="-1 1" out="-1 1" label="elevator"/>
+  <binding stack="Manual" channel="2" type="Motor" index="0" in="0 1" out="0 1" label="io320"/>
+  <binding stack="Manual" channel="3" type="Rudder" in="-1 1" out="-1 1" invert="1" label="rudder"/>
+  <binding stack="Manual" channel="3" property="fcs/steer-cmd-norm" in="-1 1" out="-1 1" label="nosewheel"/>
 </control_bindings>

@@ -5,4 +5,5 @@
   <ground_reactions file="Gear.xml"/>
   <propulsion file="Propulsion.xml"/>
   <aerodynamics file="Aero.xml"/>
+  <system file="esc_map"/>
 </fdm_config>

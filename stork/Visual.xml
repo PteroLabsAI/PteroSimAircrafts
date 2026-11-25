@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  Metres and degrees from the centre of mass, in the vehicle's frame: X forward, Y right, Z up. The meshes are built from
+  NASA's OpenVSP model (meshes/NOTICE) in the FDM's frame, X aft, Y right, Z up, origin at the VSP file's Center-Of-Mass marker; the loader turns glTF (x, y, z) into
+  (-z, x, y), so the right side lands on +X and the tail on +Y, and every part is yawed +90 deg onto +X forward.
+
+  Livery: each folder under meshes/ is a full set. To change it, change the folder name in the five file= below:
+  taxi, rescue, liner, police.
+
+  Fixture: the mesh's origin lies 0.083 ft aft of and 1.532 ft above the CG at DGW (Mass.xml), so it goes to xyz -0.0253 0 0.4669.
+  Rotors: a propeller hangs off its engine's shaft, Propulsion.xml's thruster location, and its mesh's origin is the hub as
+  built, 0.086 ft ahead of or 0.070 ft aft of that location and 0.075 ft outboard of it, 0.002 ft low; the offset across
+  the axis moves the pivot, so the blades still turn about the hub. Spin: a propeller turns about +axis in the vehicle's
+  frame, clockwise seen from the axis tip; sense 1 is anticlockwise from above, so its axis points down.
+  Chase: 16 m behind, 15 deg above. Rear blade tips reach 6.5 m behind the CG, so this leaves about 9 m; chosen, the 22 m of Orca read far.
+-->
+<visual>
+  <fixture file="meshes/taxi/body.glb" xyz="-0.0253 0 0.4669" rpy="0 0 90"/>
+  <propeller file="meshes/taxi/rotor_1.glb" xyz="0.0262 0.0229 -0.0006" rpy="0 0 90" motor="rotor_1" axis="0 0 -1"/>
+  <propeller file="meshes/taxi/rotor_2.glb" xyz="0.0262 -0.0229 -0.0006" rpy="0 0 90" motor="rotor_2" axis="0 0 1"/>
+  <propeller file="meshes/taxi/rotor_3.glb" xyz="-0.0213 0.0229 -0.0006" rpy="0 0 90" motor="rotor_3" axis="0 0 1"/>
+  <propeller file="meshes/taxi/rotor_4.glb" xyz="-0.0213 -0.0229 -0.0006" rpy="0 0 90" motor="rotor_4" axis="0 0 -1"/>
+
+  <chase xyz="0 0 1" rpy="0 -15 0" length="16"/>
+</visual>

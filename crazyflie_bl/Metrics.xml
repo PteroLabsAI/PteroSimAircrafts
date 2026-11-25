@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- No wing: the reference values only keep the aero normalisations finite. -->
+<metrics>
+  <wingarea unit="M2"> 0.0025 </wingarea>
+  <wingspan unit="M"> 0.1 </wingspan>
+  <chord unit="M"> 0.025 </chord>
+  <location name="AERORP" unit="M"> <x> 0 </x> <y> 0 </y> <z> 0 </z> </location>
+  <location name="EYEPOINT" unit="M"> <x> 0 </x> <y> 0 </y> <z> 0 </z> </location>
+  <location name="VRP" unit="M"> <x> 0 </x> <y> 0 </y> <z> 0 </z> </location>
+</metrics>

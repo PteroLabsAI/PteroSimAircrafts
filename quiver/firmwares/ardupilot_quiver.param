@@ -1,0 +1,293 @@
+# ArduCopter SITL parameters for the Arrow Air Quiver Dev-Kit: sim_vehicle.py -v ArduCopter -f quad --model JSON:<host> --add-param-file=<this>.
+# Arrow's own standard-params.param (Arrow-air/project-quiver a14970474c, 2026-06-17), with only what SITL cannot have taken out
+# or replaced; every change says why. With --model JSON current ArduPilot loads no frame defaults, so the file is self-contained.
+# Names as ArduCopter 4.8-dev (b7ba8bca) spells them. 4.7 moved the cm and cdeg parameters to m and deg (x 0.01, the factor of
+# its own conversion), so a line whose name differs from theirs carries their original above it.
+
+AHRS_EKF_TYPE 3
+AHRS_GPS_GAIN 1
+AHRS_GPS_MINSATS 6
+AHRS_GPS_USE 1
+AHRS_OPTIONS 0
+AHRS_ORIENTATION 0
+AHRS_RP_P 0.2
+AHRS_YAW_P 0.2
+ARMING_ACCTHRESH 0.75
+# ARMING_CHECK 1 (all checks) is ARMING_SKIPCHK 0 since 4.7, which is the default.
+ARMING_MAGTHRESH 100
+ARMING_NEED_LOC 0
+ARMING_OPTIONS 0
+ARMING_RUDDER 2
+
+# Their attitude tune, as published.
+# Theirs: ANGLE_MAX 3000, ATC_ACCEL_P_MAX 68443.15, ATC_ACCEL_R_MAX 60184.69, ATC_ACCEL_Y_MAX 9049, ATC_SLEW_YAW 6000
+ATC_ANGLE_MAX 30
+ATC_ACC_P_MAX 684.4315
+ATC_ACC_R_MAX 601.8469
+ATC_ACC_Y_MAX 90.49
+ATC_RATE_WPY_MAX 60
+ATC_ANG_LIM_TC 1
+ATC_ANG_PIT_P 10.68668
+ATC_ANG_RLL_P 11.33392
+ATC_ANG_YAW_P 3.538
+ATC_ANGLE_BOOST 1
+ATC_INPUT_TC 0.15
+ATC_RAT_PIT_D 0.009356325
+ATC_RAT_PIT_FLTD 10
+ATC_RAT_PIT_FLTT 10
+ATC_RAT_PIT_I 0.1453998
+ATC_RAT_PIT_IMAX 0.5
+ATC_RAT_PIT_P 0.1453998
+ATC_RAT_PIT_SMAX 50
+ATC_RAT_RLL_D 0.009198768
+ATC_RAT_RLL_FLTD 10
+ATC_RAT_RLL_FLTT 10
+ATC_RAT_RLL_I 0.142759
+ATC_RAT_RLL_IMAX 0.5
+ATC_RAT_RLL_P 0.142759
+ATC_RAT_RLL_SMAX 50
+ATC_RAT_YAW_D 0.01000001
+ATC_RAT_YAW_FLTD 10
+ATC_RAT_YAW_FLTE 2
+ATC_RAT_YAW_FLTT 10
+ATC_RAT_YAW_I 0.16
+ATC_RAT_YAW_IMAX 0.5
+ATC_RAT_YAW_P 1.6
+ATC_RAT_YAW_SMAX 50
+ATC_RATE_FF_ENAB 1
+ATC_RATE_Y_MAX 30
+ATC_THR_MIX_MAN 0.1
+ATC_THR_MIX_MAX 0.5
+ATC_THR_MIX_MIN 0.1
+AVOID_ENABLE 0
+
+# Battery: theirs is a Tattu 14S smart pack on DroneCAN (BATT_MONITOR 9). SITL's analog monitor reads the simulated pack instead:
+# PteroSim sends the pack's terminal volts and amps as JSON "battery" (SIM_JSON.h:163-164), SITL puts them on pins 13/12 at
+# /10.1 and /17 (SITL_State_common.cpp:494-495), and these multipliers read them back. SIM_BATT_VOLTAGE is only the fallback for
+# a frame without battery: 0 refuses arming instead of reporting a pack that is not there.
+SIM_BATT_VOLTAGE 0
+BATT_MONITOR 4
+BATT_VOLT_PIN 13
+BATT_CURR_PIN 12
+BATT_VOLT_MULT 10.1
+BATT_AMP_PERVLT 17
+BATT_AMP_OFFSET 0
+BATT_ARM_VOLT 47.5
+BATT_CAPACITY 30000
+BATT_CRT_VOLT 44.8
+# Theirs sets 48 on BATT2 and leaves BATT_LOW_VOLT at the copter default 10.5, below BATT_CRT_VOLT: arming refuses that
+# ("voltage failsafe critical >= low"). SITL has one pack, so their low threshold goes on it.
+BATT_LOW_VOLT 48
+BATT_FS_CRT_ACT 1
+BATT_FS_LOW_ACT 2
+BATT_FS_VOLTSRC 1
+
+DISARM_DELAY 10
+EK3_ENABLE 1
+EK3_ERR_THRESH 0.2
+EK3_GPS_CHECK 31
+EK3_IMU_MASK 3
+EK3_MAG_CAL 3
+EK3_PRIMARY 0
+EK3_SRC_OPTIONS 1
+EK3_SRC1_POSXY 3
+EK3_SRC1_POSZ 1
+EK3_SRC1_VELXY 3
+EK3_SRC1_VELZ 3
+EK3_SRC1_YAW 1
+FENCE_ACTION 1
+FENCE_ALT_MAX 30
+FENCE_ALT_MIN -10
+FENCE_ENABLE 1
+FENCE_MARGIN 5
+FENCE_RADIUS 60
+FENCE_TYPE 7
+FRAME_CLASS 1
+FRAME_TYPE 1
+FS_CRASH_CHECK 1
+FS_DR_ENABLE 2
+FS_DR_TIMEOUT 30
+FS_EKF_ACTION 1
+FS_EKF_FILT 5
+FS_EKF_THRESH 0.8
+FS_GCS_ENABLE 1
+FS_GCS_TIMEOUT 5
+FS_OPTIONS 16
+FS_THR_ENABLE 1
+FS_THR_VALUE 975
+FS_VIBE_ENABLE 1
+
+# GPS: theirs are two DroneCAN receivers (GPS1/2_TYPE 9). SITL simulates one serial u-blox on SERIAL3 (SITL_State.h _serial_path "GPS1").
+GPS_AUTO_CONFIG 2
+GPS_BLEND_MASK 5
+GPS_HDOP_GOOD 160
+GPS_MIN_ELEV 13
+GPS_NAVFILTER 8
+GPS_PRIMARY 0
+GPS_SAVE_CFG 1
+GPS1_GNSS_MODE 77
+GPS1_RATE_MS 200
+GPS1_TYPE 1
+SERIAL3_PROTOCOL 5
+
+# SITL's own accelerometer calibration (Tools/autotest/default_params/copter.parm), which a JSON run never loads: offsets of
+# exactly zero read as uncalibrated ("3D Accel calibration needed"). SITL simulates two IMUs (SIM_IMU_COUNT 2).
+INS_ACCOFFS_X 0.001
+INS_ACCOFFS_Y 0.001
+INS_ACCOFFS_Z 0.001
+INS_ACCSCAL_X 1.001
+INS_ACCSCAL_Y 1.001
+INS_ACCSCAL_Z 1.001
+INS_ACC2OFFS_X 0.001
+INS_ACC2OFFS_Y 0.001
+INS_ACC2OFFS_Z 0.001
+INS_ACC2SCAL_X 1.001
+INS_ACC2SCAL_Y 1.001
+INS_ACC2SCAL_Z 1.001
+
+INS_ACCEL_FILTER 10
+INS_ENABLE_MASK 127
+INS_FAST_SAMPLE 3
+INS_GYR_CAL 1
+INS_GYRO_FILTER 20
+INS_GYRO_RATE 1
+# Their notch kept: it tracks throttle alone, needs no sensor SITL lacks, and their gains were tuned with its phase lag in the loop.
+# REF 1 = full throttle, HMNCS 2 = 2nd harmonic only: 116*sqrt(throttle)*2, about 133 Hz at hover, the 2-blade pass rate.
+INS_HNTCH_ATT 40
+INS_HNTCH_BW 58
+INS_HNTCH_ENABLE 1
+INS_HNTCH_FM_RAT 1
+INS_HNTCH_FREQ 116
+INS_HNTCH_HMNCS 2
+INS_HNTCH_MODE 1
+INS_HNTCH_REF 1
+INS_RAW_LOG_OPT 9
+INS_STILL_THRESH 2.5
+INS_TRIM_OPTION 1
+INS_USE 1
+INS_USE2 1
+INS_USE3 0
+
+# Theirs: LAND_ALT_LOW 500, LAND_SPEED 30
+LAND_ALT_LOW_M 5
+LAND_SPD_MS 0.3
+LAND_REPOSITION 1
+LOG_BACKEND_TYPE 1
+LOG_BITMASK 407550
+LOG_FILE_BUFSIZE 200
+LOG_FILE_DSRMROT 1
+LOG_FILE_MB_FREE 500
+LOG_MAX_FILES 500
+# Theirs: LOIT_ACC_MAX 250, LOIT_BRK_ACCEL 220, LOIT_BRK_JERK 500, LOIT_SPEED 1250
+LOIT_ACC_MAX_M 2.5
+LOIT_BRK_ACC_M 2.2
+LOIT_BRK_JRK_M 5
+LOIT_SPEED_MS 12.5
+LOIT_BRK_DELAY 0.4
+LOIT_OPTIONS 1
+
+# Motors: theirs. Controls.xml maps their 1050..1950 us onto the ESC map's 0..1.
+MOT_BAT_VOLT_MAX 60.9
+MOT_BAT_VOLT_MIN 46.2
+MOT_HOVER_LEARN 2
+MOT_PWM_MAX 1950
+MOT_PWM_MIN 1050
+# Theirs is 10, which ArduPilot does not define (0..9) and DroneCAN ignores; SITL sends plain PWM to the simulator.
+MOT_PWM_TYPE 0
+MOT_SAFE_TIME 1
+MOT_SPIN_ARM 0.07
+MOT_SPIN_MAX 0.95
+MOT_SPIN_MIN 0.1
+MOT_SPOOL_TIME 0.5
+# Theirs, kept as their config. The Hobbywing table fits 0.27 and this JSBSim model 0.29.
+MOT_THST_EXPO 0.74
+MOT_YAW_HEADROOM 200
+
+OA_TYPE 0
+# Theirs: PILOT_ACCEL_Z 250, PILOT_SPEED_UP 250
+PILOT_ACC_Z 2.5
+PILOT_SPD_UP 2.5
+RCMAP_PITCH 2
+RCMAP_ROLL 1
+RCMAP_THROTTLE 3
+RCMAP_YAW 4
+# Theirs: RTL_ALT 1000, RTL_ALT_FINAL 0
+RTL_ALT_M 10
+RTL_ALT_FINAL_M 0
+# Theirs is 1, terrain, which their radar altimeter serves. Without one ArduCopter wants terrain tiles from a GCS before it arms
+# (AP_Arming_Copter::terrain_database_required), and SRTM tiles are not the PteroSim scene anyway.
+RTL_ALT_TYPE 0
+RTL_CONE_SLOPE 3
+RTL_LOIT_TIME 5000
+SCHED_LOOP_RATE 400
+SERIAL0_BAUD 115
+SERIAL0_PROTOCOL 2
+# SITL's SERIAL1/2 are TCP 5762/5763; MAVLink2 there as on their telemetry radios.
+SERIAL1_BAUD 57
+SERIAL1_OPTIONS 0
+SERIAL1_PROTOCOL 2
+SERIAL2_BAUD 57
+SERIAL2_OPTIONS 0
+SERIAL2_PROTOCOL 2
+SERVO_RATE 50
+SERVO1_FUNCTION 33
+SERVO1_MAX 1950
+SERVO1_MIN 1050
+SERVO1_TRIM 1500
+SERVO2_FUNCTION 34
+SERVO2_MAX 1950
+SERVO2_MIN 1050
+SERVO2_TRIM 1500
+SERVO3_FUNCTION 35
+SERVO3_MAX 1950
+SERVO3_MIN 1050
+SERVO3_TRIM 1500
+SERVO4_FUNCTION 36
+SERVO4_MAX 1950
+SERVO4_MIN 1050
+SERVO4_TRIM 1500
+
+# Sim only, not Arrow's: their file sets no mount. The SIYI A8 mini as a servo mount (MNT1_TYPE 1) on SERVO5-7, which are
+# Controls.xml channels 4-6, so a mission's DO_SET_ROI aims it. Each MIN/MAX is the binding's out=; the full PWM span,
+# as the simulator reads (PWM - 1500) / 500. MNT1_DEFLT_MODE 2: MAVLink targeting while no ROI is set.
+MNT1_TYPE 1
+MNT1_DEFLT_MODE 2
+MNT1_ROLL_MIN -45
+MNT1_ROLL_MAX 45
+MNT1_PITCH_MIN -90
+MNT1_PITCH_MAX 90
+MNT1_YAW_MIN -180
+MNT1_YAW_MAX 180
+SERVO5_FUNCTION 8
+SERVO6_FUNCTION 7
+SERVO7_FUNCTION 6
+SERVO5_MIN 1000
+SERVO5_MAX 2000
+SERVO6_MIN 1000
+SERVO6_MAX 2000
+SERVO7_MIN 1000
+SERVO7_MAX 2000
+TERRAIN_ENABLE 1
+TERRAIN_SPACING 100
+THR_DZ 100
+# Theirs: WPNAV_ACCEL 100, WPNAV_ACCEL_Z 50, WPNAV_JERK 1, WPNAV_RADIUS 25, WPNAV_RFND_USE 1, WPNAV_SPEED 350, WPNAV_SPEED_DN 100,
+# WPNAV_SPEED_UP 100. The group is WP_ now; JERK and RFND_USE kept their units.
+WP_ACC 1
+WP_ACC_Z 0.5
+WP_JERK 1
+WP_RADIUS_M 0.25
+WP_RFND_USE 1
+WP_SPD 3.5
+WP_SPD_DN 1
+WP_SPD_UP 1
+
+# Left out, SITL has no such hardware:
+#   CAN_D1_*, CAN_D2_*, CAN_P1_*, CAN_P2_*   DroneCAN buses, ESC bitmask included: SITL's SERVO1-4 outputs drive the motors
+#   BATT_OPTIONS 128, BATT2_MONITOR 9        DroneCAN battery-node option and a second CAN monitor
+#   GPS2_TYPE 9, GPS2_GNSS_MODE, GPS2_RATE_MS  second DroneCAN receiver
+#   RNGFND1_*                                NanoRadar on CAN; PteroSim sends SITL no range (no rng_N in its JSON)
+#   PRX_FILT, PRX1_*, SERIAL5_*              RPLidar S2L on SERIAL5; not simulated, and proximity with no data fails arming
+#   SERIAL3_BAUD/OPTIONS, SERIAL4_*          SERIAL3/4 are SITL's simulated GPS ports, not their companion links
+#   BRD_*, SERVO_GPIO_MASK, NTF_LED_*        Pixhawk board: safety switch, watchdog, USB voltage, GPIO pins, LEDs
+#   NET_ENABLE 0                             Ethernet bridge to the Pi (0 is the default)
+# Compass offsets stay at zero: SITL's simulated ones are zero (SIM_MAG1_OFS default).

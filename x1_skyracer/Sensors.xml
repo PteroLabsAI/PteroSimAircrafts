@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  A sidecar: JSBSim never reads this file. Metres and degrees, X forward / Y right / Z up from the race-weight CG, the frame
+  Visual.xml states. Mounts from the X1 SkyRacer concept model; rates are the components' own defaults.
+  imu        at the race-weight CG
+  gps        engine-cover crown behind the canopy
+  barometer  inside the cabin, static-vented
+  airspeed   pitot at the nose tip
+  camera     driver's eye, left seat
+-->
+<sensors>
+  <sensor type="imu" name="imu"/>
+  <sensor type="gps" name="gps" xyz="-0.2192 0 0.4086"/>
+  <sensor type="barometer" name="barometer" xyz="0.4808 0 -0.0414"/>
+  <sensor type="temperature" name="temperature"/>
+  <sensor type="airspeed" name="airspeed" xyz="2.9208 0 -0.1414"/>
+  <sensor type="camera" name="driver_camera" xyz="1.0808 -0.32 0.3386"/>
+</sensors>

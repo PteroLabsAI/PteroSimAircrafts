@@ -5,6 +5,9 @@
 #
 # Generated from the source model's own plugins. Motor order,
 # senses, geometry and surface effectiveness are the model's; nothing here is guessed.
+# CT is the thrust this simulation makes at full command on the motor's 14.8 V, through its ESC
+# (Systems/esc_map.xml), held down at sea level -- 7294 rpm, 14.4 N a rotor -- since it is the
+# simulation the allocator has to match.
 #
 
 . ${R}etc/init.d/rc.mc_defaults
@@ -17,22 +20,22 @@ param set-default CA_ROTOR0_PX 0.174
 param set-default CA_ROTOR0_PY 0.174
 param set-default CA_ROTOR0_PZ -0.06
 param set-default CA_ROTOR0_KM 0.05
-param set-default CA_ROTOR0_CT 8.549
+param set-default CA_ROTOR0_CT 14.42
 param set-default CA_ROTOR1_PX -0.174
 param set-default CA_ROTOR1_PY -0.174
 param set-default CA_ROTOR1_PZ -0.06
 param set-default CA_ROTOR1_KM 0.05
-param set-default CA_ROTOR1_CT 8.549
+param set-default CA_ROTOR1_CT 14.42
 param set-default CA_ROTOR2_PX 0.174
 param set-default CA_ROTOR2_PY -0.174
 param set-default CA_ROTOR2_PZ -0.06
 param set-default CA_ROTOR2_KM -0.05
-param set-default CA_ROTOR2_CT 8.549
+param set-default CA_ROTOR2_CT 14.42
 param set-default CA_ROTOR3_PX -0.174
 param set-default CA_ROTOR3_PY 0.174
 param set-default CA_ROTOR3_PZ -0.06
 param set-default CA_ROTOR3_KM -0.05
-param set-default CA_ROTOR3_CT 8.549
+param set-default CA_ROTOR3_CT 14.42
 
 param set-default CA_SV_CS_COUNT 0
 
@@ -56,7 +59,9 @@ param set-default MNT_MIN_PITCH -90
 param set-default MNT_MAX_PITCH 90
 param set-default MNT_RANGE_YAW 360
 
-param set-default MPC_THR_HOVER 0.59
+# The command that holds the x500 up on a full pack (Battery.xml, 16.8 V at rest), bisected held down in bare
+# JSBSim at sea level: PX4's first guess before it learns the hover (MPC_USE_HTE). 0.48 at the motor's 14.8 V.
+param set-default MPC_THR_HOVER 0.43
 param set-default SIM_BAT_ENABLE 0
 param set-default COM_ARM_CHK_ESCS 0
 param set-default SYS_HAS_NUM_ASPD 0

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<!-- Rotor speed governor: a PID on rotor rpm, the way the AH-1S T53 work governs its rotor (jsbsim fork
-     feature/ah1s-t53-turboshaft, systems/rpm_governor.xml): error clipped, integrator held while the demand is pinned
-     in the error's direction, derivative lead equal to the N1 spool time. A feed-forward carries the load: the shaft
+<!-- Rotor speed governor: a PID on rotor rpm: error clipped, integrator held while the demand is pinned in the error's
+     direction, derivative lead equal to the N1 spool time. A feed-forward carries the load: the shaft
      power the drive absorbed last step (rotor torque x speed, NOTAR fan, gearbox; Systems/notar.xml, which runs first),
      as a fraction of the engine's maximum here, so the PID only trims and an air start or a collective step does not
      wait for its integrator. The power demand is turned into the throttle (N1 demand) by the inverse of the engine's
@@ -10,7 +9,7 @@
      Input: fcs/throttle-cmd-norm[0] above engage-norm switches the governor on (target = nominal rpm); below it the
      throttle stays at the command (0 = ground idle N1). FGRotor's transmission speed is unbounded, so without this
      loop the rotor runs away or droops.
-     Gains (chosen, then checked in scripts/validate.py): rotor plus engine side inertia 791 slug ft2 at 25.5 rad/s gives
+     Gains (chosen): rotor plus engine side inertia 791 slug ft2 at 25.5 rad/s gives
      0.26 rpm/s per hp, 120 rpm/s per unit of power demand; with the lead cancelling the 1 s spool, kp 0.015 is a
      1.8 rad/s loop. -->
 <system name="Orca rotor governor">
@@ -18,7 +17,7 @@
   <property value="243.5"> fcs/nominal-rpm </property>               <!-- Omega 25.5 rad/s [V22 Table 3] -->
   <property value="0.5">   fcs/governor/engage-norm </property>      <!-- chosen: throttle command that engages it -->
   <property value="25.0">  fcs/governor/error-clip-rpm </property>   <!-- chosen: ~10 % of nominal -->
-  <property value="462.0"> fcs/governor/max-power-hp </property>     <!-- = maxpower, Engines/orca_turboshaft.xml (scripts/validate.py checks) -->
+  <property value="462.0"> fcs/governor/max-power-hp </property>     <!-- = maxpower, Engines/orca_turboshaft.xml -->
 
   <channel name="governor">
 

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<!-- Stork mass properties, from the VSP file's named mass parts, each weight group scaled
+     to [S18] Table 3 Quad TS (factors 0.90 to 1.11). DGW 3735 lb = empty 2345 + fixed useful 10 + payload 1200 + fuel 180.
+     At DGW: CG (-0.083, 0, -1.532) ft, Ixx 4325, Iyy 6254, Izz 8368, Ixz +501 slug ft2 (sum of m x z in this frame).
+     Chosen: part inertia as a box of the part's size; cabin and cowling as hollow; rotor masses as points (articulated: the
+     blades' own inertia lives in the flapping); occupants at the centre of each seat's box. NDARC flies its performance
+     cases at dSLcg -0.8 ft [L6]; the file's parts put the CG 0.72 ft aft of that. The fuel is Propulsion.xml's tank, 179 lb full, at
+     the VSP file's fuel tank: it burns, and a full tank weighs 1 lb under DGW. -->
+
+<mass_balance negated_crossproduct_inertia="false">
+
+  <ixx unit="SLUG*FT2"> 4089 </ixx>
+  <iyy unit="SLUG*FT2"> 5691 </iyy>
+  <izz unit="SLUG*FT2"> 7859 </izz>
+  <ixz unit="SLUG*FT2">  482 </ixz>
+
+  <emptywt unit="LBS"> 2354.6 </emptywt>  <!-- WE 2345 [S18] + Wtrap 10 [L6], rounding of the groups -0.4 -->
+
+  <location name="CG" unit="FT">
+    <x>  0.101 </x>
+    <y>  0.0 </y>
+    <z> -0.684 </z>
+  </location>
+
+  <!-- Payload 1200 lb [S18]: Upass 200 lb x 6 [L6] -->
+  <pointmass name="seat_front_left">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -4.415 </x> <y> -1.55 </y> <z> -2.919 </z> </location>
+  </pointmass>
+  <pointmass name="seat_front_right">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -4.415 </x> <y>  1.55 </y> <z> -2.919 </z> </location>
+  </pointmass>
+  <pointmass name="seat_middle_left">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -1.082 </x> <y> -1.55 </y> <z> -2.919 </z> </location>
+  </pointmass>
+  <pointmass name="seat_middle_right">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x> -1.082 </x> <y>  1.55 </y> <z> -2.919 </z> </location>
+  </pointmass>
+  <pointmass name="seat_rear_left">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x>  2.251 </x> <y> -1.55 </y> <z> -2.919 </z> </location>
+  </pointmass>
+  <pointmass name="seat_rear_right">
+    <weight unit="LBS"> 200 </weight>
+    <location unit="FT"> <x>  2.251 </x> <y>  1.55 </y> <z> -2.919 </z> </location>
+  </pointmass>
+
+</mass_balance>

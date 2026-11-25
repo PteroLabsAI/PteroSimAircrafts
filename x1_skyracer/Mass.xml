@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+  <mass_balance>
+    <!-- designer's mass list 2026-10-21: generator 1175, accumulator 150, fuselage/seats/canopy 565, 4 lift units 190, 2 pushers 100, wings 50 + 60, -->
+    <!-- sponsons and wheels 80 lb, every item less 7.895 % (the lightweighting a team needs for race weight): 3040 -> 2800 lb -->
+    <emptywt unit="LBS"> 2800 </emptywt>
+    <!-- designer's mass list 2026-10-21 spread over the concept model's part surfaces, pushers at y +-0.705 m; internal generator and accumulator as boxes -->
+    <location name="CG" unit="IN">
+      <x> 15.25 </x>
+      <y> 0 </y>
+      <z> 30.55 </z>
+    </location>
+    <ixx unit="SLUG*FT2"> 921.4 </ixx>
+    <iyy unit="SLUG*FT2"> 1340.5 </iyy>
+    <izz unit="SLUG*FT2"> 2140.8 </izz>
+    <!-- JSBSim default sign, ixz = -sum(m x z): aft items sit high and forward items low -->
+    <ixy unit="SLUG*FT2"> 0 </ixy>
+    <ixz unit="SLUG*FT2"> -150.6 </ixz>
+    <iyz unit="SLUG*FT2"> 0 </iyz>
+    <!-- rule book 3.3: 500 lb ballast in the front seats, 0.28 m above the cushions; trade with inertia/pointmass-weight-lbs[0..1] -->
+    <pointmass name="Ballast, left front seat">
+      <weight unit="LBS"> 250 </weight>
+      <location unit="IN">
+        <x> -33.46 </x>
+        <y> -12.6 </y>
+        <z> 25.98 </z>
+      </location>
+    </pointmass>
+    <pointmass name="Ballast, right front seat">
+      <weight unit="LBS"> 250 </weight>
+      <location unit="IN">
+        <x> -33.46 </x>
+        <y> 12.6 </y>
+        <z> 25.98 </z>
+      </location>
+    </pointmass>
+  </mass_balance>

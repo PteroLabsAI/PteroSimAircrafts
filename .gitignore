@@ -1,2 +1,5 @@
 # Editing backups, which belong to whoever made them.
 *.bak*
+
+# Python bytecode.
+__pycache__/

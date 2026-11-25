@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- Standing on its feet at the benchmark's site, Lugano (city coordinates, 273 m), where the propeller coefficients
+     were converted (standard-atmosphere density 1.19323 kg/m^3). CG height: the 15.43 mm feet less Gear.xml's 1.0 mm
+     static deflection. -->
+<initialize name="Lugano ground">
+  <vt unit="M/S"> 0.0 </vt>
+  <latitude type="geodetic" unit="DEG"> 46.0037 </latitude>
+  <longitude unit="DEG"> 8.9511 </longitude>
+  <elevation unit="M"> 273.0 </elevation>
+  <altitudeAGL unit="M"> 0.01443 </altitudeAGL>
+</initialize>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!-- Rotors 2-4 on rotor 1's shaft: numbers as stork_rotor_master.xml, sourced there, kept equal; ExternalRPM scales by the gear ratios' quotient -->
+
+<rotor name="stork_rotor_slave">
+
+  <diameter unit="FT">        18.318 </diameter>
+  <numblades>                     3 </numblades>
+  <nominalrpm>                573.4 </nominalrpm>
+  <minrpm>                      1.0 </minrpm>
+  <maxrpm>                   1146.8 </maxrpm>
+  <gearratio>                87.966 </gearratio>
+
+  <chord unit="FT">           0.6234 </chord>
+  <liftcurveslope>            5.7 </liftcurveslope>
+  <twist unit="RAD">       -0.20944 </twist>
+  <hingeoffset unit="FT">     0.3574 </hingeoffset>
+  <tiplossfactor>             0.97 </tiplossfactor>
+
+  <flappingmoment unit="SLUG*FT2"> 14.86 </flappingmoment>
+  <massmoment>                     2.532 </massmoment>
+
+  <inflowlag>                 0.0656 </inflowlag>
+
+  <groundeffectexp>            0.0 </groundeffectexp>
+
+  <ExternalRPM> 0 </ExternalRPM>  <!-- engine 0's rotor speed -->
+
+</rotor>

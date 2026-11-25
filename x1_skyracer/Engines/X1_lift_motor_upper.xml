@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<brushless_dc_motor name="X1 lift motor, upper fan">
+  <!-- Sized, no manufacturer data: rated 375 hp at 3952 rpm so that the rear upper fan reaches full duty when the whole 2000 hp burst goes into balanced lift -->
+  <!-- 800 V bus, chosen; 3 % copper and 1 % iron/friction loss at the rated point, chosen (aviation PM motors run 94-97 %) -->
+  <maxvolts unit="VOLTS"> 800 </maxvolts>
+  <velocityconstant> 5.0923 </velocityconstant>
+  <coilresistance unit="OHMS"> 0.06585 </coilresistance>
+  <noloadcurrent unit="AMPERES"> 3.757 </noloadcurrent>
+</brushless_dc_motor>

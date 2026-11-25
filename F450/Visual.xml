@@ -5,7 +5,7 @@
     fixture    a part that is seen and does not move, the airframe among them
     propeller  a blade that turns with its motor
     surface    a control surface that deflects
-    gripper    where a payload is taken hold of; the Gripper channel in Controls.xml works it
+    gripper    where a payload is taken hold of; the Gripper binding in Controls.xml that names it works it
 
     file   a mesh inside this folder
     xyz    where it sits. For a propeller this is its offset from the motor, which is where its hub

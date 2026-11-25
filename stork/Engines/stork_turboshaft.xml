@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!-- One of two turboshafts, engines 1 and 2: NASA's GEN500 [L6 gen500.list] scaled by [NT sec 20-7] to 305 hp MRP [S18 Table 3]; its power reaches the shaft through Systems/stork_drive.xml -->
+<turboprop_engine name="stork_turboshaft">
+  <maxpower unit="HP">          319.41 </maxpower>         <!-- CRP: 305 MRP x 665 / 635 [L6 gen500.list P0_ref] -->
+  <psfc unit="LBS/HR/HP">         0.5961 </psfc>           <!-- sfc0C 0.5677 [NT sec 20-7 on L6 gen500.list] x Kffd 1.05 deterioration [L6] -->
+  <idlen1>                       70.0  </idlen1>           <!-- T53 file, as the Orca; no GEN500 data -->
+  <maxn1>                       106.0  </maxn1>            <!-- T53 file, as the Orca; no GEN500 data -->
+  <n1idle_max_delay>              1.0  </n1idle_max_delay> <!-- engtm601.xml template, as the Orca; checked against 14 CFR 33.73(b) -->
+  <maxstartingtime>              20.0  </maxstartingtime>  <!-- engtm601.xml template, as the Orca -->
+  <startern1>                    20.0  </startern1>        <!-- engtm601.xml template, as the Orca -->
+  <itt_delay>                     0.05 </itt_delay>        <!-- engtm601.xml template, as the Orca -->
+
+  <!-- MRP lapse (delta / sqrt theta) theta^(3 - 2 theta) exp(0.28 (1 - theta)) [L6 gen500.list, NT eq 20-5] x installation 0.973 [L6]; ram ignored -->
+  <function name="propulsion/engine[#]/lapse-norm">
+    <product>
+      <value> 0.973 </value>
+      <quotient>
+        <property> atmosphere/delta </property>
+        <sqrt><property> atmosphere/theta </property></sqrt>
+      </quotient>
+      <pow>
+        <property> atmosphere/theta </property>
+        <difference>
+          <value> 3.0 </value>
+          <product><value> 2.0 </value><property> atmosphere/theta </property></product>
+        </difference>
+      </pow>
+      <exp>
+        <product>
+          <value> 0.28 </value>
+          <difference><value> 1.0 </value><property> atmosphere/theta </property></difference>
+        </product>
+      </exp>
+    </product>
+  </function>
+
+  <!-- Power rises with N1 but drops with the fuel cut, to the throttle's N1 at once (N1's 2.4 s decel oversped a collective dump 12 %); 36, 70: maxn1 - idlen1, idlen1 -->
+  <function name="EnginePowerVC">
+    <product>
+      <property> propulsion/engine[#]/lapse-norm </property>
+      <min>
+        <value> 1.0 </value>
+        <quotient>
+          <product><property> fcs/throttle-pos-norm[#] </property><value> 36.0 </value></product>
+          <difference><property> propulsion/engine[#]/n1 </property><value> 70.0 </value></difference>
+        </quotient>
+      </min>
+    </product>
+  </function>
+
+  <!-- HP: CRP x n (2 - n), n = rpm / Nspec 50440 [NT sec 20-5, 20-7; L6 XNeta 2, Nopt = Nspec], linear in N1 from 0 at idle to CRP at max (chosen, no engine map) -->
+  <table name="EnginePowerRPM_N1" type="internal">
+    <tableData>
+                70.0    106.0
+           0     0.00     0.00
+        2522     0.00    31.14
+        5044     0.00    60.69
+       10088     0.00   114.99
+       15132     0.00   162.90
+       20176     0.00   204.42
+       25220     0.00   239.56
+       30264     0.00   268.30
+       35308     0.00   290.66
+       40352     0.00   306.63
+       45396     0.00   316.22
+       47918     0.00   318.61
+       50440     0.00   319.41
+       52962     0.00   318.61
+       55484     0.00   316.22
+       60528     0.00   306.63
+       70616     0.00   268.30
+       80704     0.00   204.42
+      100880     0.00     0.00
+    </tableData>
+  </table>
+
+  <table name="ITT_N1" type="internal">
+    <description> ITT [deg C] vs N1 and engine run (0 off / 1 running): the T53 file's, as the Orca; no GEN500 data </description>
+    <tableData>
+              0     1
+        0     0     0
+       15   100   100
+       70   180   400
+      103.7 270   820
+      106   280   880
+    </tableData>
+  </table>
+
+  <!-- psfc x power / this = psfc P0C delta sqrt(theta) (0.2 + 0.8 q) [L6 Kffq, NT sec 20-6] at 6000 ft ISA; zero power burns nothing -->
+  <table name="CombustionEfficiency_N1" type="internal">
+    <tableData>
+       70.0   0.0057
+       71.8   0.2331
+       73.6   0.3929
+       75.4   0.5093
+       77.2   0.5979
+       80.8   0.7238
+       84.4   0.8089
+       88.0   0.8703
+       91.6   0.9167
+       95.2   0.9530
+       98.8   0.9822
+      102.4   1.0061
+      106.0   1.0262
+    </tableData>
+  </table>
+
+</turboprop_engine>

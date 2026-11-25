@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- A cell's resting volts by charge: Amicell, https://www.amicell.co.il/light-weight-12s-battery/, "Use this chart to estimate
+     remaining capacity from a resting pack voltage". It gives 3.00-3.30 V at 0 %; 3.30 V is chosen within that. -->
+<chemistry>
+    <point charge_percent="0" cell_volts="3.30"/>
+    <point charge_percent="10" cell_volts="3.62"/>
+    <point charge_percent="20" cell_volts="3.70"/>
+    <point charge_percent="30" cell_volts="3.75"/>
+    <point charge_percent="40" cell_volts="3.79"/>
+    <point charge_percent="50" cell_volts="3.84"/>
+    <point charge_percent="60" cell_volts="3.89"/>
+    <point charge_percent="70" cell_volts="3.95"/>
+    <point charge_percent="80" cell_volts="4.02"/>
+    <point charge_percent="90" cell_volts="4.11"/>
+    <point charge_percent="100" cell_volts="4.20"/>
+</chemistry>

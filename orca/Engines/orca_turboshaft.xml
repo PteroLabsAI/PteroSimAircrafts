@@ -2,8 +2,8 @@
 <!--
   Orca turboshaft: NASA's QSMR has two RR300-based engines of 231 hp [J20 Table 2, p.6]. JSBSim drives a rotor from
   one engine only, so this is ONE turboshaft of 2 x 231 hp: no one-engine-inoperative case (README.md, limits).
-  Shape (power vs N1 and output speed, lapse, spool, TGT) is the AH-1S T53-L-703 file's (jsbsim fork,
-  feature/ah1s-t53-turboshaft), itself the engtm601.xml template: there is no RR300 map. Its rows are rescaled to this
+  Shape (power vs N1 and output speed, lapse, spool, TGT) is a T53-L-703 map built on
+  JSBSim's engtm601.xml template: there is no RR300 map. Its rows are rescaled to this
   engine's output speed and its power to 462 hp. The table's rpm is the output shaft's, rotor rpm x gearratio.
 -->
 

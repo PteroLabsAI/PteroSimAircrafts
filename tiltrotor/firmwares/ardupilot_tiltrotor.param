@@ -1,0 +1,57 @@
+# ArduPlane SITL parameters for tiltrotor, a quad X QuadPlane (Q_FRAME_CLASS and
+# Q_FRAME_TYPE's defaults): sim_vehicle.py -v ArduPlane --model JSON:<host>
+# --add-param-file=<this file>. In Mission Planner: set Q_ENABLE=1 and Q_TILT_ENABLE=1,
+# reboot, import this file, reboot again.
+# Controls.xml channels 0..3: Motor1 front right, Motor2 rear left,
+# Motor3 front left, Motor4 rear right. Channels 4..8: left elevon,
+# right elevon, elevator, front right tilt, front left tilt.
+Q_ENABLE 1
+Q_MAV_TYPE 21
+Q_TILT_ENABLE 1
+Q_TILT_MASK 5
+# Limit forward thrust while waiting for transition airspeed. At 45 deg, tilting
+# at 15 deg/s both ways, this model reached ~50 m/s before the transition completed.
+Q_TILT_MAX 25
+# Reach the forward position quickly after the wing reaches 10 m/s.
+Q_TILT_RATE_DN 60
+# Stand the motors up while disarmed in fixed-wing modes other than MANUAL
+# (bit 21). Once armed, ArduPlane flies GUIDED as fixed wing until a take-off
+# and tilts them forward again, so a GUIDED take-off starts with them coming up
+# at 40 deg/s; take off from QHOVER, QLOITER or AUTO's VTOL takeoff to start
+# with them vertical.
+Q_OPTIONS 2097152
+
+# Initial transition speeds for this 5.135 kg, 1.01 m2 wing model.
+# Confirm the airspeed envelope in flight before relying on automatic transitions.
+ARSPD_USE 1
+AIRSPEED_MIN 10
+AIRSPEED_CRUISE 15
+AIRSPEED_MAX 20
+Q_ASSIST_SPEED 8
+
+# PteroSim channel N is ArduPilot SERVO(N+1). Keep the four motor outputs
+# on 1..4; Plane's usual 5..8 QuadPlane defaults would drive the surfaces.
+SERVO1_FUNCTION 33
+SERVO2_FUNCTION 34
+SERVO3_FUNCTION 35
+SERVO4_FUNCTION 36
+SERVO5_FUNCTION 4
+SERVO6_FUNCTION 4
+SERVO7_FUNCTION 19
+SERVO8_FUNCTION 41
+SERVO9_FUNCTION 41
+
+# The left and right elevons have opposite roll sense in the model.
+SERVO5_REVERSED 1
+
+# PteroSim maps surface and tilt PWM 1000..2000 to their full travel.
+SERVO5_MIN 1000
+SERVO5_MAX 2000
+SERVO6_MIN 1000
+SERVO6_MAX 2000
+SERVO7_MIN 1000
+SERVO7_MAX 2000
+SERVO8_MIN 1000
+SERVO8_MAX 2000
+SERVO9_MIN 1000
+SERVO9_MAX 2000

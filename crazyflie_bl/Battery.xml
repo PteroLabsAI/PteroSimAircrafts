@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  1S1P, cell_capacity_mah 350: the IDSIA benchmark's vehicle flies a 1S 350 mAh LiPo (Busetto et al., arXiv
+  2512.14450), Bitcraze's 350 mAh Crazyflie battery.
+  cell_resistance_mohm 64.5: identified on the benchmark's training flights, the logged battery voltage against this
+  model's pack current, which counts each motor's current at its ESC's esc-input-duty (Systems/esc.xml). For comparison, about 150 mOhm is usual for new 100-200 mAh cells and 1-4 mOhm for
+  5000 mAh ones (https://www.rchelicopterfun.com/lipo-internal-resistance.html).
+  avionics_watts 2.07: the Crazyflie board, 0.24 A at 4.01 V with the motors off (Bitcraze crazyflie-firmware,
+  docs/functional-areas/pwm-to-thrust.md, measured on the Crazyflie 2.0), and the AI deck at its rating, 300 mA
+  from the battery line ("Power supply 3V-5V @ VCOM up to 300mA", AI-deck 1.1 datasheet) at 3.7 V; the flow deck's
+  draw was not found and is not counted.
+  warn_charge_percent 15: PX4's BAT_LOW_THR default, 0.15
+  (https://docs.px4.io/main/en/advanced_config/parameter_reference.html#BAT_LOW_THR).
+  initial_charge_percent 100: it starts full.
+  infinite false: it drains as it flies.
+-->
+<battery chemistry="LiPo" series="1" parallel="1" cell_capacity_mah="350" cell_resistance_mohm="64.5"
+         initial_charge_percent="100" warn_charge_percent="15" avionics_watts="2.07" infinite="false"/>

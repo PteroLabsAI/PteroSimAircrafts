@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<propeller version="1.1" name="X1 pusher fan">
+  <!-- Blades designed for the X1 concept model, not the manufacturer's fan: 11 twisted NACA 4409 blades, chord 63-92 mm, pitch 50-27 deg root to tip, r 0.10-0.32 m in a 26 in duct -->
+  <!-- design point: 2000 N at 25 m/s, tip Mach 0.6, loading rising as sqrt(r), lift coefficient 0.9 root to 0.7 tip -->
+  <!-- solid CFRP blades 1600 kg/m3 0.0801 + aluminium hub and spinner 2700 kg/m3 0.0266 kg m2; the motor rotor is not included -->
+  <ixx unit="KG*M2"> 0.1067 </ixx>
+  <diameter unit="M"> 0.6400 </diameter>
+  <numblades> 11 </numblades>
+  <!-- Blade element + momentum per annulus, exit swirl lost, no tip loss (10 mm gap), wake area ratio 0.72 = the concept model's 1.13 duct gain, three 25 mm struts as drag (CD 1.0); -->
+  <!-- NACA 4409 polars as the lift fans'; tip Mach 0.6; thrust includes the duct's -->
+  <table name="C_THRUST" type="internal">
+    <tableData>
+       0.000    1.11346
+       0.100    1.04207
+       0.200    0.97635
+       0.300    0.91929
+       0.400    0.86533
+       0.500    0.81733
+       0.600    0.76514
+       0.700    0.71520
+       0.800    0.66706
+       0.900    0.62030
+       1.000    0.57457
+       1.100    0.52956
+       1.200    0.48496
+       1.300    0.44054
+       1.400    0.39605
+       1.500    0.35128
+       1.600    0.30607
+    </tableData>
+  </table>
+  <table name="C_POWER" type="internal">
+    <tableData>
+       0.000    1.05991
+       0.100    1.05918
+       0.200    1.05694
+       0.300    1.05585
+       0.400    1.05250
+       0.500    1.04999
+       0.600    1.03903
+       0.700    1.02499
+       0.800    1.00752
+       0.900    0.98629
+       1.000    0.96095
+       1.100    0.93117
+       1.200    0.89662
+       1.300    0.85694
+       1.400    0.81184
+       1.500    0.76097
+       1.600    0.70404
+    </tableData>
+  </table>
+  <!-- same model at J = 0 against helical tip Mach (sea-level Reynolds number with it), 1 at Mach 0.6 -->
+  <table name="CT_MACH" type="internal">
+    <tableData>
+       0.200    0.956
+       0.250    0.976
+       0.300    0.971
+       0.350    0.954
+       0.400    0.969
+       0.450    0.983
+       0.500    0.981
+       0.550    0.978
+       0.600    1.000
+       0.650    1.015
+       0.700    0.987
+       0.750    1.002
+       0.800    1.008
+       0.850    1.025
+       0.900    1.034
+       0.950    0.909
+    </tableData>
+  </table>
+  <table name="CP_MACH" type="internal">
+    <tableData>
+       0.200    0.946
+       0.250    0.959
+       0.300    0.958
+       0.350    0.948
+       0.400    0.961
+       0.450    0.974
+       0.500    0.976
+       0.550    0.980
+       0.600    1.000
+       0.650    1.016
+       0.700    1.006
+       0.750    1.029
+       0.800    1.056
+       0.850    1.103
+       0.900    1.164
+       0.950    1.083
+    </tableData>
+  </table>
+</propeller>

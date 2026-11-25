@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!-- The feet are the tips of the propeller guards' four posts, one under each motor axis: the lowest points of
+     meshes/body.glb as Visual.xml places it, 35.355 mm out on each axis and 15.43 mm under the CG.
+     Spring and damping are chosen, not measured: 1.0 mm static deflection under 45 g
+     (k = m g / (4 * 0.001 m) = 110 N/m per foot) and a heave damping ratio of 0.7
+     (c = 2 * 0.7 * sqrt(4 k m) / 4 = 1.56 N s/m per foot), which damps the roll and pitch rocking at 0.92 and 0.85.
+     Friction: plastic on the ground, chosen. -->
+<ground_reactions>
+  <contact type="STRUCTURE" name="M1_foot">
+    <location unit="M"> <x> -0.035355 </x> <y> 0.035355 </y> <z> -0.01543 </z> </location>
+    <static_friction> 0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="N/M"> 110 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 1.56 </damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="M2_foot">
+    <location unit="M"> <x> 0.035355 </x> <y> 0.035355 </y> <z> -0.01543 </z> </location>
+    <static_friction> 0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="N/M"> 110 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 1.56 </damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="M3_foot">
+    <location unit="M"> <x> 0.035355 </x> <y> -0.035355 </y> <z> -0.01543 </z> </location>
+    <static_friction> 0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="N/M"> 110 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 1.56 </damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="M4_foot">
+    <location unit="M"> <x> -0.035355 </x> <y> -0.035355 </y> <z> -0.01543 </z> </location>
+    <static_friction> 0.8 </static_friction>
+    <dynamic_friction> 0.5 </dynamic_friction>
+    <spring_coeff unit="N/M"> 110 </spring_coeff>
+    <damping_coeff unit="N/M/SEC"> 1.56 </damping_coeff>
+  </contact>
+</ground_reactions>

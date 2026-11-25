@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<propeller name="Hobbywing MFP 24x8.0" version="1.1">
+  <!-- prop 1.71e-3 (107 g, 33.5 g blades spread as chord^2 over the STEP sections) + motor bell 1.2e-4 (chosen, no evidence) -->
+  <ixx unit="KG*M2"> 1.83e-03 </ixx>
+  <diameter unit="IN"> 24 </diameter>
+  <numblades> 2 </numblades>
+  <constspeed> 0 </constspeed>
+
+  <!-- J = 0: mean of the 22 Hobbywing 54 V rows, rows spread -3.0/+1.6 % (12S rows differ as much); J shape: BEMT on 3112_propeller.step, chosen polar -->
+  <table name="C_THRUST" type="internal">
+    <tableData>
+      0.00   0.07967
+      0.05   0.07444
+      0.10   0.06874
+      0.15   0.06255
+      0.20   0.05586
+      0.25   0.04865
+      0.30   0.04101
+      0.35   0.03293
+      0.40   0.02444
+      0.45   0.01552
+      0.50   0.00608
+      0.55  -0.00407
+      0.60  -0.01469
+    </tableData>
+  </table>
+
+  <!-- J = 0: mean of the 22 rows, spread -4.0/+2.3 %; J shape: same BEMT, chosen polar -->
+  <table name="C_POWER" type="internal">
+    <tableData>
+      0.00   0.02359
+      0.05   0.02345
+      0.10   0.02309
+      0.15   0.02246
+      0.20   0.02150
+      0.25   0.02014
+      0.30   0.01831
+      0.35   0.01596
+      0.40   0.01301
+      0.45   0.00938
+      0.50   0.00492
+      0.55  -0.00059
+      0.60  -0.00717
+    </tableData>
+  </table>
+
+  <!-- H-force C_H = H/(rho n^2 D^4) vs mu = V_inplane/(n D): edgewise BEMT at J = 0, 3777 rpm, chosen polar -->
+  <!-- read by PteroLabs' JSBSim fork (PteroLabsAI/jsbsim, 74748c2e and later); stock JSBSim logs "Unknown table type" and applies no in-plane force -->
+  <table name="C_INPLANE_FORCE" type="internal">
+    <tableData>
+      0.000  0.000000
+      0.025  0.000190
+      0.050  0.000378
+      0.075  0.000563
+      0.100  0.000745
+      0.150  0.001089
+      0.200  0.001385
+      0.250  0.001635
+      0.300  0.001851
+      0.350  0.002042
+      0.400  0.002214
+      0.500  0.002524
+    </tableData>
+  </table>
+</propeller>

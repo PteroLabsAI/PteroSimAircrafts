@@ -11,7 +11,7 @@
   <vtailarea unit="M2"> 0.0266 </vtailarea>  <!-- both fins, streamwise slices y_cad 38..243 (up) and -21..-217 (down) integrated, exposed part only -->
   <vtailarm unit="M"> 0.2042 </vtailarm>  <!-- fin mean quarter-chord x=0.4930 to the nominal CG x=0.2888 -->
   <location name="AERORP" unit="M">  <!-- AVL neutral point (AVL run at alpha 6: Xnp 0.301458 m = 23.1 % gross MAC; 0.3008 at alpha 2, 0.3022 at alpha 10).
-                                          ATLAS convention: Aero.xml writes no Cm_alpha, JSBSim carries the lift across the AERORP-to-CG arm (12.7 mm at the nominal CG, static margin +4.2 % MAC).
+                                          Aero.xml writes no Cm_alpha: JSBSim carries the lift across the AERORP-to-CG arm (12.7 mm at the nominal CG, static margin +4.2 % MAC).
                                           All moment derivatives in Aero.xml are AVL's values about this point. z = AVL Zref, the chord line at the MAC station, where those moments were taken.
                                           Fuselage not in AVL: Munk slender-body estimate would move the NP 5.6 mm forward, not applied. -->
     <x> 0.3015 </x>

@@ -7,7 +7,7 @@ Vertical Lift Technology project; under the NASA media usage guidelines (nasa.go
 NASA's 3D model files "generally are not subject to copyright in the United States". NASA is acknowledged here and
 does not endorse PteroSim. No NASA insignia, logotype or identifier appears on the meshes or their textures.
 
-Changes made here (scripts/ holds the pipeline): the geometry was tessellated with OpenVSP 3.55 and split by
+Changes made here: the geometry was tessellated with OpenVSP 3.55 and split by
 component; PteroLabs modelled the detail NASA's concept model leaves out (landing gear struts and torque links, the
 exhaust, the direct-jet thruster's fixed and turning cones with their vanes), unwrapped the result, and painted and
 baked its own textures: the livery, access panels, steps, the circulation-control slot and the lettering "Orca",

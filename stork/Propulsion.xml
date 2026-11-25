@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<!-- Two turboshafts on one shaft through the combiner gearbox and cross shafts [S18 p.5, Fig 3]. Rotor 1 holds the shaft (transmission, all
+     four rotors' inertia) on engine 0, the combiner; rotors 2-4 take its speed through ExternalRPM (rotor 1 loads first) and are billed on its
+     brake. JSBSim wants an engine per thruster: the turboshafts, engines 1 and 2, ride rotors 2 and 3, which read them the shaft's speed and
+     ignore their power, which the drive system passes to the combiner (Systems/stork_drive.xml). Engine 3 is a placeholder.
+     Senses: CCW = +1 [L6 rotate 1, -1, -1, 1]. Shafts vertical: blades Y rotation 90 [VSP], incid_hub 0, cant_hub 0 [L6]. -->
+
+<propulsion>
+
+  <engine file="stork_combiner" name="rotor_1">
+    <thruster file="stork_rotor_master">
+      <location unit="FT"> <x> -12.365 </x> <y>  12.365 </y> <z> 2.29 </z> </location>  <!-- front right [VSP Rotor-1-Blades] -->
+      <orient unit="DEG"> <roll> 0.0 </roll> <pitch> 90.0 </pitch> <yaw> 0.0 </yaw> </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+
+  <engine file="stork_turboshaft" name="rotor_2">
+    <feed> 0 </feed>
+    <thruster file="stork_rotor_slave">
+      <location unit="FT"> <x> -12.365 </x> <y> -12.365 </y> <z> 2.29 </z> </location>  <!-- front left [VSP Rotor-2-Blades] -->
+      <orient unit="DEG"> <roll> 0.0 </roll> <pitch> 90.0 </pitch> <yaw> 0.0 </yaw> </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+
+  <engine file="stork_turboshaft" name="rotor_3">
+    <feed> 0 </feed>
+    <thruster file="stork_rotor_slave">
+      <location unit="FT"> <x> 12.365 </x> <y>  12.365 </y> <z> 5.5 </z> </location>  <!-- rear right [VSP Rotor-3-Blades] -->
+      <orient unit="DEG"> <roll> 0.0 </roll> <pitch> 90.0 </pitch> <yaw> 0.0 </yaw> </orient>
+      <sense> -1 </sense>
+    </thruster>
+  </engine>
+
+  <engine file="stork_shaft" name="rotor_4">
+    <thruster file="stork_rotor_slave">
+      <location unit="FT"> <x> 12.365 </x> <y> -12.365 </y> <z> 5.5 </z> </location>  <!-- rear left [VSP Rotor-4-Blades] -->
+      <orient unit="DEG"> <roll> 0.0 </roll> <pitch> 90.0 </pitch> <yaw> 0.0 </yaw> </orient>
+      <sense> 1 </sense>
+    </thruster>
+  </engine>
+
+  <tank type="FUEL" number="0">
+    <location unit="FT"> <x> 4.172 </x> <y> 0.0 </y> <z> -3.37 </z> </location>  <!-- the VSP part FuelTank-1-100_FULL -->
+    <capacity unit="LBS"> 179.0 </capacity>  <!-- fuel tank capacity [S18 Table 3] -->
+    <contents unit="LBS"> 179.0 </contents>  <!-- full; DGW - WE - payload - Wtrap gives 180 [S18, L6]: Table 3 rounds -->
+    <type> JET-A </type>
+  </tank>
+
+</propulsion>

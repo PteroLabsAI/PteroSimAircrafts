@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<mass_balance>
+  <emptywt unit="KG"> 0.045 </emptywt> <!-- kg, IDSIA paper: total mass including the battery -->
+  <!-- CG x: -0.123 mm forward of the motor centre, train flights, mean of 12 per-flight trims (sd 0.37 mm).
+       CG y: +0.162 mm left of the motor centre, train flights, mean of 12 per-flight trims (sd 0.10 mm).
+       The trim is a CG offset or a thrust mismatch between props; the data cannot tell them apart.
+       CG height not measured: taken in the circuit-board plane, where Crazyflow's cf21B model has its centre of mass. -->
+  <location name="CG" unit="M"> <x> 0.000123 </x> <y> -0.000162 </y> <z> 0 </z> </location>
+  <ixx unit="KG*M2"> 3.2300e-05 </ixx> <!-- kg m^2, train flights (Crazyflow cf21B 2.5e-5) -->
+  <iyy unit="KG*M2"> 3.7900e-05 </iyy> <!-- kg m^2, train flights (Crazyflow cf21B 2.8e-5) -->
+  <izz unit="KG*M2"> 5.4600e-05 </izz> <!-- kg m^2, train flights with kM and Jr fixed (Crazyflow cf21B 4.9e-5) -->
+  <ixy unit="KG*M2"> 0 </ixy>
+  <ixz unit="KG*M2"> 0 </ixz>
+  <iyz unit="KG*M2"> 0 </iyz>
+</mass_balance>

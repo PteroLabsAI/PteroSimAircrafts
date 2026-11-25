@@ -1,0 +1,81 @@
+# ArduPlane SITL parameters for x1_skyracer (X1 SkyRacer):
+#   sim_vehicle.py -v ArduPlane --model JSON:<host> -w --add-param-file=<this>
+# Self-contained: with --model JSON the binary loads no frame defaults. Anything not listed
+# is ArduPlane's default. Without -w, values saved in eeprom.bin override this file.
+# Lines stay under 99 characters: AP_Param reads a defaults file 99 bytes at a time.
+
+# Eight lift fans, the four ducts each a coaxial pair: OctaQuad X with front/rear throttle
+# factors, set by ardupilot_x1_skyracer_motors.lua (scripting matrix, Q_FRAME_CLASS 15).
+# The Lua file must be in scripts/ under the SITL working directory.
+# With no control surfaces the craft flies Q modes only; ENABLE 2 starts AUTO in VTOL, so every
+# mission leg is hovered.
+Q_ENABLE 2
+Q_FRAME_CLASS 15
+SCR_ENABLE 1
+
+# No fixed-wing flight: -1 turns Q-assist off (arming refuses the default 0), RTL flies QRTL.
+Q_ASSIST_SPEED -1
+Q_RTL_MODE 3
+
+# Controls.xml channel N drives engine N. Each fan takes the OctaQuad X motor at its corner
+# with its spin (the Lua file's table); motors 1-4 spin as the lower fans.
+# SERVO1-8: FL upper M5, FL lower M2, FR upper M6, FR lower M1, RL upper M8, RL lower M3,
+# RR upper M7, RR lower M4. Motor PWM spans 1000..2000 (Q_M_PWM_MIN/MAX), the simulator's 0..1.
+SERVO1_FUNCTION 37
+SERVO2_FUNCTION 34
+SERVO3_FUNCTION 38
+SERVO4_FUNCTION 33
+SERVO5_FUNCTION 40
+SERVO6_FUNCTION 35
+SERVO7_FUNCTION 39
+SERVO8_FUNCTION 36
+
+# Engines 8-9, the pushers, are forward throttle. Full PWM span: the simulator reads
+# (PWM - 1000) / 1000, and the default 1100..1900 would leave them at a tenth when idle.
+SERVO9_FUNCTION 70
+SERVO10_FUNCTION 70
+SERVO9_MIN 1000
+SERVO9_MAX 2000
+SERVO10_MIN 1000
+SERVO10_MAX 2000
+
+# Forward pitch past Q_FWD_PIT_LIM (3 deg) is flown on the pushers, in every Q mode and AUTO.
+# Gain = weight / combined pusher thrust, as its documentation asks: 3500 / (2 x 592 lbf).
+Q_FWD_THR_USE 2
+Q_FWD_THR_GAIN 2.96
+
+# Static thrust fits (1-e)u + eu^2 with e 1.01-1.02 for every fan: a square law.
+Q_M_THST_EXPO 1.0
+# Collective at hover is the rear fans' thrust (throttle factor 1): their hover duty 0.7835
+# in ArduPilot's units, ((0.7835 - 0.15) / 0.8)^2; learnt in flight (Q_M_HOVER_LEARN 2).
+Q_M_THST_HOVER 0.63
+
+# The CG sits behind the lift centre: rear ducts carry 1.65 x the front ones in a hover, which
+# the Lua file's throttle factors put into collective thrust.
+# TODO attitude gains, from 1000 lbf per fan, a 0.15 s spool lag and 0.40/0.49 ft of fan
+# torque per lbf: rate loops cross near 3.5 rad/s (pitch at its default 0.25), angle loops
+# near 2 rad/s. The default angle P 4.5 would sit above the rate loops and oscillate.
+Q_A_RAT_RLL_P 0.10
+Q_A_RAT_RLL_I 0.10
+Q_A_RAT_YAW_P 1.8
+Q_A_RAT_YAW_I 0.18
+Q_A_ANG_RLL_P 1.8
+Q_A_ANG_PIT_P 1.8
+Q_A_ANG_YAW_P 1.2
+# Yaw comes from fan torque alone, about 40 deg/s/s at hover; commands are shaped to half.
+Q_A_ACC_Y_MAX 20
+
+# SITL's own accelerometer calibration (Tools/autotest/default_params/quadplane.parm), which
+# a JSON run never loads: offsets of exactly zero read as "3D Accel calibration needed".
+INS_ACCOFFS_X 0.001
+INS_ACCOFFS_Y 0.001
+INS_ACCOFFS_Z 0.001
+INS_ACCSCAL_X 1.001
+INS_ACCSCAL_Y 1.001
+INS_ACCSCAL_Z 1.001
+INS_ACC2OFFS_X 0.001
+INS_ACC2OFFS_Y 0.001
+INS_ACC2OFFS_Z 0.001
+INS_ACC2SCAL_X 1.001
+INS_ACC2SCAL_Y 1.001
+INS_ACC2SCAL_Z 1.001

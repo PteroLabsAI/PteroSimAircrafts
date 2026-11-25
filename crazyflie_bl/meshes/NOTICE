@@ -1,0 +1,48 @@
+The meshes in this folder are converted from the cf21B STL files of Crazyflow
+(https://github.com/learnsyslab/crazyflow, formerly utiasDSL/crazyflow, commit
+c95f69bc54f830e859fee4ac5734bf571acd81f3, folder crazyflow/drones/assets/cf21B):
+
+  body.glb      cf21B_pcb, cf21B_motors, cf21B_prop-guards, cf21B_connectors, cf21B_connector-pins,
+                cf21B_battery and cf21B_battery-holder, one node each
+  prop_ccw.glb  cf21B_PropL
+  prop_cw.glb   cf21B_PropR
+
+placed and coloured as Crazyflow's crazyflow/drones/cf21B_500.xml places and colours them. Changes made here:
+scaled from millimetres to metres, vertices closer than 1 micrometre merged, shaded smooth below 30 degrees,
+the MJCF colours converted from sRGB to linear values, a roughness of 0.5 chosen. The geometry is otherwise
+unchanged, and its frame is the source's (x forward, y left, z up, origin at the centre of the four motor axes
+in the circuit-board plane).
+
+Licence. Crazyflow's repository is distributed under the MIT License, reproduced below, and packages these
+files under it. Whether the files are Crazyflow's to license is not established:
+
+  - The STL files carry an Autodesk export header and name no author, and no public CAD source of them is
+    known.
+  - In the same Crazyflow folder, cf_led-diffuser.stl (not used here) is byte-identical to led-diffuser.stl in
+    Bitcraze's bitcraze-mechanics repository (https://github.com/bitcraze/bitcraze-mechanics, commit
+    d9f18d7147d66fb2a8c53775ef9d5761e6536e78), which Bitcraze licenses under CC BY-NC-SA 3.0.
+  - The propeller guards, cf21B_prop-guards.stl, lie on the surface of Bitcraze's
+    models/CF21-BL_guards_v1_40k_vertices.stl from that repository, in the same frame, to within 0.003 mm for
+    95 % of their vertices: it is the same guard geometry, tessellated differently.
+  - The circuit board, motors, propellers, connectors and battery holder have no counterpart in that
+    repository.
+
+Crazyflow's licence:
+
+The MIT License (MIT)
+Copyright © 2025 Martin Schuck
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the “Software”), to deal in the Software without restriction, including without
+limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.

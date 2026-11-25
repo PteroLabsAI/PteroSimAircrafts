@@ -1,0 +1,17 @@
+The meshes in this folder are built from NASA's OpenVSP model of its six-seat Quadrotor concept, collective-control
+version (file quadcollflap.vsp3, sha256 a2b582d8b0e5ecdda9314f6e6fd36837fc975837919d64a88a6252dc58346ce4, in
+quadrotor-vsp.zip, linked from https://www.nasa.gov/reference/uam-refs/). The model is one of NASA's reference
+vehicles for Urban Air Mobility; under the NASA media usage guidelines (nasa.gov/nasa-brand-center/images-and-media)
+NASA's 3D model files "generally are not subject to copyright in the United States". NASA is acknowledged here and
+does not endorse PteroSim. No NASA insignia, logotype or identifier appears on the meshes or their textures.
+
+Changes made here: the geometry was tessellated with OpenVSP 3.56 and split by component. PteroLabs rebuilt the
+airframe as one closed hull with blended joints, cut the doors and the windscreen as real openings, modelled the
+detail the concept model leaves out (door grooves and levers, grab bars, boarding steps, roof slots and side
+louvres, panel seams and fasteners, a pitot, an antenna, blade cuffs), unwrapped the result, and painted and baked
+its own textures in four liveries: taxi, rescue, liner and police. The police livery carries the word "POLICE" and
+no real force's insignia.
+
+Each livery folder holds body.glb, the airframe, in the flight model's frame (X aft, Y right, Z up, origin at the
+VSP file's Center-Of-Mass marker), and rotor_1.glb to rotor_4.glb, each rotor about its own hub and numbered as in
+Propulsion.xml; metres.

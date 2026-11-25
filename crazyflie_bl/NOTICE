@@ -1,0 +1,43 @@
+This aircraft is a JSBSim model of Bitcraze's Crazyflie 2.1 Brushless nano quadrotor in the configuration of
+the IDSIA nano-drone system-identification benchmark, written by PteroLabs in 2026, with meshes converted from
+the Crazyflow simulator's cf21B model.
+
+The flight model (crazyflie_bl.xml, the files it assembles, Engines/, Systems/, Battery.xml and initGrnd.xml)
+is PteroLabs' work, distributed under the GNU General Public License v3.0; see LICENSE in this folder for its
+text. Its numbers come from:
+
+  Busetto et al., "Nonlinear System Identification Nano-drone Benchmark", arXiv:2512.14450 (2025): the
+  vehicle's configuration and mass, and the flight data of its training flights (chirp, random, square) on
+  which the thrust, climb-loss, rotor-drag, motor, ESC, battery-resistance, rotor-inertia, body-inertia and
+  CG-trim values were identified; the battery's capacity.
+    https://arxiv.org/abs/2512.14450
+    https://github.com/idsia-robotics/nanodrone-sysid-benchmark
+
+  Bitcraze crazyflie-firmware (GPL-3.0), commit 9912584c85db92dbbba14334ffed20ebabba463e: the arm length
+  (ARM_LENGTH) and the thrust-to-torque ratio (THRUST2TORQUE) in
+  src/platform/interface/platform_defaults_cf21bl.h, the motor numbering in
+  src/modules/src/power_distribution_quadrotor.c.
+    https://github.com/bitcraze/crazyflie-firmware
+
+  Bitcraze's Crazyflie 2.1 Brushless datasheet and product pages: the frame, the 55-35 propeller, the
+  08028-10000KV motor's winding resistance and its other data quoted for comparison, and which propeller turns
+  which way on which motor.
+    https://www.bitcraze.io/documentation/hardware/crazyflie_2_1_brushless/crazyflie_2_1_brushless-datasheet.pdf
+
+  Bitcraze crazyflie-firmware, docs/functional-areas/pwm-to-thrust.md: the Crazyflie board's current with its
+  motors off, in the avionics draw of Battery.xml. Bitcraze's AI-deck 1.1 datasheet: the deck's supply rating.
+    https://www.bitcraze.io/documentation/hardware/ai_deck_1_1/ai_deck_1_1-datasheet.pdf
+
+  PX4's parameter reference: the BAT_LOW_THR default, Battery.xml's low warning.
+    https://docs.px4.io/main/en/advanced_config/parameter_reference.html#BAT_LOW_THR
+
+  Crazyflow (learnsyslab/crazyflow, MIT), commit c95f69bc54f830e859fee4ac5734bf571acd81f3: the meshes
+  (meshes/NOTICE) and their placement in crazyflow/drones/cf21B_500.xml, on which the propeller-hub and foot
+  heights were measured; its inertia and rotor-inertia values are quoted for comparison.
+    https://github.com/learnsyslab/crazyflow
+
+Chosen, with no source, and marked so where they appear: the CG height (the circuit-board plane), the feet's
+spring, damping and friction, the meshes' roughness, the chase camera.
+
+Crazyflie is a trademark of Bitcraze AB. The name says which vehicle this models; Bitcraze does not endorse
+PteroSim, and this model is not a Bitcraze product.
