@@ -81,7 +81,7 @@
             <damping_coeff_rebound unit="LBS/FT/SEC"> 3000 </damping_coeff_rebound>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> NONE </brake_group>
-            <retractable>0</retractable>
+            <retractable>1</retractable>
         </contact>
         <contact type="BOGEY" name="Left Skid">
             <location unit="IN">
@@ -97,7 +97,7 @@
             <damping_coeff_rebound unit="LBS/FT/SEC"> 7500 </damping_coeff_rebound>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> NONE </brake_group>
-            <retractable>0</retractable>
+            <retractable>1</retractable>
         </contact>
         <contact type="BOGEY" name="Right Skid">
             <location unit="IN">
@@ -113,7 +113,7 @@
             <damping_coeff_rebound unit="LBS/FT/SEC"> 7500 </damping_coeff_rebound>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> NONE </brake_group>
-            <retractable>0</retractable>
+            <retractable>1</retractable>
         </contact>
     </ground_reactions>
     <propulsion>
@@ -334,6 +334,50 @@
 
         </channel>
 
+        <!-- The all-moving tail combines pitch and roll for the rendered
+             surfaces. Aerodynamics still use the separate original positions. -->
+        <channel name="Visual tail positions">
+            <summer name="fcs/x15-visual-left-tail-rad">
+                <input>fcs/elevator-pos-rad</input>
+                <input>fcs/left-aileron-pos-rad</input>
+                <clipto><min>-0.26</min><max>0.61</max></clipto>
+            </summer>
+            <summer name="fcs/x15-visual-right-tail-rad">
+                <input>fcs/elevator-pos-rad</input>
+                <input>-fcs/left-aileron-pos-rad</input>
+                <clipto><min>-0.26</min><max>0.61</max></clipto>
+            </summer>
+            <pure_gain name="fcs/x15-visual-left-tail-deg">
+                <input>fcs/x15-visual-left-tail-rad</input>
+                <gain>57.29577951308232</gain>
+            </pure_gain>
+            <pure_gain name="fcs/x15-visual-right-tail-deg">
+                <input>fcs/x15-visual-right-tail-rad</input>
+                <gain>57.29577951308232</gain>
+            </pure_gain>
+        </channel>
+        <channel name="Landing Gear">
+            <kinematic name="Landing gear travel">
+                <input>gear/gear-cmd-norm</input>
+                <traverse>
+                    <setting><position>0</position><time>0</time></setting>
+                    <setting><position>1</position><time>2</time></setting>
+                </traverse>
+                <output>gear/gear-pos-norm</output>
+            </kinematic>
+            <summer name="fcs/gear-stowed-fraction">
+                <input>-gear/gear-pos-norm</input>
+                <bias>1</bias>
+            </summer>
+            <pure_gain name="fcs/nose-gear-fold-deg">
+                <input>fcs/gear-stowed-fraction</input>
+                <gain>84.164498</gain>
+            </pure_gain>
+            <pure_gain name="fcs/main-gear-fold-deg">
+                <input>fcs/gear-stowed-fraction</input>
+                <gain>107.953417</gain>
+            </pure_gain>
+        </channel>
     </flight_control>
 
     <aerodynamics>

@@ -1,0 +1,7 @@
+# ArduPlane SITL. RC5 low deploys the gear and RC5 high retracts it.
+RC5_OPTION 29
+SERVO5_FUNCTION 29
+SERVO5_MIN 1000
+SERVO5_MAX 2000
+LGR_ENABLE 1
+LGR_STARTUP 1

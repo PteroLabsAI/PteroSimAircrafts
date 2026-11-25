@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<sensors>
+  <sensor type="imu" name="imu_sensor" hz="250"/>
+</sensors>

@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <control_bindings stack="Manual" pilot="direct">
+  <binding stack="ArduPilot" channel="0" type="Aileron" in="-1 1" out="-1 1" label="elevon_roll"/>
+  <binding stack="ArduPilot" channel="1" type="Elevator" in="-1 1" out="-1 1" label="elevon_pitch"/>
+  <binding stack="ArduPilot" channel="2" type="Motor" index="0" in="0 1" out="0 1" label="xlr99"/>
+  <binding stack="ArduPilot" channel="3" type="Rudder" in="-1 1" out="-1 1" label="rudder"/>
+  <binding stack="ArduPilot" channel="4" property="gear/gear-cmd-norm" in="-1 1" out="0 1" label="landing_gear"/>
   <binding stack="Manual" channel="0" type="Aileron" in="-1 1" out="-1 1" label="elevon_roll"/>
   <binding stack="Manual" channel="1" type="Elevator" in="-1 1" out="-1 1" label="elevon_pitch"/>
   <binding stack="Manual" channel="2" type="Motor" index="0" in="0 1" out="0 1" label="xlr99"/>
