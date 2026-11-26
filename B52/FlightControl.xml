@@ -17,6 +17,14 @@
         <max>1</max>
       </clipto>
     </summer>
+    <pure_gain name="fcs/left-aileron-pos-deg">
+      <input>fcs/left-aileron-pos-norm</input>
+      <gain>28</gain>
+    </pure_gain>
+    <pure_gain name="fcs/right-aileron-pos-deg">
+      <input>fcs/right-aileron-pos-norm</input>
+      <gain>28</gain>
+    </pure_gain>
     <summer name="fcs/elevator-pos-norm">
       <input>fcs/elevator-cmd-norm</input>
       <input>fcs/pitch-trim-cmd-norm</input>

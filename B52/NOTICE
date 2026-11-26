@@ -22,7 +22,7 @@ Visual
 https://sketchfab.com/3d-models/boeing-b-52-stratofortress-38b0c64bd552431394efa8625d7f5144
 https://creativecommons.org/licenses/by/4.0/
 
-The GLB is included as downloaded. Visual.xml positions this static mesh at
-the empty centre of gravity. Its landing gear and control surfaces do not
-animate. The visual depicts a later Stratofortress configuration, while the
-flight dynamics use the B-52F data.
+The downloaded mesh depicts a later Stratofortress configuration. The two
+trailing-edge panels between its flap sections have been split out to
+represent the B-52F ailerons. They pivot with the corresponding JSBSim roll
+control outputs. The remaining mesh is fixed, including the landing gear.

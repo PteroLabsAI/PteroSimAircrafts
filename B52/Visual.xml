@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <visual>
   <fixture file="meshes/stratofortress.glb" xyz="-6.453 0 0.7" rpy="0 0 0" />
+  <!-- The trailing-edge panels between the flap sections pivot in opposite directions. -->
+  <surface name="left_aileron" file="meshes/left_aileron.glb" xyz="0 0 0" rpy="0 0 0" source="fcs/left-aileron-pos-deg" axis="-0.5145 -0.8575 0" hinge="-3.723 -11.61 1.074" limit="28" />
+  <surface name="right_aileron" file="meshes/right_aileron.glb" xyz="0 0 0" rpy="0 0 0" source="fcs/right-aileron-pos-deg" axis="0.5145 -0.8575 0" hinge="-3.723 11.61 1.065" limit="28" />
   <chase xyz="0 0 5" rpy="0 -12 0" length="95" />
 </visual>
