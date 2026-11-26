@@ -12,4 +12,18 @@
   <binding stack="Manual" channel="2" type="Motor" index="5" in="0 1" out="0 1" label="J57 6" />
   <binding stack="Manual" channel="2" type="Motor" index="6" in="0 1" out="0 1" label="J57 7" />
   <binding stack="Manual" channel="2" type="Motor" index="7" in="0 1" out="0 1" label="J57 8" />
+  <!-- PX4 has one throttle function, routed to all eight turbines. -->
+  <binding stack="PX4" channel="1" type="Elevator" in="-1 1" out="-1 1" />
+  <binding stack="PX4" channel="2" type="Aileron" in="-1 1" out="-1 1" />
+  <binding stack="PX4" channel="3" type="Rudder" in="-1 1" out="-1 1" />
+  <binding stack="PX4" channel="3" property="fcs/steer-cmd-norm" in="-1 1" out="-1 1" invert="1" />
+  <binding stack="PX4" channel="4" type="Flaps" in="0 1" out="0 1" />
+  <binding stack="PX4" channel="0" type="Motor" index="0" in="0 1" out="0 1" label="J57 1" />
+  <binding stack="PX4" channel="0" type="Motor" index="1" in="0 1" out="0 1" label="J57 2" />
+  <binding stack="PX4" channel="0" type="Motor" index="2" in="0 1" out="0 1" label="J57 3" />
+  <binding stack="PX4" channel="0" type="Motor" index="3" in="0 1" out="0 1" label="J57 4" />
+  <binding stack="PX4" channel="0" type="Motor" index="4" in="0 1" out="0 1" label="J57 5" />
+  <binding stack="PX4" channel="0" type="Motor" index="5" in="0 1" out="0 1" label="J57 6" />
+  <binding stack="PX4" channel="0" type="Motor" index="6" in="0 1" out="0 1" label="J57 7" />
+  <binding stack="PX4" channel="0" type="Motor" index="7" in="0 1" out="0 1" label="J57 8" />
 </control_bindings>

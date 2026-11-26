@@ -13,6 +13,8 @@ tandem undercarriage geometry. The JSBSim aerodynamic coefficients, inertia,
 damper and spring rates, and thrust lapse are estimates. The default tank
 fill is 40%. Landing gear, flaps and brakes respond to JSBSim properties.
 The Manual stick pilot drives roll, pitch, yaw and all eight throttles.
+The PX4 SITL profile in firmwares/px4_B52 uses one motor output for all eight
+turbines and separate outputs for elevator, aileron, rudder and flaps.
 
 Visual
 
