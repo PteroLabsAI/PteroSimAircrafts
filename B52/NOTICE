@@ -39,7 +39,7 @@ photographs EC65-885, ECN-14284, EC97-44105-29 and EC01-0079-3. The notch is
 6 ft wide and up to 8 ft deep, ending at the flap's leading edge. FlightGear's
 two wing pylons are removed.
 
-The geometry is aligned to the JSBSim model datum and the drag chute is
+The geometry is measured from the loaded CG and the drag chute is
 omitted. The ailerons are separate glTF files, meshes/left_aileron.glb and
 meshes/right_aileron.glb, and follow the corresponding JSBSim roll control
 outputs. The remaining mesh is fixed, including the landing gear.
