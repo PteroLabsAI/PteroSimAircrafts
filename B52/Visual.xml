@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<visual>
+  <fixture file="meshes/stratofortress.glb" xyz="-6.453 0 0.7" rpy="0 0 0" />
+  <chase xyz="0 0 5" rpy="0 -12 0" length="95" />
+</visual>

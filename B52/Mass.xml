@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<mass_balance>
+  <!--Estimated empty inertia about the model CG. Fuel tanks add mass and inertia at their physical locations.-->
+  <ixx unit="KG*M2">6200000</ixx>
+  <iyy unit="KG*M2">9500000</iyy>
+  <izz unit="KG*M2">15500000</izz>
+  <emptywt unit="LBS">173599</emptywt>
+  <location name="CG" unit="M">
+    <x>21.0</x>
+    <y>0.0</y>
+    <z>0.1</z>
+  </location>
+</mass_balance>
