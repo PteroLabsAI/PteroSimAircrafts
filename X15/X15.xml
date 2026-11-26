@@ -347,14 +347,31 @@
                 <input>-fcs/left-aileron-pos-rad</input>
                 <clipto><min>-0.26</min><max>0.61</max></clipto>
             </summer>
-            <pure_gain name="fcs/x15-visual-left-tail-deg">
+            <pure_gain name="fcs/x15-left-tail-target-deg">
                 <input>fcs/x15-visual-left-tail-rad</input>
                 <gain>57.29577951308232</gain>
             </pure_gain>
-            <pure_gain name="fcs/x15-visual-right-tail-deg">
+            <pure_gain name="fcs/x15-right-tail-target-deg">
                 <input>fcs/x15-visual-right-tail-rad</input>
                 <gain>57.29577951308232</gain>
             </pure_gain>
+            <!-- NASA-TM-X-514 reports a 25 deg/s horizontal surface limit. -->
+            <actuator name="fcs/x15-visual-left-tail-deg">
+                <input>fcs/x15-left-tail-target-deg</input>
+                <rate_limit>25</rate_limit>
+            </actuator>
+            <actuator name="fcs/x15-visual-right-tail-deg">
+                <input>fcs/x15-right-tail-target-deg</input>
+                <rate_limit>25</rate_limit>
+            </actuator>
+            <pure_gain name="fcs/x15-rudder-target-deg">
+                <input>fcs/rudder-pos-rad</input>
+                <gain>57.29577951308232</gain>
+            </pure_gain>
+            <actuator name="fcs/x15-visual-rudder-deg">
+                <input>fcs/x15-rudder-target-deg</input>
+                <rate_limit>45</rate_limit>
+            </actuator>
         </channel>
         <channel name="Landing Gear">
             <kinematic name="Landing gear travel">
