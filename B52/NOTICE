@@ -24,8 +24,22 @@ Lee Elliott's FlightGear B-52F mesh (B-52F-002-027e.ac) and livery
 distributed under the GNU General Public License, version 2 or later.
 https://svn.code.sf.net/p/flightgear/fgaddon/trunk/Aircraft/B-52F/Models/
 
-The editable Blender source with packed livery is in source/flightgear-b52f.blend.
-Its Airframe, LWingAileron and RWingAileron collections export separately as
-Y-up binary glTF files. The conversion aligns the geometry to the JSBSim model
-datum and omits the drag chute. The ailerons follow the corresponding JSBSim
-roll control outputs. The remaining mesh is fixed, including the landing gear.
+The mesh is painted as NASA's NB-52B 52-0008, the X-15 launch aircraft, after
+NASA photographs EC90-262-27, EC97-44163-16 and ECN-14283: bare aluminium, a
+black radome, full-colour national insignia and the NASA band on the fin. The
+base colour, normal and metallic-roughness textures are derived from the
+FlightGear livery, whose panel lines become the seams of the normal map. The
+flight model remains the B-52F's. NASA does not endorse PteroSim.
+
+The X-15 pylon under the right wing and the notch in the right inboard flap
+are added. The pylon's position follows NASA TN D-723, figure 1(b): the X-15
+hung 17.33 ft right of the centreline with its top 3.58 ft below the wing. Its
+length, outline, details and three hooks are approximated from NASA
+photographs EC65-885, ECN-14284, EC97-44105-29 and EC01-0079-3. The notch is
+6 ft wide and up to 8 ft deep, ending at the flap's leading edge. FlightGear's
+two wing pylons are removed.
+
+The geometry is aligned to the JSBSim model datum and the drag chute is
+omitted. The ailerons are separate glTF files, meshes/left_aileron.glb and
+meshes/right_aileron.glb, and follow the corresponding JSBSim roll control
+outputs. The remaining mesh is fixed, including the landing gear.
