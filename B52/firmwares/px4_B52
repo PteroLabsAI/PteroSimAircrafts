@@ -29,6 +29,9 @@ param set-default PWM_MAIN_FUNC2 201
 param set-default PWM_MAIN_FUNC3 202
 param set-default PWM_MAIN_FUNC4 203
 param set-default PWM_MAIN_FUNC5 204
+# Offboard actuator controls 1 and 2 drive wheel brakes and ground steering.
+param set-default PWM_MAIN_FUNC6 301
+param set-default PWM_MAIN_FUNC7 302
 
 # Equivalent airspeeds in metres per second.
 param set-default FW_AIRSPD_STALL 73

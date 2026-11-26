@@ -14,15 +14,18 @@ damper and spring rates, and thrust lapse are estimates. The default tank
 fill is 40%. Landing gear, flaps and brakes respond to JSBSim properties.
 The Manual stick pilot drives roll, pitch, yaw and all eight throttles.
 The PX4 SITL profile in firmwares/px4_B52 uses one motor output for all eight
-turbines and separate outputs for elevator, aileron, rudder and flaps.
+turbines and separate outputs for elevator, aileron, rudder, flaps,
+wheel brakes and ground steering.
 
 Visual
 
-"Boeing B-52 Stratofortress" by bohmerang is licensed under CC BY 4.0.
-https://sketchfab.com/3d-models/boeing-b-52-stratofortress-38b0c64bd552431394efa8625d7f5144
-https://creativecommons.org/licenses/by/4.0/
+Lee Elliott's FlightGear B-52F mesh (B-52F-002-027e.ac) and livery
+(B-52F-02.rgb) are adapted from FlightGear FGAddon. The adapted model is
+distributed under the GNU General Public License, version 2 or later.
+https://svn.code.sf.net/p/flightgear/fgaddon/trunk/Aircraft/B-52F/Models/
 
-The downloaded mesh depicts a later Stratofortress configuration. The two
-trailing-edge panels between its flap sections have been split out to
-represent the B-52F ailerons. They pivot with the corresponding JSBSim roll
-control outputs. The remaining mesh is fixed, including the landing gear.
+The editable Blender source with packed livery is in source/flightgear-b52f.blend.
+Its Airframe, LWingAileron and RWingAileron collections export separately as
+Y-up binary glTF files. The conversion aligns the geometry to the JSBSim model
+datum and omits the drag chute. The ailerons follow the corresponding JSBSim
+roll control outputs. The remaining mesh is fixed, including the landing gear.

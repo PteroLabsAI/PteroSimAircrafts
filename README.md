@@ -57,7 +57,7 @@ Third-party licences and notices remain in the directories of the relevant aircr
 
 ## Credits
 
-- `B52` adapts Lee Elliott's FlightGear B-52F flight dynamics and uses bohmerang's Stratofortress mesh.
+- `B52` adapts Lee Elliott's FlightGear B-52F flight dynamics, exterior mesh, and livery.
   [B52/NOTICE](B52/NOTICE) records the sources and licences.
 - `explora` is derived from the [eXplora Tailsitter VTOL](https://github.com/robustini/eXploraVTOL) by
   Marco Robustini (concept design, tuning and flight tests), Davide Silimbani (3D design), Roberto Casoni,
