@@ -64,7 +64,7 @@
   <contact type="BOGEY" name="OUTRIGGER_LEFT">
     <location unit="M">
       <x>31.1</x>
-      <y>-23.0</y>
+      <y>-22.7</y>
       <z>-2.75</z>
     </location>
     <static_friction>0.75</static_friction>
@@ -79,7 +79,7 @@
   <contact type="BOGEY" name="OUTRIGGER_RIGHT">
     <location unit="M">
       <x>31.1</x>
-      <y>23.0</y>
+      <y>22.7</y>
       <z>-2.75</z>
     </location>
     <static_friction>0.75</static_friction>

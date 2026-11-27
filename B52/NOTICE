@@ -9,7 +9,8 @@ https://github.com/FGMEMBERS/B-52F/blob/344df48dcb8231742615ef5f17bfb5a24b06f9cf
 
 The adaptation uses the source's wing geometry and incidence, empty weight,
 engine positions and dry thrust, fuel tank positions and capacities, and
-tandem undercarriage geometry. The JSBSim aerodynamic coefficients, inertia,
+the undercarriage's fore-and-aft positions and heights; the wheels'
+spacing across follows the mesh. The JSBSim aerodynamic coefficients, inertia,
 damper and spring rates, and thrust lapse are estimates. The default tank
 fill is 40%. Landing gear, flaps and brakes respond to JSBSim properties.
 The Manual stick pilot drives roll, pitch, yaw and all eight throttles.
