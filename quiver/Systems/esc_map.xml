@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- X6 Plus ESC throttle command -> the motor voltage (V) its speed needs, per Hobbywing 54 V row, V = rpm/Kv + R*(Q*2*pi*Kv/60 + I0) with Engines/X6PlusG2.xml -->
 <!-- Over supply-volts: the ESC holds rpm whatever the bus, until the bus is lower than that voltage (the clip to 1). Without a Battery.xml supply-volts is maxvolts, 54 V. -->
-<!-- First two points, 0 .. 0.0572: 33 -> 35 % slope extended to 0 V, extrapolated, no data. Static map: the ESC's own speed loop is not modelled. -->
+<!-- Below the 33 % row, no data: a straight line from 0 V at the command 0, the ESC's calibrated minimum (MOT_PWM_MIN 1050 us, Controls.xml), chosen so a motor armed at any idle above it turns. Static map: the ESC's own speed loop is not modelled. -->
 <system name="Quiver ESC map">
   <channel name="ESC 0">
     <fcs_function name="fcs/esc/voltage-norm[0]">
@@ -11,7 +11,6 @@
             <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
             <tableData>
             0.0000  0.000
-            0.0572  0.000
             0.3300  15.717
             0.3500  16.869
             0.3700  18.052
@@ -51,7 +50,6 @@
             <independentVar lookup="row">fcs/throttle-cmd-norm[1]</independentVar>
             <tableData>
             0.0000  0.000
-            0.0572  0.000
             0.3300  15.717
             0.3500  16.869
             0.3700  18.052
@@ -91,7 +89,6 @@
             <independentVar lookup="row">fcs/throttle-cmd-norm[2]</independentVar>
             <tableData>
             0.0000  0.000
-            0.0572  0.000
             0.3300  15.717
             0.3500  16.869
             0.3700  18.052
@@ -131,7 +128,6 @@
             <independentVar lookup="row">fcs/throttle-cmd-norm[3]</independentVar>
             <tableData>
             0.0000  0.000
-            0.0572  0.000
             0.3300  15.717
             0.3500  16.869
             0.3700  18.052
