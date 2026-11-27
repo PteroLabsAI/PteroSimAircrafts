@@ -20,6 +20,9 @@ From Project Quiver, commit 9ef9efc80db1 (2026-09-29):
   firmwares/ardupilot_quiver.param: Arrow's standard-params.param (commit a14970474c, 2026-06-17), with the changes
   SITL needs; each change is marked in the file.
 
+  firmwares/px4_quiver: its roll and pitch rate gains and its thrust curve factor are the numbers of the ArduCopter
+  parameters above, set in PX4's parameters.
+
 Other sources:
 
   Hobbywing XRotor X6 Plus G2 spec sheet and its 14S static load table with the MFP 24x8.0 prop: motor constants,
