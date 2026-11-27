@@ -3,8 +3,8 @@ Boeing B-52 Stratofortress for PteroSim
 Flight dynamics
 
 Lee Elliott's FlightGear B-52F YASim configuration is distributed under the
-GNU General Public License, version 2 or later. The original XML and licence
-are in source/. The JSBSim adaptation is distributed under the same licence.
+GNU General Public License, version 2 or later; LICENSE holds its text. The
+JSBSim adaptation is distributed under the same licence.
 https://github.com/FGMEMBERS/B-52F/blob/344df48dcb8231742615ef5f17bfb5a24b06f9cf/B-52F-yasim.xml
 
 The adaptation uses the source's wing geometry and incidence, empty weight,
