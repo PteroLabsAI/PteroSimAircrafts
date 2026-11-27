@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# @name Quiver
+# @type Multicopter
+#
+# Arrow Air's Quiver as this model builds it: motor order and senses from Propulsion.xml (ArduPilot quad X, the order
+# Controls.xml binds), rotor positions about the CG Mass.xml gives with the 30 Ah pack (21.05 kg), and the rate loop
+# from Arrow's own ArduCopter tune (ardupilot_quiver.param), which flies this model.
+#
+
+. ${R}etc/init.d/rc.mc_defaults
+
+param set-default CA_AIRFRAME 0
+param set-default MAV_TYPE 2
+
+# Propulsion.xml puts the rotors 0.44674 m out on each axis and 0.05627 m up; the CG with the pack is 0.0104 m aft and
+# 0.0437 m down, so the rotors sit 0.457 m ahead or 0.436 m behind it, 0.447 m to a side and 0.100 m above it (FRD).
+# CT is the Hobbywing X6 Plus G2 with the MFP 24x8 at full throttle, 12.5 kg a rotor (Hobbywing's 14S table); every
+# rotor has the same, so it scales the allocator without changing its split.
+param set-default CA_ROTOR_COUNT 4
+param set-default CA_ROTOR0_PX 0.457
+param set-default CA_ROTOR0_PY 0.447
+param set-default CA_ROTOR0_PZ -0.100
+param set-default CA_ROTOR0_KM 0.05
+param set-default CA_ROTOR0_CT 122.6
+param set-default CA_ROTOR1_PX -0.436
+param set-default CA_ROTOR1_PY -0.447
+param set-default CA_ROTOR1_PZ -0.100
+param set-default CA_ROTOR1_KM 0.05
+param set-default CA_ROTOR1_CT 122.6
+param set-default CA_ROTOR2_PX 0.457
+param set-default CA_ROTOR2_PY -0.447
+param set-default CA_ROTOR2_PZ -0.100
+param set-default CA_ROTOR2_KM -0.05
+param set-default CA_ROTOR2_CT 122.6
+param set-default CA_ROTOR3_PX -0.436
+param set-default CA_ROTOR3_PY 0.447
+param set-default CA_ROTOR3_PZ -0.100
+param set-default CA_ROTOR3_KM -0.05
+param set-default CA_ROTOR3_CT 122.6
+
+param set-default CA_SV_CS_COUNT 0
+
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+
+# Arrow's roll and pitch rate loop (ATC_RAT_RLL/PIT P, I, D) as the same numbers. ArduCopter scales roll and pitch to
+# +-0.5 per motor and PX4's allocator to about +-0.71 on this square quad, so here they give about 1.4 times the loop gain.
+# Yaw keeps PX4's defaults.
+param set-default MC_ROLLRATE_P 0.143
+param set-default MC_ROLLRATE_I 0.143
+param set-default MC_ROLLRATE_D 0.0092
+param set-default MC_PITCHRATE_P 0.145
+param set-default MC_PITCHRATE_I 0.145
+param set-default MC_PITCHRATE_D 0.0094
+# Arrow's MOT_THST_EXPO in PX4's THR_MDL_FAC, the same (1 - f) u + f u^2 form; ArduCopter spans it over
+# MOT_SPIN_MIN..MAX (0.10..0.95), PX4 over the whole 0..1 output.
+param set-default THR_MDL_FAC 0.74
+
+# MPC_THR_HOVER is thrust, before THR_MDL_FAC: the motor command 0.536 that holds 21.05 kg through this model's ESC map
+# (Systems/esc_map.xml) is thrust 0.26 * 0.536 + 0.74 * 0.536^2 = 0.352. PX4's first guess before it learns the
+# hover (MPC_USE_HTE).
+param set-default MPC_THR_HOVER 0.352
+param set-default SIM_BAT_ENABLE 0
+param set-default SYS_HAS_NUM_ASPD 0
+
+# No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.
+param set-default COM_RC_IN_MODE 4

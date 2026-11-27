@@ -1,7 +1,7 @@
 # Quiver (quiver)
 
 Arrow Air's Quiver Dev-Kit is a 25 kg MTOW quadcopter with four Hobbywing X6 Plus G2 motors, MFP 24x8.0 folding props
-and a 14S Tattu 4.0 pack. This model carries the 30 Ah long-endurance pack (21.4 kg at take-off). It is a JSBSim model
+and a 14S Tattu 4.0 pack. This model carries the 30 Ah long-endurance pack (21.05 kg at take-off). It is a JSBSim model
 built from Arrow Air's open hardware repository, meshes included (CERN-OHL-S-2.0; `NOTICE` names every source; Arrow
 Air does not endorse PteroSim).
 
@@ -15,10 +15,11 @@ Aero.xml        body drag per axis
 Engines/        X6PlusG2 (electric motor), MFP2480 (thrust and power tables, in-plane force)
 Systems/        esc_map.xml: throttle command to motor voltage, from Hobbywing's 54 V table
 Battery.xml     the pack (sidecar): Tattu 4.0 14S 30 Ah; Batteries/LiHV.xml is its cell curve
-Controls.xml    ArduCopter outputs to the motors and the gimbal (sidecar)
+Controls.xml    ArduCopter outputs to the motors and the gimbal, PX4 outputs to the motors (sidecar)
 Sensors.xml     imu, gps, barometer, temperature, the gimbal camera, streamed (sidecar)
 Visual.xml      meshes and the SIYI A8 mini gimbal (sidecar)
-firmwares/      ardupilot_quiver.param: Arrow's ArduCopter parameters, set up for SITL
+firmwares/      ardupilot_quiver.param: Arrow's ArduCopter parameters, set up for SITL;
+                px4_quiver: a PX4 airframe for the same quad, with Arrow's rate tune
 LICENSE, NOTICE CERN-OHL-S-2.0, sources
 ```
 
@@ -34,6 +35,10 @@ The param file keeps Arrow's battery failsafe (RTL at BATT_LOW_VOLT 48 V, land a
 fence (30 m up, 60 m out). ArduPilot reads the pack from the JSON state as an analog monitor (BATT_MONITOR 4). Before
 arming, PteroSim also sends the pack's charge, so a part-charged start shows its real percentage. The start charge is
 `initial_charge_percent` in `Battery.xml`.
+
+Under PX4 SITL, install `firmwares/px4_quiver` as airframe 22103 (`ROMFS/px4fmu_common/init.d-posix/airframes/
+22103_quiver`, LF line endings), start PX4 with `PX4_SYS_AUTOSTART=22103`, and choose PX4 for the aircraft in PteroSim.
+It takes off, holds and lands with PX4's own modes; the gimbal is bound for ArduPilot only.
 
 The model needs PteroLabs' JSBSim fork (PteroLabsAI/jsbsim) for two things: the prop's in-plane force table and the
 motors' `supply-volts`. Stock JSBSim logs "Unknown table type" for the in-plane table and applies no in-plane force.
