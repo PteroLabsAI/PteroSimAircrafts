@@ -16,7 +16,8 @@ fill is 40%. Landing gear, flaps and brakes respond to JSBSim properties.
 The Manual stick pilot drives roll, pitch, yaw and all eight throttles.
 The PX4 SITL profile in firmwares/px4_B52 uses one motor output for all eight
 turbines and separate outputs for elevator, aileron, rudder, flaps,
-wheel brakes and ground steering.
+wheel brakes, ground steering and landing gear. PX4 offboard actuator 3
+commands gear down at 0 and gear up at 1.
 
 Visual
 
@@ -43,4 +44,7 @@ two wing pylons are removed.
 The geometry is measured from the loaded CG and the drag chute is
 omitted. The ailerons are separate glTF files, meshes/left_aileron.glb and
 meshes/right_aileron.glb, and follow the corresponding JSBSim roll control
-outputs. The remaining mesh is fixed, including the landing gear.
+outputs. The landing gear and doors use the FlightGear animation curves from
+B-52F-model.xml in the same upstream directory. PteroSim samples the
+FlightGearLandingGear clip in meshes/flightgear-b52f-gear.glb using the
+JSBSim gear/gear-pos-norm property. The rest of the mesh is fixed.
