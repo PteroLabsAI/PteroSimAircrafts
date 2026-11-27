@@ -1,0 +1,46 @@
+Boeing B-52 Stratofortress for PteroSim
+
+Flight dynamics
+
+Lee Elliott's FlightGear B-52F YASim configuration is distributed under the
+GNU General Public License, version 2 or later; LICENSE holds its text. The
+JSBSim adaptation is distributed under the same licence.
+https://github.com/FGMEMBERS/B-52F/blob/344df48dcb8231742615ef5f17bfb5a24b06f9cf/B-52F-yasim.xml
+
+The adaptation uses the source's wing geometry and incidence, empty weight,
+engine positions and dry thrust, fuel tank positions and capacities, and
+the undercarriage's fore-and-aft positions and heights; the wheels'
+spacing across follows the mesh. The JSBSim aerodynamic coefficients, inertia,
+damper and spring rates, and thrust lapse are estimates. The default tank
+fill is 40%. Landing gear, flaps and brakes respond to JSBSim properties.
+The Manual stick pilot drives roll, pitch, yaw and all eight throttles.
+The PX4 SITL profile in firmwares/px4_B52 uses one motor output for all eight
+turbines and separate outputs for elevator, aileron, rudder, flaps,
+wheel brakes and ground steering.
+
+Visual
+
+Lee Elliott's FlightGear B-52F mesh (B-52F-002-027e.ac) and livery
+(B-52F-02.rgb) are adapted from FlightGear FGAddon. The adapted model is
+distributed under the GNU General Public License, version 2 or later.
+https://svn.code.sf.net/p/flightgear/fgaddon/trunk/Aircraft/B-52F/Models/
+
+The mesh is painted as NASA's NB-52B 52-0008, the X-15 launch aircraft, after
+NASA photographs EC90-262-27, EC97-44163-16 and ECN-14283: bare aluminium, a
+black radome, full-colour national insignia and the NASA band on the fin. The
+base colour, normal and metallic-roughness textures are derived from the
+FlightGear livery, whose panel lines become the seams of the normal map. The
+flight model remains the B-52F's. NASA does not endorse PteroSim.
+
+The X-15 pylon under the right wing and the notch in the right inboard flap
+are added. The pylon's position follows NASA TN D-723, figure 1(b): the X-15
+hung 17.33 ft right of the centreline with its top 3.58 ft below the wing. Its
+length, outline, details and three hooks are approximated from NASA
+photographs EC65-885, ECN-14284, EC97-44105-29 and EC01-0079-3. The notch is
+6 ft wide and up to 8 ft deep, ending at the flap's leading edge. FlightGear's
+two wing pylons are removed.
+
+The geometry is measured from the loaded CG and the drag chute is
+omitted. The ailerons are separate glTF files, meshes/left_aileron.glb and
+meshes/right_aileron.glb, and follow the corresponding JSBSim roll control
+outputs. The remaining mesh is fixed, including the landing gear.

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<flight_control name="B52">
+  <channel name="Primary flight controls">
+    <summer name="fcs/left-aileron-pos-norm">
+      <input>fcs/aileron-cmd-norm</input>
+      <input>fcs/roll-trim-cmd-norm</input>
+      <clipto>
+        <min>-1</min>
+        <max>1</max>
+      </clipto>
+    </summer>
+    <summer name="fcs/right-aileron-pos-norm">
+      <input>-fcs/aileron-cmd-norm</input>
+      <input>-fcs/roll-trim-cmd-norm</input>
+      <clipto>
+        <min>-1</min>
+        <max>1</max>
+      </clipto>
+    </summer>
+    <pure_gain name="fcs/left-aileron-pos-deg">
+      <input>fcs/left-aileron-pos-norm</input>
+      <gain>28</gain>
+    </pure_gain>
+    <pure_gain name="fcs/right-aileron-pos-deg">
+      <input>fcs/right-aileron-pos-norm</input>
+      <gain>28</gain>
+    </pure_gain>
+    <summer name="fcs/elevator-pos-norm">
+      <input>fcs/elevator-cmd-norm</input>
+      <input>fcs/pitch-trim-cmd-norm</input>
+      <clipto>
+        <min>-1</min>
+        <max>1</max>
+      </clipto>
+    </summer>
+    <summer name="fcs/rudder-pos-norm">
+      <input>fcs/rudder-cmd-norm</input>
+      <input>fcs/yaw-trim-cmd-norm</input>
+      <clipto>
+        <min>-1</min>
+        <max>1</max>
+      </clipto>
+    </summer>
+    <pure_gain name="fcs/flap-pos-norm">
+      <input>fcs/flap-cmd-norm</input>
+      <gain>1</gain>
+    </pure_gain>
+  </channel>
+  <channel name="Landing gear">
+    <kinematic name="B52 gear extension">
+      <input>gear/gear-cmd-norm</input>
+      <traverse>
+        <setting>
+          <position>0</position>
+          <time>0</time>
+        </setting>
+        <setting>
+          <position>1</position>
+          <time>14</time>
+        </setting>
+      </traverse>
+      <output>gear/gear-pos-norm</output>
+    </kinematic>
+  </channel>
+</flight_control>

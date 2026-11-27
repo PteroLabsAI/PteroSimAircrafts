@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<fdm_config name="Boeing B-52 Stratofortress" version="2.0" release="ALPHA">
+  <fileheader>
+    <description>B-52F-derived flight dynamics for PteroSim</description>
+    <note>Approximate simulation adapted from Lee Elliott’s FlightGear YASim model. See NOTICE.</note>
+  </fileheader>
+  <metrics file="Metrics.xml" />
+  <mass_balance file="Mass.xml" />
+  <ground_reactions file="Gear.xml" />
+  <propulsion file="Propulsion.xml" />
+  <flight_control file="FlightControl.xml" />
+  <aerodynamics file="Aero.xml" />
+</fdm_config>
