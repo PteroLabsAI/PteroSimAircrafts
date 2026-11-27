@@ -31,7 +31,7 @@ so JSBSim loads the new definition.
 | Preview | Directory | Model | Summary |
 | --- | --- | --- | --- |
 | <img src="docs/previews/advanced_plane.jpg" width="320" alt="Fixed-wing aircraft"> | `advanced_plane` | Fixed-wing aircraft | A pusher-prop aircraft with wheeled landing gear, elevons, rudder, and flaps. |
-| | `B52` | Boeing B-52 Stratofortress | An eight-jet aircraft with tandem main gear, manual stick control, a PX4 SITL profile, and approximate B-52F flight dynamics derived from FlightGear. |
+| <img src="docs/previews/B52.jpg" width="320" alt="Boeing B-52 Stratofortress"> | `B52` | Boeing B-52 Stratofortress | An eight-jet aircraft with tandem main gear, manual stick control, a PX4 SITL profile, and approximate B-52F flight dynamics derived from FlightGear. |
 | <img src="docs/previews/c172p.jpg" width="320" alt="Cessna 172P Skyhawk"> | `c172p` | Cessna 172P Skyhawk | A four-seat single-piston trainer with tricycle gear, flaps, and PX4 and ArduPlane profiles; its meshes are FlightGear's c172p. |
 | <img src="docs/previews/explora.jpg" width="320" alt="eXplora Tailsitter VTOL"> | `explora` | eXplora Tailsitter VTOL | A 3D-printed dual-motor tailsitter flying wing with two elevons, built from the open-source eXplora design files, with ArduPlane and PX4 profiles. |
 | <img src="docs/previews/F450.jpg" width="320" alt="DJI F450"> | `F450` | DJI F450 | A baseline quadcopter using an F450 frame, DJI E305 motors, and 9450 propellers. |
