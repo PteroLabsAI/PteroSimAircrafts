@@ -1,10 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <ground_reactions>
-  <contact type="STRUCTURE" name="left_leg_front">
+  <!--
+    The four rubber pads at the ends of the two skids, at the bottom of each pad's centre (meshes/skid_*.glb).
+    spring_coeff   1400 N/m a pad: the 1.95 kg takeoff weight sinks 3.4 mm on four. Chosen, no published figure.
+    damping_coeff  32 N/(m/s) a pad: a damping ratio of 0.6 on that spring. Chosen.
+    friction       0.8 static, 0.55 sliding: rubber on dry ground, chosen.
+  -->
+  <contact type="STRUCTURE" name="right_skid_front">
     <location unit="M">
-      <x>-0.144999739</x>
+      <x>-0.117608</x>
       <y>0.14314</y>
-      <z>-0.219181051</z>
+      <z>-0.218171</z>
     </location>
     <static_friction>0.8</static_friction>
     <dynamic_friction>0.55</dynamic_friction>
@@ -12,11 +18,11 @@
     <damping_coeff unit="N/M/SEC">32</damping_coeff>
     <retractable>1</retractable>
   </contact>
-  <contact type="STRUCTURE" name="left_leg_rear">
+  <contact type="STRUCTURE" name="right_skid_rear">
     <location unit="M">
-      <x>0.154999739</x>
+      <x>0.118392</x>
       <y>0.14314</y>
-      <z>-0.219740949</z>
+      <z>-0.218171</z>
     </location>
     <static_friction>0.8</static_friction>
     <dynamic_friction>0.55</dynamic_friction>
@@ -24,11 +30,11 @@
     <damping_coeff unit="N/M/SEC">32</damping_coeff>
     <retractable>1</retractable>
   </contact>
-  <contact type="STRUCTURE" name="right_leg_front">
+  <contact type="STRUCTURE" name="left_skid_front">
     <location unit="M">
-      <x>-0.144999739</x>
+      <x>-0.117608</x>
       <y>-0.14314</y>
-      <z>-0.219181051</z>
+      <z>-0.218171</z>
     </location>
     <static_friction>0.8</static_friction>
     <dynamic_friction>0.55</dynamic_friction>
@@ -36,11 +42,11 @@
     <damping_coeff unit="N/M/SEC">32</damping_coeff>
     <retractable>1</retractable>
   </contact>
-  <contact type="STRUCTURE" name="right_leg_rear">
+  <contact type="STRUCTURE" name="left_skid_rear">
     <location unit="M">
-      <x>0.154999739</x>
+      <x>0.118392</x>
       <y>-0.14314</y>
-      <z>-0.219740949</z>
+      <z>-0.218171</z>
     </location>
     <static_friction>0.8</static_friction>
     <dynamic_friction>0.55</dynamic_friction>

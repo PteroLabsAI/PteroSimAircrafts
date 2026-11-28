@@ -6,6 +6,9 @@ The author named in model.config is Lorenz Meier. The original import
 and the CGO3 addition are both attributed to him in the upstream history.
 The PteroSim adaptation converts the STL files to GLB and adds new
 materials, rebuilt skids, lens details and a newly modelled battery case.
+The body's two materials are split along smooth lines through the mesh,
+and each propeller hand sits on the rotors that turn its way; the source
+model mounts its clockwise blades on the counter-clockwise rotors.
 
   https://github.com/PX4/PX4-SITL_gazebo-classic/tree/ab7dbc572b4519238f8263ef4a288e6eb80a6076/models/typhoon_h480
   https://github.com/PX4/PX4-SITL_gazebo-classic/commit/682656decbc93026c888a37a88202eb1f389437c

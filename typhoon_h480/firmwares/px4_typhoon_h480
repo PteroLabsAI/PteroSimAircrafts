@@ -3,68 +3,92 @@
 # @name Typhoon H480 (PteroSim)
 # @type Hexarotor x
 #
+# PX4's hexarotor x in Propulsion.xml's order and senses: 1 right CW, 2 left CCW, 3 front left CW, 4 rear right CCW,
+# 5 front right CCW, 6 rear left CW, seen from above. Rotor positions are FRD about the takeoff CG Mass.xml gives,
+# 0.0116 m aft of and 0.0343 m below the model's origin.
+#
+
 . "${R}etc/init.d/rc.mc_defaults"
 
 param set-default MAV_TYPE 13
 param set-default CA_AIRFRAME 0
 param set-default CA_ROTOR_COUNT 6
 param set-default CA_SV_CS_COUNT 0
-param set-default MPC_THR_HOVER 0.610597509
+
+# CT: a rotor's thrust at the full command, 1000 rad/s through Systems/esc_map.xml, in newtons. KM: torque over thrust
+# from Engines/h480_prop.xml's static tables, C_P / (2 pi) * D / C_T; negative for a clockwise rotor.
+param set-default CA_ROTOR0_PX 0.00972521153
+param set-default CA_ROTOR0_PY 0.242705
+param set-default CA_ROTOR0_PZ -0.11649945
+param set-default CA_ROTOR0_KM -0.0115380375
+param set-default CA_ROTOR0_CT 8.54858
+param set-default CA_ROTOR1_PX 0.00972521153
+param set-default CA_ROTOR1_PY -0.242705
+param set-default CA_ROTOR1_PZ -0.11649945
+param set-default CA_ROTOR1_KM 0.0115380375
+param set-default CA_ROTOR1_CT 8.54858
+param set-default CA_ROTOR2_PX 0.223000172
+param set-default CA_ROTOR2_PY -0.119762
+param set-default CA_ROTOR2_PZ -0.11650155
+param set-default CA_ROTOR2_KM -0.0115380375
+param set-default CA_ROTOR2_CT 8.54858
+param set-default CA_ROTOR3_PX -0.197791828
+param set-default CA_ROTOR3_PY 0.122762
+param set-default CA_ROTOR3_PZ -0.11650155
+param set-default CA_ROTOR3_KM 0.0115380375
+param set-default CA_ROTOR3_CT 8.54858
+param set-default CA_ROTOR4_PX 0.223000172
+param set-default CA_ROTOR4_PY 0.119762
+param set-default CA_ROTOR4_PZ -0.11650155
+param set-default CA_ROTOR4_KM 0.0115380375
+param set-default CA_ROTOR4_CT 8.54858
+param set-default CA_ROTOR5_PX -0.197791828
+param set-default CA_ROTOR5_PY -0.122762
+param set-default CA_ROTOR5_PZ -0.11650155
+param set-default CA_ROTOR5_KM -0.0115380375
+param set-default CA_ROTOR5_CT 8.54858
+
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+param set-default PWM_MAIN_FUNC5 105
+param set-default PWM_MAIN_FUNC6 106
+
+# The ESC map makes a rotor's speed follow the command, so its thrust goes as the command squared.
 param set-default THR_MDL_FAC 1
-param set-default COM_RC_IN_MODE 4
-param set-default COM_ARM_CHK_ESCS 0
-param set-default SIM_BAT_ENABLE 0
-param set-default SYS_HAS_NUM_ASPD 0
-param set-default BAT1_N_CELLS 4
-param set-default BAT1_CAPACITY 5400
-param set-default MNT_MODE_IN 4
-param set-default MNT_MODE_OUT 0
-param set-default MNT_RANGE_ROLL 90
-param set-default MNT_MIN_PITCH -90
-param set-default MNT_MAX_PITCH 90
-param set-default MNT_RANGE_YAW 360
+# MPC_THR_HOVER is thrust, before THR_MDL_FAC: the command 0.6106 holds the 1.95 kg takeoff weight in this model, which
+# is 0.6106^2 = 0.373 of full thrust. PX4's first guess before it learns the hover (MPC_USE_HTE).
+param set-default MPC_THR_HOVER 0.373
+
+# The rate loop of PX4's own Typhoon H480 airframe (6011_gazebo-classic_typhoon_h480).
 param set-default MC_PITCHRATE_P 0.08
 param set-default MC_PITCHRATE_I 0.04
 param set-default MC_PITCHRATE_D 0.001
 param set-default MC_ROLLRATE_P 0.08
 param set-default MC_ROLLRATE_I 0.04
 param set-default MC_ROLLRATE_D 0.001
-param set-default CA_ROTOR0_PX 0.00972521153
-param set-default CA_ROTOR0_PY 0.242705
-param set-default CA_ROTOR0_PZ -0.11649945
-param set-default CA_ROTOR0_KM -0.0115380375
-param set-default CA_ROTOR0_CT 8.54858
-param set-default PWM_MAIN_FUNC1 101
-param set-default CA_ROTOR1_PX 0.00972521153
-param set-default CA_ROTOR1_PY -0.242705
-param set-default CA_ROTOR1_PZ -0.11649945
-param set-default CA_ROTOR1_KM 0.0115380375
-param set-default CA_ROTOR1_CT 8.54858
-param set-default PWM_MAIN_FUNC2 102
-param set-default CA_ROTOR2_PX 0.223000172
-param set-default CA_ROTOR2_PY -0.119762
-param set-default CA_ROTOR2_PZ -0.11650155
-param set-default CA_ROTOR2_KM -0.0115380375
-param set-default CA_ROTOR2_CT 8.54858
-param set-default PWM_MAIN_FUNC3 103
-param set-default CA_ROTOR3_PX -0.197791828
-param set-default CA_ROTOR3_PY 0.122762
-param set-default CA_ROTOR3_PZ -0.11650155
-param set-default CA_ROTOR3_KM 0.0115380375
-param set-default CA_ROTOR3_CT 8.54858
-param set-default PWM_MAIN_FUNC4 104
-param set-default CA_ROTOR4_PX 0.223000172
-param set-default CA_ROTOR4_PY 0.119762
-param set-default CA_ROTOR4_PZ -0.11650155
-param set-default CA_ROTOR4_KM 0.0115380375
-param set-default CA_ROTOR4_CT 8.54858
-param set-default PWM_MAIN_FUNC5 105
-param set-default CA_ROTOR5_PX -0.197791828
-param set-default CA_ROTOR5_PY -0.122762
-param set-default CA_ROTOR5_PZ -0.11650155
-param set-default CA_ROTOR5_KM -0.0115380375
-param set-default CA_ROTOR5_CT 8.54858
-param set-default PWM_MAIN_FUNC6 106
+
+# The pack: PteroSim sends it (Battery.xml), PX4 does not simulate one. No airspeed sensor, no ESC telemetry.
+param set-default SIM_BAT_ENABLE 0
+param set-default BAT1_N_CELLS 4
+param set-default BAT1_CAPACITY 5400
+param set-default SYS_HAS_NUM_ASPD 0
+param set-default COM_ARM_CHK_ESCS 0
+
+# No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.
+param set-default COM_RC_IN_MODE 4
+
+# The CGO3 on outputs 7-9 (Payloads.xml): PX4 is the gimbal device, driven over the MAVLink gimbal protocol v2.
+param set-default MNT_MODE_IN 4
+param set-default MNT_MODE_OUT 0
+param set-default MNT_RANGE_ROLL 90
+param set-default MNT_MIN_PITCH -90
+param set-default MNT_MAX_PITCH 90
+param set-default MNT_RANGE_YAW 360
 param set-default PWM_MAIN_FUNC7 420
 param set-default PWM_MAIN_FUNC8 421
 param set-default PWM_MAIN_FUNC9 422
+
+# The landing skids on output 10 (Controls.xml): PX4 raises them above 2 m in its auto modes and lowers them to land.
+param set-default PWM_MAIN_FUNC10 400

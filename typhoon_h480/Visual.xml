@@ -1,19 +1,29 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
+<!--
+  What this vehicle looks like. Metres and degrees from the centre of mass, X forward, Y right, Z up.
+  Meshes from the PX4 Gazebo Classic typhoon_h480 model (NOTICE). The body's silver shell faces up and its graphite
+  housing faces down or sideways; both textures are projected from above.
+  Each propeller turns at its motor about Z: +Z on the rotors that turn clockwise seen from above (Propulsion.xml sense -1),
+  -Z on the others. prop_cw carries the blades that lead clockwise, prop_ccw the other hand; the source model had them
+  the other way round on its rotors.
+  The skids swing about the hinges at the top of their struts by h480/skid-angle-deg (Systems/skid_retract.xml).
+  The CGO3's arm, fork and camera ride the gimbal in Payloads.xml.
+-->
 <visual>
-  <propeller file="meshes/rotor_0.glb" motor="rotor_0" axis="0 0 1" />
-  <propeller file="meshes/rotor_1.glb" motor="rotor_1" axis="0 0 -1" />
-  <propeller file="meshes/rotor_2.glb" motor="rotor_2" axis="0 0 1" />
-  <propeller file="meshes/rotor_3.glb" motor="rotor_3" axis="0 0 -1" />
-  <propeller file="meshes/rotor_4.glb" motor="rotor_4" axis="0 0 -1" />
-  <propeller file="meshes/rotor_5.glb" motor="rotor_5" axis="0 0 1" />
-  <gimbal name="cgo3" xyz="-0.0293958284 0 -0.127717449" rate="105 100 115" tau="0.14" />
-  <fixture file="meshes/base_link__base_link_visual.glb" xyz="0.00621254316 0 -0.00844575019" />
-  <fixture file="meshes/cgo3_mount_link__cgo3_mount_visual.glb" xyz="0.00621254316 0 -0.00844575019" />
-  <fixture file="meshes/cgo3_vertical_arm_link__cgo3_vertical_arm_visual.glb" parent="cgo3.yaw" />
-  <fixture file="meshes/cgo3_horizontal_arm_link__cgo3_horizontal_arm_visual.glb" parent="cgo3.roll" />
-  <fixture file="meshes/cgo3_camera_link__cgo3_camera_visual.glb" parent="cgo3" />
-  <surface file="meshes/left_leg__base_link_left_leg.glb" name="left_skid" source="h480/skid-angle-deg" axis="1 0 0" hinge="0.0118641715 0.040515 -0.0137174496" xyz="-0.00565162837 -0.040515 0.0052716994" limit="55" />
-  <surface file="meshes/right_leg__base_link_right_leg.glb" name="right_skid" source="h480/skid-angle-deg" axis="-1 0 0" hinge="0.0118641715 -0.040515 -0.0137174496" xyz="-0.00565162837 0.040515 0.0052716994" limit="55" />
-  <chase xyz="0.00621254316 0 0.0815542498" rpy="0 -21 0" length="1.65" />
-  <fixture name="power4_flight_pack" file="meshes/power4_flight_pack.glb" xyz="-0.0123958285 0 0.0315825504" />
+  <propeller file="meshes/prop_cw.glb" motor="rotor_0" axis="0 0 1"/>
+  <propeller file="meshes/prop_ccw.glb" motor="rotor_1" axis="0 0 -1"/>
+  <propeller file="meshes/prop_cw.glb" motor="rotor_2" axis="0 0 1"/>
+  <propeller file="meshes/prop_ccw.glb" motor="rotor_3" axis="0 0 -1"/>
+  <propeller file="meshes/prop_ccw.glb" motor="rotor_4" axis="0 0 -1"/>
+  <propeller file="meshes/prop_cw.glb" motor="rotor_5" axis="0 0 1"/>
+  <fixture file="meshes/base_link__base_link_visual.glb" xyz="0.00621254316 0 -0.00844575019"/>
+  <fixture file="meshes/cgo3_mount_link__cgo3_mount_visual.glb" xyz="0.00621254316 0 -0.00844575019"/>
+  <fixture file="meshes/cgo3_vertical_arm_link__cgo3_vertical_arm_visual.glb" parent="cgo3.yaw"/>
+  <fixture file="meshes/cgo3_horizontal_arm_link__cgo3_horizontal_arm_visual.glb" parent="cgo3.roll"/>
+  <fixture file="meshes/cgo3_camera_link__cgo3_camera_visual.glb" parent="cgo3"/>
+  <fixture name="power4_flight_pack" file="meshes/power4_flight_pack.glb" xyz="-0.0123958285 0 0.0315825504"/>
+  <surface file="meshes/skid_right.glb" name="right_skid" source="h480/skid-angle-deg" axis="1 0 0" hinge="0.0118641715 0.040515 -0.0137174496" xyz="-0.00565162837 -0.040515 0.0052716994" limit="55"/>
+  <surface file="meshes/skid_left.glb" name="left_skid" source="h480/skid-angle-deg" axis="-1 0 0" hinge="0.0118641715 -0.040515 -0.0137174496" xyz="-0.00565162837 0.040515 0.0052716994" limit="55"/>
+  <!-- chosen: about three spans behind and a little above, so the whole hexacopter fits the frame -->
+  <chase xyz="0.00621254316 0 0.0815542498" rpy="0 -21 0" length="1.65"/>
 </visual>

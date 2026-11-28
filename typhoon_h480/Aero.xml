@@ -1,5 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <aerodynamics>
+  <!--
+    Rotor drag only: each rotor pushes back on the air crossing its disc, F = -k w v, summed over the six (the source
+    model's motor plugin). k = 8.06428e-4 N per rad/s per m/s, its rotorDragCoefficient, is 5.78659e-6 lbf per rpm per
+    ft/s. The body's own drag is not modelled.
+  -->
   <axis name="X">
     <function name="aero/force/rotor-drag-x">
       <product>

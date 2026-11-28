@@ -1,28 +1,57 @@
-# Typhoon H480 для PteroSim
+# Typhoon H480 (typhoon_h480)
 
-Шестимоторная модель на базе Typhoon H480 из Gazebo Classic. GLB содержат текстурированный корпус, карбоновые лопасти и лыжи, детали моторов, навигационные огни, оптику CGO3 и корпус аккумулятора POWER 4. Динамика JSBSim использует взлётную массу **1,950 кг** штатного Typhoon H с аккумулятором и CGO3+. Данные о происхождении сеток, лицензии и оценках массы собраны в `NOTICE`. [Спецификация Yuneec](https://yuneec.kayako.com/en-us/article/2-data-tyhoon-h).
+Yuneec's Typhoon H is a 1.95 kg camera hexacopter with retractable skids and the CGO3+ 4K camera on a three-axis
+gimbal. This is a JSBSim model of it built from PX4's Gazebo Classic `typhoon_h480`, meshes included (BSD; `NOTICE`
+names every source; Yuneec does not endorse PteroSim).
 
-## Запуск с PX4
+```
+typhoon_h480.xml  main file
+Metrics.xml       reference values; structural frame = the source model's base link, x aft, y right, z up
+Mass.xml          1.145 kg airframe, the 0.550 kg POWER 4 pack and the 0.255 kg CGO3+: 1.950 kg at takeoff
+Gear.xml          the four rubber pads at the ends of the skids, retracted with them
+Propulsion.xml    six motors in PX4's hexarotor x order
+Aero.xml          rotor drag
+Engines/          h480_motor (brushless motor), h480_prop (thrust and power tables)
+Systems/          esc_map.xml: command to motor duty; skid_retract.xml: the skids follow the gear command
+Battery.xml       the POWER 4 pack (sidecar); Batteries/LiPo.xml is its cell curve
+Controls.xml      PX4 outputs to the motors and the skids (sidecar)
+Payloads.xml      the CGO3+ gimbal and its PX4 outputs (sidecar)
+Sensors.xml       imu, gps, barometer and the CGO3+ camera (sidecar)
+Visual.xml        meshes (sidecar)
+firmwares/        px4_typhoon_h480: the PX4 airframe; run_px4_sitl.sh starts PX4 SITL with it
+LICENSE.PX4, NOTICE  BSD 3-Clause for the PX4 material, sources
+```
 
-1. Откройте PteroSim, добавьте `typhoon_h480`, выберите **PX4**, выставьте **Physics Hz** на 250 и нажмите **Start**.
-2. Запустите PX4 SITL в WSL с профилем из этой папки. Передайте путь к уже собранному PX4 и задайте адрес Windows из WSL.
+## Run it
 
-   ```bash
-   export PX4_SIM_HOSTNAME="$(ip route | awk '/default/ {print $3; exit}')"
-   bash /path/to/typhoon_h480/firmwares/run_px4_sitl.sh \
-     "$HOME/Documents/PX4-Autopilot/build/px4_sitl_default"
-   ```
+In PteroSim, add `typhoon_h480`, choose PX4, set Physics Hz to 250 or more (the IMU reports at 250 Hz) and press Start.
+Then start PX4 SITL in WSL from a built PX4 tree, with the Windows host's address:
 
-3. Дождитесь готовности оценки положения и запустите взлёт из QGroundControl или командой `commander takeoff` в консоли PX4. [Подключение PX4 SITL к PteroSim](https://docs.px4.io/main/en/sim_pterosim/index).
+```bash
+export PX4_SIM_HOSTNAME="$(ip route | awk '/default/ {print $3; exit}')"
+bash firmwares/run_px4_sitl.sh "$HOME/Documents/PX4-Autopilot/build/px4_sitl_default"
+```
 
-Скрипт запуска копирует PX4 ROMFS во временную папку и загружает профиль гексаротора. Каналы 1–6 соответствуют моторам 1–6, каналы 7–9 управляют осями подвеса CGO3.
+The script copies PX4's ROMFS to a temporary folder, installs the airframe under the first free number from 22100 and
+starts PX4 on it. Once the estimator is ready, take off from QGroundControl or with `commander takeoff`
+([PX4 SITL with PteroSim](https://docs.px4.io/main/en/sim_pterosim/index)).
 
-## Анимации и динамика
+PX4's outputs 1-6 drive the motors, 7-9 the CGO3's roll, pitch and yaw, and 10 the skids. PX4 raises the skids above
+2 m in its auto modes (takeoff, hold, mission, return) and lowers them to land; with no autopilot they stay down.
 
-Лыжи автоматически убираются выше 6 м и выпускаются ниже 4 м. При снижении быстрее 1 м/с выпуск начинается уже ниже 7 м. Угол лыж и положение контактов с землёй задаёт один контроллер JSBSim. Каждый винт вращается по оборотам своего мотора в соответствующем направлении. Три оси CGO3 имеют отдельные ограничения скорости и общий центр вращения.
+## What is modelled
 
-Батарея POWER 4 имеет паспортные 14,8 В и 5400 мА·ч (4S LiPo). Заряд расходуется от тока двигателей и бортовой электроники. PteroSim рассчитывает просадку напряжения под нагрузкой и передаёт состояние батареи в PX4. В развесовке отдельно учтены оценочные 550 г установленной батареи и паспортные 255 г камеры CGO3+ с подвесом. Масса остального планера с шасси — 1,145 кг. [Карточка аккумулятора YUNTYH105](https://yuneec.pl/product-eng-18-Yuneec-YUNTYH105-Typhoon-H-1-Piece-Digital-Camera-Battery-Black.html).
+- Mass: Yuneec gives 1.950 kg at takeoff and 0.255 kg for the CGO3+. The installed pack's 0.550 kg is estimated from a
+  teardown of the stock pack; the inertia is scaled from the source model's links.
+- Propellers: the thrust coefficient is the source model's, 8.55 N a rotor at 1000 rad/s. Shaft power and reaction
+  torque come from APC's 10x4.5MR data near the hover speed.
+- Battery: the POWER 4 is 4S, 14.8 V, 5400 mAh. PteroSim drains it by the motors' current and the avionics, sags its
+  voltage under load and sends it to PX4.
+- Skids: they swing up 55 degrees in 1.18 s on PX4's gear output, and their pads leave the ground with them.
+- Camera: the CGO3+ sees 115 degrees across, on a gimbal turning roll ±45, pitch ±90 and yaw ±180 degrees.
 
-Коэффициент тяги взят из модели Gazebo. Мощность и реактивный момент оценены по винту аналогичного диаметра, а тензоры и центровка вычислены приближённо. IMU, GPS и барометр включены. Стандартное отклонение вертикального дрейфа имитируемого GPS — 0,1 м. [Данные APC 10×4,5 MR](https://www.apcprop.com/files/PER3_10x45MR.dat).
+## Known limits
 
-Модель проверена в PteroSim 0.6.0 с PX4 SITL. В контрольном полёте штатной конфигурации аккумулятор отдал около 68 мА·ч, напряжение в полёте составило 16,73–16,77 В, а после посадки PX4 автоматически разоружился. В этом прогоне PX4 выдал предупреждение по компасу. Ранее отдельно проверены уборка и выпуск лыж и команды по всем трём осям подвеса.
+- The airframe has rotor drag only; the body's own drag is not modelled.
+- The ESC is a static map set to 1000 rad/s at the full command; its speed loop is not modelled.
+- Yuneec publishes the gimbal's rates, the skids' travel and the pack's resistance nowhere, so those values are chosen.

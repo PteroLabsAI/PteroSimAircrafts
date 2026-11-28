@@ -1,12 +1,17 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
+<!--
+  Which channel from the autopilot drives what on this vehicle (F450's attributes; Quiver's Controls.xml explains them).
+  Channels 0-5 are PX4's hexarotor x outputs 1-6 (PWM_MAIN_FUNC1-6, Motor 1-6), bound to Propulsion.xml's rotors in order.
+  Channel 9 is PX4's Landing Gear output (PWM_MAIN_FUNC10 400): -1 down, +1 up, and 0 while PX4 is disarmed, which zeroes
+  every channel. Read over 0..1 and inverted, -1 and 0 both give gear/gear-cmd-norm 1, skids down (Systems/skid_retract.xml).
+  The CGO3 gimbal's channels are in Payloads.xml.
+-->
 <control_bindings stack="PX4" pilot="multicopter">
-  <binding stack="PX4" channel="0" type="Motor" index="0" label="rotor_0" />
-  <binding stack="PX4" channel="1" type="Motor" index="1" label="rotor_1" />
-  <binding stack="PX4" channel="2" type="Motor" index="2" label="rotor_2" />
-  <binding stack="PX4" channel="3" type="Motor" index="3" label="rotor_3" />
-  <binding stack="PX4" channel="4" type="Motor" index="4" label="rotor_4" />
-  <binding stack="PX4" channel="5" type="Motor" index="5" label="rotor_5" />
-  <binding stack="PX4" channel="6" type="Gimbal" index="0" label="CGO3 roll" in="-1 1" out="-45 45" />
-  <binding stack="PX4" channel="7" type="Gimbal" index="1" label="CGO3 pitch" in="-1 1" out="-90 90" />
-  <binding stack="PX4" channel="8" type="Gimbal" index="2" label="CGO3 yaw" in="-1 1" out="-180 180" />
+  <binding stack="PX4" channel="0" type="Motor" index="0" label="rotor_0"/>
+  <binding stack="PX4" channel="1" type="Motor" index="1" label="rotor_1"/>
+  <binding stack="PX4" channel="2" type="Motor" index="2" label="rotor_2"/>
+  <binding stack="PX4" channel="3" type="Motor" index="3" label="rotor_3"/>
+  <binding stack="PX4" channel="4" type="Motor" index="4" label="rotor_4"/>
+  <binding stack="PX4" channel="5" type="Motor" index="5" label="rotor_5"/>
+  <binding stack="PX4" channel="9" property="gear/gear-cmd-norm" in="0 1" out="0 1" invert="1" label="Landing skids"/>
 </control_bindings>
