@@ -6,9 +6,8 @@
         source model's mount does, 0.1072 m above the axis.
         rate (roll, pitch, yaw in deg/s) and tau: Yuneec publishes neither; chosen.
   Channels 6-8 are PX4's outputs 7-9, Gimbal Roll, Pitch and Yaw (PWM_MAIN_FUNC7-9 420-422), each -1..1 over the mount's
-  range: MNT_RANGE_ROLL 90, MNT_RANGE_PITCH 180 or MNT_MIN_PITCH -90 to MNT_MAX_PITCH 90, MNT_RANGE_YAW 360
-  (firmwares/px4_typhoon_h480). PX4 maps pitch in two halves, min..0 and 0..max (gimbal/output_rc.cpp), so the range
-  stays symmetric for a binding's one line.
+  range in firmwares/px4_typhoon_h480. From v1.18 PX4 maps pitch in two halves, min..0 and 0..max (gimbal/output_rc.cpp),
+  so the pitch range stays symmetric for a binding's one line.
 -->
 <payloads>
   <gimbal name="cgo3" xyz="-0.0061 0 -0.1277" rate="105 100 115" tau="0.14"/>

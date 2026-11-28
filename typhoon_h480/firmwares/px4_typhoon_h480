@@ -62,8 +62,10 @@ param set-default MC_ROLLRATE_P 0.08
 param set-default MC_ROLLRATE_I 0.04
 param set-default MC_ROLLRATE_D 0.001
 
-# The pack: PteroSim sends it (Battery.xml), PX4 does not simulate one.
+# The pack: PteroSim sends it (Battery.xml), PX4 does not simulate one. SIM_BAT_ENABLE turns PX4's battery simulator off
+# up to v1.17; v1.18 dropped it and starts the simulator unless SIM_BAT_DRAIN is 0.
 param set-default SIM_BAT_ENABLE 0
+param set-default SIM_BAT_DRAIN 0
 
 # No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.
 param set-default COM_RC_IN_MODE 4

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   What this vehicle looks like. Metres and degrees from the centre of mass, X forward, Y right, Z up.
-  Meshes from the PX4 Gazebo Classic typhoon_h480 model and x500's CGO3 (NOTICE).
+  Meshes from the PX4 Gazebo Classic typhoon_h480 model, x500's CGO3, and the skids and battery pack made here (NOTICE).
   Each propeller turns at its motor about Z: +Z on the rotors that turn clockwise seen from above (Propulsion.xml sense -1),
   -Z on the others. prop_cw carries the blades that lead clockwise, prop_ccw the other hand.
   The skids swing about the hinges at the top of their struts by h480/skid-angle-deg (Systems/skid_retract.xml).
