@@ -19,7 +19,7 @@ Payloads.xml      the CGO3+ gimbal and its PX4 outputs (sidecar)
 Sensors.xml       imu, gps, barometer and the CGO3+ camera (sidecar)
 Visual.xml        meshes (sidecar)
 firmwares/        px4_typhoon_h480: the PX4 airframe; run_px4_sitl.sh starts PX4 SITL with it
-LICENSE.PX4, NOTICE  BSD 3-Clause for the PX4 material, sources
+LICENSE.PX4, LICENSE.gimbal, NOTICE  BSD 3-Clause for the PX4 material and the CGO3 meshes, sources
 ```
 
 ## Run it
