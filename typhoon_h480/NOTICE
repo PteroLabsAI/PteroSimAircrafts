@@ -15,11 +15,14 @@ copyright notice.
 The body is rebuilt from the source's main_body_remeshed_v3.stl, whose
 surface is open along networks of cracks: it is the surface standing 0.7 mm
 off that mesh (an unsigned distance field on a 0.5 mm grid), closed and free
-of cracks, decimated to 300,000 triangles. The six motor pods, whose source
-surface had holes the size of a finger tip, are turned anew from the source's
-own profile about each motor axis. Normals are smoothed across edges under
-30 degrees. The shell texture drops the bars beside the word, which hid half
-of the T and the N's right stem.
+of cracks, decimated to 300,000 triangles; grooves torn open in the source and
+narrower than about 5 mm are closed. The six motor pods, whose source surface
+had holes the size of a finger tip, are turned anew from the source's own
+profile about each motor axis, and the six shoulder sleeves, whose slots were
+torn, are turned about each arm's axis as fitted to its 12.3 mm tube. Normals
+are smoothed across edges under 30 degrees. The shell texture drops the bars
+beside the word, which hid half of the T and the N's right stem, and the word
+is set at 65 % so it stays on the flat of the shell.
 The body's two materials are split along clean lines through the mesh,
 and each propeller hand sits on the rotors that turn its way; the source
 model mounts its clockwise blades on the counter-clockwise rotors.
