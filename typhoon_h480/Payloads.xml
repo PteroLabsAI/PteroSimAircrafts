@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  What hangs on the vehicle: the CGO3+ gimbal and the channels that drive it. Metres and degrees from the centre of mass,
+  X forward, Y right, Z up, as in Visual.xml.
+  cgo3  the camera's pitch axis, where x500's CGO3 meshes turn: placed so their mount's top meets the body where the
+        source model's mount does, 0.1072 m above the axis.
+        rate (roll, pitch, yaw in deg/s) and tau: Yuneec publishes neither; chosen.
+  Channels 6-8 are PX4's outputs 7-9, Gimbal Roll, Pitch and Yaw (PWM_MAIN_FUNC7-9 420-422), each -1..1 over the mount's
+  range in firmwares/px4_typhoon_h480. From v1.18 PX4 maps pitch in two halves, min..0 and 0..max (gimbal/output_rc.cpp),
+  so the pitch range stays symmetric for a binding's one line.
+-->
+<payloads>
+  <gimbal name="cgo3" xyz="-0.0061 0 -0.1277" rate="105 100 115" tau="0.14"/>
+  <binding stack="PX4" channel="6" type="Gimbal" index="0" label="CGO3 roll" in="-1 1" out="-45 45"/>
+  <binding stack="PX4" channel="7" type="Gimbal" index="1" label="CGO3 pitch" in="-1 1" out="-90 90"/>
+  <binding stack="PX4" channel="8" type="Gimbal" index="2" label="CGO3 yaw" in="-1 1" out="-180 180"/>
+</payloads>

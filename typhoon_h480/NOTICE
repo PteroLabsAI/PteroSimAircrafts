@@ -1,0 +1,61 @@
+Typhoon H480 model provenance
+
+The fuselage and propellers were adapted from PX4-SITL_gazebo-classic
+at ab7dbc572b4519238f8263ef4a288e6eb80a6076. The author named in model.config
+is Lorenz Meier, and the upstream history attributes the original import to
+him. The PteroSim adaptation converts the STL files to GLB and adds new
+materials, rebuilt skids and a newly modelled battery case.
+The gimbal is x500's CGO3: the gimbal model of PX4's gz collection
+(Tools/simulation/gz/models/gimbal, by Stefano Colli, Auterion), converted,
+welded, shaded smooth and textured as x500's NOTICE describes. That model is
+distributed under the BSD 3-Clause License; LICENSE.gimbal holds its text and
+copyright notice.
+
+The body is rebuilt from the source's main_body_remeshed_v3.stl as a closed
+surface 0.7 mm off it, with its motor pods and shoulder sleeves turned anew
+from the source's own profiles, and its shell texture redrawn. Each propeller
+hand sits on the rotors that turn its way; the source model mounts its
+clockwise blades on the counter-clockwise rotors.
+
+  https://github.com/PX4/PX4-SITL_gazebo-classic/tree/ab7dbc572b4519238f8263ef4a288e6eb80a6076/models/typhoon_h480
+  https://github.com/PX4/PX4-SITL_gazebo-classic/commit/682656decbc93026c888a37a88202eb1f389437c
+
+The Gazebo Classic package manifest declares BSD. The pinned model
+directory has no mesh-specific license text or copyright notice, and
+the manifest gives no BSD variant. This record preserves the upstream
+declaration and attribution. LICENSE.PX4 contains the separate BSD
+3-Clause notice from PX4-Autopilot for the PX4 airframe profile material.
+
+  https://github.com/PX4/PX4-SITL_gazebo-classic/blob/ab7dbc572b4519238f8263ef4a288e6eb80a6076/package.xml
+  https://github.com/PX4/PX4-Autopilot/blob/b0b99de767/LICENSE
+
+Equipment and mass model
+
+Yuneec's standard Typhoon H specification gives an equipped takeoff
+mass of 1.950 kg, a 0.255 kg CGO3+, and the POWER 4 LiPo pack at 4S,
+14.8 V nominal, 5400 mAh and 79.9 Wh. The separate stock pack listing
+identifies it as YUNTYH105. The installation diagram in the manual
+shows how it fits in the bay.
+
+  https://yuneec.kayako.com/en-us/article/2-data-tyhoon-h
+  https://yuneec.pl/product-eng-18-Yuneec-YUNTYH105-Typhoon-H-1-Piece-Digital-Camera-Battery-Black.html
+  https://yuneec.uk/images/TyphoonHmanuals/TYPHOON-H-USER-MANUAL-V1.1%20LR.pdf
+
+The 0.550 kg installed pack is a modelling estimate. A teardown of the
+stock pack reports a 0.527 kg internal assembly with board and connector,
+about 125 x 45 x 42 mm; the model allows for the casing and latch. The
+camera and battery tensors are cuboid approximations at their fitted
+positions. The 1.145 kg remainder includes airframe, drivetrain and
+landing gear. Its inertia is scaled from the corresponding Gazebo
+links. Component locations and computed CG are simulation estimates.
+The generic LiPo open-circuit curve is credited in Batteries/LiPo.xml.
+Resistance and avionics draw are simulator settings. The rotor thrust
+coefficient comes from Gazebo. Shaft power and reaction torque are
+estimated using the static figure of merit of APC's 10x4.5MR model near
+the hover RPM. That propeller is a performance reference. The 1000 rad/s
+full-command calibration is a simulation estimate. Endurance depends
+on that approximation, the manoeuvre and the pack settings.
+
+  https://yuneecpilots.com/threads/battery-revealed.1753/
+  https://www.amicell.co.il/light-weight-12s-battery/
+  https://www.apcprop.com/files/PER3_10x45MR.dat

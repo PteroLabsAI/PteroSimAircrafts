@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<aerodynamics>
+  <!--
+    Rotor drag only: each rotor pushes back on the air crossing its disc, F = -k w v, summed over the six (the source
+    model's motor plugin). k = 8.06428e-4 N per rad/s per m/s, its rotorDragCoefficient, is 5.78659e-6 lbf per rpm per
+    ft/s. The body's own drag is not modelled.
+  -->
+  <axis name="X">
+    <function name="aero/force/rotor-drag-x">
+      <product>
+        <value>-5.78659068e-06</value>
+        <property>velocities/u-aero-fps</property>
+        <sum>
+          <property>propulsion/engine[0]/propeller-rpm</property>
+          <property>propulsion/engine[1]/propeller-rpm</property>
+          <property>propulsion/engine[2]/propeller-rpm</property>
+          <property>propulsion/engine[3]/propeller-rpm</property>
+          <property>propulsion/engine[4]/propeller-rpm</property>
+          <property>propulsion/engine[5]/propeller-rpm</property>
+        </sum>
+      </product>
+    </function>
+  </axis>
+  <axis name="Y">
+    <function name="aero/force/rotor-drag-y">
+      <product>
+        <value>-5.78659068e-06</value>
+        <property>velocities/v-aero-fps</property>
+        <sum>
+          <property>propulsion/engine[0]/propeller-rpm</property>
+          <property>propulsion/engine[1]/propeller-rpm</property>
+          <property>propulsion/engine[2]/propeller-rpm</property>
+          <property>propulsion/engine[3]/propeller-rpm</property>
+          <property>propulsion/engine[4]/propeller-rpm</property>
+          <property>propulsion/engine[5]/propeller-rpm</property>
+        </sum>
+      </product>
+    </function>
+  </axis>
+</aerodynamics>

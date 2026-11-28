@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<metrics>
+  <!-- a 0.67 m square, chosen: Aero.xml reads none of them, Core takes the span as the vehicle's size for its ground
+       probe; the three locations sit at the takeoff CG Mass.xml gives -->
+  <wingarea unit="M2">0.4489</wingarea>
+  <wingspan unit="M">0.67</wingspan>
+  <chord unit="M">0.67</chord>
+  <location unit="M" name="AERORP">
+    <x>0.0116041715</x>
+    <y>0</y>
+    <z>-0.0342825504</z>
+  </location>
+  <location unit="M" name="EYEPOINT">
+    <x>0.0116041715</x>
+    <y>0</y>
+    <z>-0.0342825504</z>
+  </location>
+  <location unit="M" name="VRP">
+    <x>0.0116041715</x>
+    <y>0</y>
+    <z>-0.0342825504</z>
+  </location>
+</metrics>

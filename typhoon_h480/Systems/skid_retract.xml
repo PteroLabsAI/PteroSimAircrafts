@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  The landing skids, moved by the autopilot's landing gear output: Controls.xml binds it to gear/gear-cmd-norm, 1 down and
+  0 up as JSBSim reads it. PX4 raises the gear above 2 m in its auto modes and lowers it to land (FlightTaskAuto); with no
+  autopilot the command stays at 1 and the skids stay down.
+  The travel is an actuator's state, 0 down, which JSBSim's reset to the initial conditions zeroes
+  (FGActuator::ResetPastStates); a kinematic would keep its position in gear/gear-pos-norm, which no reset touches.
+  travel_s    down to up and back, 1.18 s, the rate limit 1 / 1.18 s = 0.84746 per second: Yuneec publishes no figure; chosen.
+  swing_deg   the skids' swing from down to up, 55: Yuneec publishes no figure; chosen so the skids fold up beside the body.
+-->
+<system name="Typhoon H480 landing skids">
+  <channel name="Landing skids">
+    <fcs_function name="h480/skid-retract-cmd">
+      <function>
+        <difference>
+          <value>1</value>
+          <property>gear/gear-cmd-norm</property>
+        </difference>
+      </function>
+    </fcs_function>
+    <actuator name="h480/skid-retraction">
+      <input>h480/skid-retract-cmd</input>
+      <rate_limit>0.84746</rate_limit>
+    </actuator>
+    <fcs_function name="h480/skid-angle-deg">
+      <function>
+        <product>
+          <value>55</value>
+          <property>h480/skid-retraction</property>
+        </product>
+      </function>
+    </fcs_function>
+    <fcs_function name="h480/skid-position">
+      <function>
+        <difference>
+          <value>1</value>
+          <property>h480/skid-retraction</property>
+        </difference>
+      </function>
+      <output>gear/gear-pos-norm</output>
+    </fcs_function>
+  </channel>
+</system>
