@@ -61,7 +61,9 @@ param set-default PWM_MAIN_FUNC2 102
 param set-default PWM_MAIN_FUNC3 103
 param set-default PWM_MAIN_FUNC4 104
 
-param set-default SIM_BAT_ENABLE 0
+# PX4's battery simulator off: SIM_BAT_ENABLE 0 up to v1.17, SIM_BAT_DRAIN 0 from v1.18 (rcS starts it when > 0).
+param set-default -s SIM_BAT_ENABLE 0
+param set-default SIM_BAT_DRAIN 0
 
 # --- hover point ---
 param set-default MPC_THR_HOVER 0.40

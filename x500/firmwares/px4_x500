@@ -62,7 +62,9 @@ param set-default MNT_RANGE_YAW 360
 # The command that holds the x500 up on a full pack (Battery.xml, 16.8 V at rest), bisected held down in bare
 # JSBSim at sea level: PX4's first guess before it learns the hover (MPC_USE_HTE). 0.48 at the motor's 14.8 V.
 param set-default MPC_THR_HOVER 0.43
-param set-default SIM_BAT_ENABLE 0
+# PX4's battery simulator off: SIM_BAT_ENABLE 0 up to v1.17, SIM_BAT_DRAIN 0 from v1.18 (rcS starts it when > 0).
+param set-default -s SIM_BAT_ENABLE 0
+param set-default SIM_BAT_DRAIN 0
 param set-default COM_ARM_CHK_ESCS 0
 param set-default SYS_HAS_NUM_ASPD 0
 
