@@ -62,9 +62,9 @@ param set-default MC_ROLLRATE_P 0.08
 param set-default MC_ROLLRATE_I 0.04
 param set-default MC_ROLLRATE_D 0.001
 
-# The pack: PteroSim sends it (Battery.xml), PX4 does not simulate one. SIM_BAT_ENABLE turns PX4's battery simulator off
-# up to v1.17; v1.18 dropped it and starts the simulator unless SIM_BAT_DRAIN is 0.
-param set-default SIM_BAT_ENABLE 0
+# The pack: PteroSim sends it (Battery.xml).
+# PX4's battery simulator off: SIM_BAT_ENABLE 0 up to v1.17, SIM_BAT_DRAIN 0 from v1.18 (rcS starts it when > 0).
+param set-default -s SIM_BAT_ENABLE 0
 param set-default SIM_BAT_DRAIN 0
 
 # No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.
@@ -72,14 +72,14 @@ param set-default COM_RC_IN_MODE 4
 
 # The CGO3 on outputs 7-9 (Payloads.xml): PX4 is the gimbal device, driven over the MAVLink gimbal protocol v2.
 # The travels are what Payloads.xml binds; PX4 maps +-1 to them about zero, so each RANGE is twice the out= half-travel.
-# The pitch range is spelled both ways, MNT_RANGE_PITCH up to v1.17 and MNT_MIN/MAX_PITCH from v1.18: the one a build
-# has not got prints a "not found" line and changes nothing.
+# The pitch range is spelled both ways, MNT_RANGE_PITCH up to v1.17 and MNT_MIN/MAX_PITCH from v1.18; -s skips the one a
+# build has not got without an error line.
 param set-default MNT_MODE_IN 4
 param set-default MNT_MODE_OUT 0
 param set-default MNT_RANGE_ROLL 90
-param set-default MNT_RANGE_PITCH 180
-param set-default MNT_MIN_PITCH -90
-param set-default MNT_MAX_PITCH 90
+param set-default -s MNT_RANGE_PITCH 180
+param set-default -s MNT_MIN_PITCH -90
+param set-default -s MNT_MAX_PITCH 90
 param set-default MNT_RANGE_YAW 360
 param set-default PWM_MAIN_FUNC7 420
 param set-default PWM_MAIN_FUNC8 421
