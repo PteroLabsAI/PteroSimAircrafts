@@ -3,6 +3,7 @@
   What this vehicle looks like. Metres and degrees from the centre of mass, X forward, Y right, Z up.
   Meshes from the PX4 Gazebo Classic typhoon_h480 model (NOTICE). The body's silver shell faces up and its graphite
   housing faces down or sideways; both textures are projected from above.
+  Both are two-sided: the source mesh is not closed, and from below its 2-5 mm slits would show the sky.
   Each propeller turns at its motor about Z: +Z on the rotors that turn clockwise seen from above (Propulsion.xml sense -1),
   -Z on the others. prop_cw carries the blades that lead clockwise, prop_ccw the other hand; the source model had them
   the other way round on its rotors.
