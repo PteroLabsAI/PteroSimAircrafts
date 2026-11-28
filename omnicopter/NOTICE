@@ -1,0 +1,16 @@
+The cage mesh and rotor geometry are from the PX4 Gazebo Classic Omnicopter
+by Jaeyoung Lim. The propeller meshes are the CW and CCW meshes from Iris.
+The source meshes were converted to GLB. The rotor GLBs include a local
+rotation clip for PteroSim.
+
+PX4-SITL_gazebo-classic, revision ab7dbc572b4519238f8263ef4a288e6eb80a6076:
+- https://github.com/PX4/PX4-SITL_gazebo-classic/tree/ab7dbc572b4519238f8263ef4a288e6eb80a6076/models/omnicopter
+- https://github.com/PX4/PX4-SITL_gazebo-classic/tree/ab7dbc572b4519238f8263ef4a288e6eb80a6076/models/iris/meshes
+- https://github.com/PX4/PX4-SITL_gazebo-classic/blob/ab7dbc572b4519238f8263ef4a288e6eb80a6076/package.xml (BSD)
+
+The PX4 startup profile adapts 10019_gazebo-classic_omnicopter from
+PX4-Autopilot at 91e37e39cb1b8ef7ac6ed0928b9fee53468be9e1. The geometry,
+moment coefficients and motor output curve are matched to the JSBSim model.
+See LICENSE for the PX4 BSD 3-Clause copyright and terms.
+
+https://github.com/PX4/PX4-Autopilot/blob/91e37e39cb1b8ef7ac6ed0928b9fee53468be9e1/ROMFS/px4fmu_common/init.d-posix/airframes/10019_gazebo-classic_omnicopter

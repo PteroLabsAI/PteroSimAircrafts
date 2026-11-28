@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- The CAD is in the Gazebo body frame. Rotor orientations are baked into the GLBs. -->
+<visual>
+  <fixture file="meshes/cage.glb"/>
+  <fixture file="meshes/rotor_0.glb" xyz="0.1 -0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-0-phase" input="0 1"/>
+  <fixture file="meshes/rotor_1.glb" xyz="-0.1 -0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-1-phase" input="0 1"/>
+  <fixture file="meshes/rotor_2.glb" xyz="0.1 0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-2-phase" input="0 1"/>
+  <fixture file="meshes/rotor_3.glb" xyz="-0.1 0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-3-phase" input="0 1"/>
+  <fixture file="meshes/rotor_4.glb" xyz="0.1 -0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-4-phase" input="0 1"/>
+  <fixture file="meshes/rotor_5.glb" xyz="-0.1 -0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-5-phase" input="0 1"/>
+  <fixture file="meshes/rotor_6.glb" xyz="0.1 0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-6-phase" input="0 1"/>
+  <fixture file="meshes/rotor_7.glb" xyz="-0.1 0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-7-phase" input="0 1"/>
+</visual>

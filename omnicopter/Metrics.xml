@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- SDF collision cube dimensions. No lifting surface is defined. -->
+<metrics>
+  <wingarea unit="M2">0.25</wingarea>
+  <wingspan unit="M">0.5</wingspan>
+  <chord unit="M">0.5</chord>
+</metrics>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<control_bindings stack="PX4">
+  <binding stack="PX4" channel="0" property="fcs/omnicopter/rotor-0-command" in="-1 1" out="-1 1" label="rotor_0"/>
+  <binding stack="PX4" channel="1" property="fcs/omnicopter/rotor-1-command" in="-1 1" out="-1 1" label="rotor_1"/>
+  <binding stack="PX4" channel="2" property="fcs/omnicopter/rotor-2-command" in="-1 1" out="-1 1" label="rotor_2"/>
+  <binding stack="PX4" channel="3" property="fcs/omnicopter/rotor-3-command" in="-1 1" out="-1 1" label="rotor_3"/>
+  <binding stack="PX4" channel="4" property="fcs/omnicopter/rotor-4-command" in="-1 1" out="-1 1" label="rotor_4"/>
+  <binding stack="PX4" channel="5" property="fcs/omnicopter/rotor-5-command" in="-1 1" out="-1 1" label="rotor_5"/>
+  <binding stack="PX4" channel="6" property="fcs/omnicopter/rotor-6-command" in="-1 1" out="-1 1" label="rotor_6"/>
+  <binding stack="PX4" channel="7" property="fcs/omnicopter/rotor-7-command" in="-1 1" out="-1 1" label="rotor_7"/>
+</control_bindings>

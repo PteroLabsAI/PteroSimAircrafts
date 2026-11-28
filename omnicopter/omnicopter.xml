@@ -1,0 +1,534 @@
+<?xml version="1.0"?>
+<fdm_config name="omnicopter" release="ALPHA" version="2.0">
+  <fileheader>
+    <description>PX4 Gazebo Classic six-degree-of-freedom Omnicopter</description>
+  </fileheader>
+  <metrics file="Metrics.xml"/>
+  <mass_balance file="Mass.xml"/>
+  <ground_reactions file="Gear.xml"/>
+  <propulsion/>
+  <aerodynamics>
+    <axis name="X"/><axis name="Y"/><axis name="Z"/>
+  </aerodynamics>
+
+  <!-- Eight reversible rotors. BODY directions are forward/right/down. Locations
+       use the JSBSim structural frame (aft/right/up) and the SDF body origin. -->
+  <external_reactions>
+    <force name="rotor-0-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-0-thrust-lbs</property></function>
+      <location unit="M"><x>-0.1</x> <y>-0.1</y> <z>0.1</z></location>
+      <direction><x>-0.788675184</x> <y>-0.211325049</y> <z>-0.577350135</z></direction>
+    </force>
+    <moment name="rotor-0-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-0-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>-0.788675184</x> <y>-0.211325049</y> <z>-0.577350135</z></direction>
+    </moment>
+    <force name="rotor-1-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-1-thrust-lbs</property></function>
+      <location unit="M"><x>0.1</x> <y>-0.1</y> <z>0.1</z></location>
+      <direction><x>0.211325049</x> <y>-0.788675184</y> <z>0.577350135</z></direction>
+    </force>
+    <moment name="rotor-1-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-1-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>0.211325049</x> <y>-0.788675184</y> <z>0.577350135</z></direction>
+    </moment>
+    <force name="rotor-2-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-2-thrust-lbs</property></function>
+      <location unit="M"><x>-0.1</x> <y>0.1</y> <z>0.1</z></location>
+      <direction><x>-0.211325049</x> <y>0.788675184</y> <z>0.577350135</z></direction>
+    </force>
+    <moment name="rotor-2-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-2-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>-0.211325049</x> <y>0.788675184</y> <z>0.577350135</z></direction>
+    </moment>
+    <force name="rotor-3-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-3-thrust-lbs</property></function>
+      <location unit="M"><x>0.1</x> <y>0.1</y> <z>0.1</z></location>
+      <direction><x>0.788675184</x> <y>0.211325049</y> <z>-0.577350135</z></direction>
+    </force>
+    <moment name="rotor-3-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-3-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>0.788675184</x> <y>0.211325049</y> <z>-0.577350135</z></direction>
+    </moment>
+    <force name="rotor-4-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-4-thrust-lbs</property></function>
+      <location unit="M"><x>-0.1</x> <y>-0.1</y> <z>-0.1</z></location>
+      <direction><x>0.788675184</x> <y>0.211325049</y> <z>-0.577350135</z></direction>
+    </force>
+    <moment name="rotor-4-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-4-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>0.788675184</x> <y>0.211325049</y> <z>-0.577350135</z></direction>
+    </moment>
+    <force name="rotor-5-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-5-thrust-lbs</property></function>
+      <location unit="M"><x>0.1</x> <y>-0.1</y> <z>-0.1</z></location>
+      <direction><x>-0.211325049</x> <y>0.788675184</y> <z>0.577350135</z></direction>
+    </force>
+    <moment name="rotor-5-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-5-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>-0.211325049</x> <y>0.788675184</y> <z>0.577350135</z></direction>
+    </moment>
+    <force name="rotor-6-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-6-thrust-lbs</property></function>
+      <location unit="M"><x>-0.1</x> <y>0.1</y> <z>-0.1</z></location>
+      <direction><x>0.211325049</x> <y>-0.788675184</y> <z>0.577350135</z></direction>
+    </force>
+    <moment name="rotor-6-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-6-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>0.211325049</x> <y>-0.788675184</y> <z>0.577350135</z></direction>
+    </moment>
+    <force name="rotor-7-thrust" frame="BODY" unit="LBS">
+      <function><property>fcs/omnicopter/rotor-7-thrust-lbs</property></function>
+      <location unit="M"><x>0.1</x> <y>0.1</y> <z>-0.1</z></location>
+      <direction><x>-0.788675184</x> <y>-0.211325049</y> <z>-0.577350135</z></direction>
+    </force>
+    <moment name="rotor-7-reaction" frame="BODY" unit="LBSFT">
+      <function><product><property>fcs/omnicopter/rotor-7-static-thrust-lbs</property><value>-0.196850394</value></product></function>
+      <direction><x>-0.788675184</x> <y>-0.211325049</y> <z>-0.577350135</z></direction>
+    </moment>
+  </external_reactions>
+
+  <!-- The rotor phase uses the source model's 10:1 visual slowdown. -->
+  <flight_control name="Omnicopter rotors">
+    <property value="0">fcs/omnicopter/rotor-0-command</property>
+    <property value="0">fcs/omnicopter/rotor-0-speed</property>
+    <property value="0">fcs/omnicopter/rotor-1-command</property>
+    <property value="0">fcs/omnicopter/rotor-1-speed</property>
+    <property value="0">fcs/omnicopter/rotor-2-command</property>
+    <property value="0">fcs/omnicopter/rotor-2-speed</property>
+    <property value="0">fcs/omnicopter/rotor-3-command</property>
+    <property value="0">fcs/omnicopter/rotor-3-speed</property>
+    <property value="0">fcs/omnicopter/rotor-4-command</property>
+    <property value="0">fcs/omnicopter/rotor-4-speed</property>
+    <property value="0">fcs/omnicopter/rotor-5-command</property>
+    <property value="0">fcs/omnicopter/rotor-5-speed</property>
+    <property value="0">fcs/omnicopter/rotor-6-command</property>
+    <property value="0">fcs/omnicopter/rotor-6-speed</property>
+    <property value="0">fcs/omnicopter/rotor-7-command</property>
+    <property value="0">fcs/omnicopter/rotor-7-speed</property>
+    <channel name="Rotor 0">
+      <switch name="fcs/omnicopter/rotor-0-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-0-command gt fcs/omnicopter/rotor-0-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-0-speed">
+        <input>fcs/omnicopter/rotor-0-command</input>
+        <c1>fcs/omnicopter/rotor-0-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-0-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-0-speed</property>
+            <abs><property>fcs/omnicopter/rotor-0-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-0-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-0-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>-0.788675184</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>-0.211325049</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>-0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-0-turn-rate">
+        <input>fcs/omnicopter/rotor-0-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-0-turns">
+        <input>fcs/omnicopter/rotor-0-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-0-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-0-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 1">
+      <switch name="fcs/omnicopter/rotor-1-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-1-command gt fcs/omnicopter/rotor-1-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-1-speed">
+        <input>fcs/omnicopter/rotor-1-command</input>
+        <c1>fcs/omnicopter/rotor-1-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-1-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-1-speed</property>
+            <abs><property>fcs/omnicopter/rotor-1-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-1-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-1-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>0.211325049</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>-0.788675184</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-1-turn-rate">
+        <input>fcs/omnicopter/rotor-1-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-1-turns">
+        <input>fcs/omnicopter/rotor-1-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-1-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-1-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 2">
+      <switch name="fcs/omnicopter/rotor-2-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-2-command gt fcs/omnicopter/rotor-2-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-2-speed">
+        <input>fcs/omnicopter/rotor-2-command</input>
+        <c1>fcs/omnicopter/rotor-2-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-2-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-2-speed</property>
+            <abs><property>fcs/omnicopter/rotor-2-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-2-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-2-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>-0.211325049</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>0.788675184</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-2-turn-rate">
+        <input>fcs/omnicopter/rotor-2-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-2-turns">
+        <input>fcs/omnicopter/rotor-2-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-2-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-2-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 3">
+      <switch name="fcs/omnicopter/rotor-3-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-3-command gt fcs/omnicopter/rotor-3-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-3-speed">
+        <input>fcs/omnicopter/rotor-3-command</input>
+        <c1>fcs/omnicopter/rotor-3-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-3-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-3-speed</property>
+            <abs><property>fcs/omnicopter/rotor-3-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-3-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-3-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>0.788675184</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>0.211325049</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>-0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-3-turn-rate">
+        <input>fcs/omnicopter/rotor-3-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-3-turns">
+        <input>fcs/omnicopter/rotor-3-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-3-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-3-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 4">
+      <switch name="fcs/omnicopter/rotor-4-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-4-command gt fcs/omnicopter/rotor-4-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-4-speed">
+        <input>fcs/omnicopter/rotor-4-command</input>
+        <c1>fcs/omnicopter/rotor-4-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-4-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-4-speed</property>
+            <abs><property>fcs/omnicopter/rotor-4-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-4-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-4-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>0.788675184</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>0.211325049</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>-0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-4-turn-rate">
+        <input>fcs/omnicopter/rotor-4-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-4-turns">
+        <input>fcs/omnicopter/rotor-4-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-4-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-4-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 5">
+      <switch name="fcs/omnicopter/rotor-5-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-5-command gt fcs/omnicopter/rotor-5-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-5-speed">
+        <input>fcs/omnicopter/rotor-5-command</input>
+        <c1>fcs/omnicopter/rotor-5-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-5-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-5-speed</property>
+            <abs><property>fcs/omnicopter/rotor-5-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-5-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-5-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>-0.211325049</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>0.788675184</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-5-turn-rate">
+        <input>fcs/omnicopter/rotor-5-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-5-turns">
+        <input>fcs/omnicopter/rotor-5-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-5-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-5-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 6">
+      <switch name="fcs/omnicopter/rotor-6-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-6-command gt fcs/omnicopter/rotor-6-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-6-speed">
+        <input>fcs/omnicopter/rotor-6-command</input>
+        <c1>fcs/omnicopter/rotor-6-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-6-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-6-speed</property>
+            <abs><property>fcs/omnicopter/rotor-6-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-6-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-6-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>0.211325049</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>-0.788675184</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-6-turn-rate">
+        <input>fcs/omnicopter/rotor-6-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-6-turns">
+        <input>fcs/omnicopter/rotor-6-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-6-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-6-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+    <channel name="Rotor 7">
+      <switch name="fcs/omnicopter/rotor-7-response">
+        <default value="40"/>
+        <test logic="AND" value="80">
+          fcs/omnicopter/rotor-7-command gt fcs/omnicopter/rotor-7-speed
+        </test>
+      </switch>
+      <lag_filter name="fcs/omnicopter/rotor-7-speed">
+        <input>fcs/omnicopter/rotor-7-command</input>
+        <c1>fcs/omnicopter/rotor-7-response</c1>
+      </lag_filter>
+      <fcs_function name="fcs/omnicopter/rotor-7-static-thrust-lbs">
+        <function>
+          <product>
+            <value>5.64207501</value>
+            <property>fcs/omnicopter/rotor-7-speed</property>
+            <abs><property>fcs/omnicopter/rotor-7-speed</property></abs>
+          </product>
+        </function>
+      </fcs_function>
+      <fcs_function name="fcs/omnicopter/rotor-7-thrust-lbs">
+        <function>
+          <product>
+            <property>fcs/omnicopter/rotor-7-static-thrust-lbs</property>
+            <max>
+              <value>0</value>
+              <difference>
+                <value>1</value>
+                <quotient>
+                  <abs><sum>
+                    <product><property>velocities/u-aero-fps</property><value>-0.788675184</value></product>
+                    <product><property>velocities/v-aero-fps</property><value>-0.211325049</value></product>
+                    <product><property>velocities/w-aero-fps</property><value>-0.577350135</value></product>
+                  </sum></abs>
+                  <value>82.0209974</value>
+                </quotient>
+              </difference>
+            </max>
+          </product>
+        </function>
+      </fcs_function>
+      <pure_gain name="fcs/omnicopter/rotor-7-turn-rate">
+        <input>fcs/omnicopter/rotor-7-speed</input><gain>15.9154943</gain>
+      </pure_gain>
+      <integrator name="fcs/omnicopter/rotor-7-turns">
+        <input>fcs/omnicopter/rotor-7-turn-rate</input><c1>1</c1>
+      </integrator>
+      <fcs_function name="fcs/omnicopter/rotor-7-phase">
+        <function>
+          <fmod><sum><fmod><property>fcs/omnicopter/rotor-7-turns</property><value>1</value></fmod><value>1</value></sum><value>1</value></fmod>
+        </function>
+      </fcs_function>
+    </channel>
+  </flight_control>
+</fdm_config>

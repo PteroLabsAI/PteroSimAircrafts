@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- IMU includes magnetic field. All rates divide the default 240 Hz physics step. -->
+<sensors>
+  <sensor type="imu" name="imu" hz="240"/>
+  <sensor type="barometer" name="barometer" hz="48"/>
+  <sensor type="gps" name="gps" hz="5"/>
+</sensors>
