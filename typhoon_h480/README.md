@@ -33,7 +33,7 @@ bash firmwares/run_px4_sitl.sh "$HOME/Documents/PX4-Autopilot/build/px4_sitl_def
 ```
 
 The script copies PX4's ROMFS to a temporary folder, installs the airframe under the first free number from 22100 and
-starts PX4 on it. Once the estimator is ready, take off from QGroundControl or with `commander takeoff`
+starts PX4 on it; when PX4 exits it names the folder that keeps the run's flight logs. Once the estimator is ready, take off from QGroundControl or with `commander takeoff`
 ([PX4 SITL with PteroSim](https://docs.px4.io/main/en/sim_pterosim/index)).
 
 PX4's outputs 1-6 drive the motors, 7-9 the CGO3's roll, pitch and yaw, and 10 the skids. PX4 raises the skids above

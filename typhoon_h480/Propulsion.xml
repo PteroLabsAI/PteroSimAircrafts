@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <propulsion>
+  <!-- Rotor locations: the source model's rotor poses (typhoon_h480.sdf) with x and y negated, x aft and y right, in
+       PX4's motor order (each rotor's motorNumber there); sense -1 turns clockwise seen from above. -->
   <engine file="h480_motor" name="rotor_0">
     <thruster file="h480_prop">
       <location unit="M">
@@ -13,7 +15,6 @@
         <yaw>0</yaw>
       </orient>
       <sense>-1</sense>
-      <p_factor>0</p_factor>
     </thruster>
   </engine>
   <engine file="h480_motor" name="rotor_1">
@@ -29,7 +30,6 @@
         <yaw>0</yaw>
       </orient>
       <sense>1</sense>
-      <p_factor>0</p_factor>
     </thruster>
   </engine>
   <engine file="h480_motor" name="rotor_2">
@@ -45,7 +45,6 @@
         <yaw>0</yaw>
       </orient>
       <sense>-1</sense>
-      <p_factor>0</p_factor>
     </thruster>
   </engine>
   <engine file="h480_motor" name="rotor_3">
@@ -61,7 +60,6 @@
         <yaw>0</yaw>
       </orient>
       <sense>1</sense>
-      <p_factor>0</p_factor>
     </thruster>
   </engine>
   <engine file="h480_motor" name="rotor_4">
@@ -77,7 +75,6 @@
         <yaw>0</yaw>
       </orient>
       <sense>1</sense>
-      <p_factor>0</p_factor>
     </thruster>
   </engine>
   <engine file="h480_motor" name="rotor_5">
@@ -93,7 +90,6 @@
         <yaw>0</yaw>
       </orient>
       <sense>-1</sense>
-      <p_factor>0</p_factor>
     </thruster>
   </engine>
 </propulsion>

@@ -1,35 +1,24 @@
 Typhoon H480 model provenance
 
-The fuselage, propellers and original CGO3 geometry were adapted from
-PX4-SITL_gazebo-classic at ab7dbc572b4519238f8263ef4a288e6eb80a6076.
-The author named in model.config is Lorenz Meier. The original import
-and the CGO3 addition are both attributed to him in the upstream history.
-The PteroSim adaptation converts the STL files to GLB and adds new
-materials, rebuilt skids, lens details and a newly modelled battery case.
+The fuselage and propellers were adapted from PX4-SITL_gazebo-classic
+at ab7dbc572b4519238f8263ef4a288e6eb80a6076. The author named in model.config
+is Lorenz Meier, and the upstream history attributes the original import to
+him. The PteroSim adaptation converts the STL files to GLB and adds new
+materials, rebuilt skids and a newly modelled battery case.
 The gimbal is x500's CGO3: the gimbal model of PX4's gz collection
 (Tools/simulation/gz/models/gimbal, by Stefano Colli, Auterion), converted,
 welded, shaded smooth and textured as x500's NOTICE describes. That model is
 distributed under the BSD 3-Clause License; LICENSE.gimbal holds its text and
 copyright notice.
 
-The body is rebuilt from the source's main_body_remeshed_v3.stl, whose
-surface is open along networks of cracks: it is the surface standing 0.7 mm
-off that mesh (an unsigned distance field on a 0.5 mm grid), closed and free
-of cracks, decimated to 300,000 triangles; grooves torn open in the source and
-narrower than about 5 mm are closed. The six motor pods, whose source surface
-had holes the size of a finger tip, are turned anew from the source's own
-profile about each motor axis, and the six shoulder sleeves, whose slots were
-torn, are turned about each arm's axis as fitted to its 12.3 mm tube. Normals
-are smoothed across edges under 30 degrees. The shell texture drops the bars
-beside the word, which hid half of the T and the N's right stem, and the word
-is set at 65 % so it stays on the flat of the shell.
-The body's two materials are split along clean lines through the mesh,
-and each propeller hand sits on the rotors that turn its way; the source
-model mounts its clockwise blades on the counter-clockwise rotors.
+The body is rebuilt from the source's main_body_remeshed_v3.stl as a closed
+surface 0.7 mm off it, with its motor pods and shoulder sleeves turned anew
+from the source's own profiles, and its shell texture redrawn. Each propeller
+hand sits on the rotors that turn its way; the source model mounts its
+clockwise blades on the counter-clockwise rotors.
 
   https://github.com/PX4/PX4-SITL_gazebo-classic/tree/ab7dbc572b4519238f8263ef4a288e6eb80a6076/models/typhoon_h480
   https://github.com/PX4/PX4-SITL_gazebo-classic/commit/682656decbc93026c888a37a88202eb1f389437c
-  https://github.com/PX4/PX4-SITL_gazebo-classic/commit/80139a2b75b789f51cab3d6cbad6d916a8c6d7f1
 
 The Gazebo Classic package manifest declares BSD. The pinned model
 directory has no mesh-specific license text or copyright notice, and

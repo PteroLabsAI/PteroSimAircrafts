@@ -5,7 +5,7 @@
 #
 # PX4's hexarotor x in Propulsion.xml's order and senses: 1 right CW, 2 left CCW, 3 front left CW, 4 rear right CCW,
 # 5 front right CCW, 6 rear left CW, seen from above. Rotor positions are FRD about the takeoff CG Mass.xml gives,
-# 0.0116 m aft of and 0.0343 m below the model's origin.
+# 0.0116 m aft of the model's origin; a rotor's height drops out of the allocation with its axis straight up, so no PZ.
 #
 
 . "${R}etc/init.d/rc.mc_defaults"
@@ -13,38 +13,31 @@
 param set-default MAV_TYPE 13
 param set-default CA_AIRFRAME 0
 param set-default CA_ROTOR_COUNT 6
-param set-default CA_SV_CS_COUNT 0
 
 # CT: a rotor's thrust at the full command, 1000 rad/s through Systems/esc_map.xml, in newtons. KM: torque over thrust
 # from Engines/h480_prop.xml's static tables, C_P / (2 pi) * D / C_T; negative for a clockwise rotor.
 param set-default CA_ROTOR0_PX 0.00972521153
 param set-default CA_ROTOR0_PY 0.242705
-param set-default CA_ROTOR0_PZ -0.11649945
 param set-default CA_ROTOR0_KM -0.0115380375
 param set-default CA_ROTOR0_CT 8.54858
 param set-default CA_ROTOR1_PX 0.00972521153
 param set-default CA_ROTOR1_PY -0.242705
-param set-default CA_ROTOR1_PZ -0.11649945
 param set-default CA_ROTOR1_KM 0.0115380375
 param set-default CA_ROTOR1_CT 8.54858
 param set-default CA_ROTOR2_PX 0.223000172
 param set-default CA_ROTOR2_PY -0.119762
-param set-default CA_ROTOR2_PZ -0.11650155
 param set-default CA_ROTOR2_KM -0.0115380375
 param set-default CA_ROTOR2_CT 8.54858
 param set-default CA_ROTOR3_PX -0.197791828
 param set-default CA_ROTOR3_PY 0.122762
-param set-default CA_ROTOR3_PZ -0.11650155
 param set-default CA_ROTOR3_KM 0.0115380375
 param set-default CA_ROTOR3_CT 8.54858
 param set-default CA_ROTOR4_PX 0.223000172
 param set-default CA_ROTOR4_PY 0.119762
-param set-default CA_ROTOR4_PZ -0.11650155
 param set-default CA_ROTOR4_KM 0.0115380375
 param set-default CA_ROTOR4_CT 8.54858
 param set-default CA_ROTOR5_PX -0.197791828
 param set-default CA_ROTOR5_PY -0.122762
-param set-default CA_ROTOR5_PZ -0.11650155
 param set-default CA_ROTOR5_KM -0.0115380375
 param set-default CA_ROTOR5_CT 8.54858
 
@@ -69,20 +62,20 @@ param set-default MC_ROLLRATE_P 0.08
 param set-default MC_ROLLRATE_I 0.04
 param set-default MC_ROLLRATE_D 0.001
 
-# The pack: PteroSim sends it (Battery.xml), PX4 does not simulate one. No airspeed sensor, no ESC telemetry.
+# The pack: PteroSim sends it (Battery.xml), PX4 does not simulate one.
 param set-default SIM_BAT_ENABLE 0
-param set-default BAT1_N_CELLS 4
-param set-default BAT1_CAPACITY 5400
-param set-default SYS_HAS_NUM_ASPD 0
-param set-default COM_ARM_CHK_ESCS 0
 
 # No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.
 param set-default COM_RC_IN_MODE 4
 
 # The CGO3 on outputs 7-9 (Payloads.xml): PX4 is the gimbal device, driven over the MAVLink gimbal protocol v2.
+# The travels are what Payloads.xml binds; PX4 maps +-1 to them about zero, so each RANGE is twice the out= half-travel.
+# The pitch range is spelled both ways, MNT_RANGE_PITCH up to v1.17 and MNT_MIN/MAX_PITCH from v1.18: the one a build
+# has not got prints a "not found" line and changes nothing.
 param set-default MNT_MODE_IN 4
 param set-default MNT_MODE_OUT 0
 param set-default MNT_RANGE_ROLL 90
+param set-default MNT_RANGE_PITCH 180
 param set-default MNT_MIN_PITCH -90
 param set-default MNT_MAX_PITCH 90
 param set-default MNT_RANGE_YAW 360

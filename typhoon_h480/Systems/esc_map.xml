@@ -1,51 +1,25 @@
 <?xml version='1.0' encoding='utf-8'?>
+<!--
+  The ESC: throttle command c -> fcs/throttle-pos-norm[n], the share of the full pack's 16.8 V it puts across the motor
+  to hold the rotor at c x 1000 rad/s (the full-command speed NOTICE names). V = omega / Kv + I R with
+  Engines/h480_motor.xml's Kv and coil resistance; I carries the propeller's torque, which goes as omega squared.
+  speed_share  0.5684105 = 1000 rad/s / (1000 rpm/V x 2 pi / 60) / 16.8 V
+  load_share   0.0073778 = 10.329 A x 0.012 ohm / 16.8 V: 10.329 A = Kv x 0.09863 N m, the torque at 1000 rad/s at sea
+               level from Engines/h480_prop.xml's C_POWER at J 0 (98.63 W / 1000 rad/s)
+-->
 <system name="Typhoon H480 ESC">
   <function type="template" name="h480-duty">
-    <interpolate1d>
-      <p>#</p>
-      <v>0</v>
-      <v>0</v>
-      <v>0.05</v>
-      <v>0.02843897</v>
-      <v>0.1</v>
-      <v>0.056914829</v>
-      <v>0.15</v>
-      <v>0.085427577</v>
-      <v>0.2</v>
-      <v>0.113977214</v>
-      <v>0.25</v>
-      <v>0.14256374</v>
-      <v>0.3</v>
-      <v>0.171187155</v>
-      <v>0.35</v>
-      <v>0.199847459</v>
-      <v>0.4</v>
-      <v>0.228544651</v>
-      <v>0.45</v>
-      <v>0.257278733</v>
-      <v>0.5</v>
-      <v>0.286049704</v>
-      <v>0.55</v>
-      <v>0.314857564</v>
-      <v>0.6</v>
-      <v>0.343702312</v>
-      <v>0.65</v>
-      <v>0.37258395</v>
-      <v>0.7</v>
-      <v>0.401502477</v>
-      <v>0.75</v>
-      <v>0.430457892</v>
-      <v>0.8</v>
-      <v>0.459450197</v>
-      <v>0.85</v>
-      <v>0.48847939</v>
-      <v>0.9</v>
-      <v>0.517545473</v>
-      <v>0.95</v>
-      <v>0.546648444</v>
-      <v>1</v>
-      <v>0.575788305</v>
-    </interpolate1d>
+    <sum>
+      <product>
+        <value>0.5684105</value>
+        <p>#</p>
+      </product>
+      <product>
+        <value>0.0073778</value>
+        <p>#</p>
+        <p>#</p>
+      </product>
+    </sum>
   </function>
   <channel name="ESC">
     <fcs_function name="fcs/esc/duty[0]">

@@ -1,15 +1,11 @@
 <?xml version="1.0"?>
 <!--
   What this vehicle looks like. Metres and degrees from the centre of mass, X forward, Y right, Z up.
-  Meshes from the PX4 Gazebo Classic typhoon_h480 model (NOTICE). The body is silver above the shell's lower rim and on
-  the arms, graphite below it; the pods are graphite where their walls turn away from the sky. Silver is projected from
-  above (its decals), graphite box-mapped. Both are two-sided, so a surface seen from behind still draws.
+  Meshes from the PX4 Gazebo Classic typhoon_h480 model and x500's CGO3 (NOTICE).
   Each propeller turns at its motor about Z: +Z on the rotors that turn clockwise seen from above (Propulsion.xml sense -1),
-  -Z on the others. prop_cw carries the blades that lead clockwise, prop_ccw the other hand; the source model had them
-  the other way round on its rotors.
+  -Z on the others. prop_cw carries the blades that lead clockwise, prop_ccw the other hand.
   The skids swing about the hinges at the top of their struts by h480/skid-angle-deg (Systems/skid_retract.xml).
-  The CGO3 is x500's, the same camera and gimbal: its post, fork and camera ride the gimbal in Payloads.xml, placed
-  about the camera's pitch axis as in x500's Visual.xml, and its mount sits where the source model's mount meets the body.
+  The CGO3's post, fork and camera ride the gimbal in Payloads.xml, placed about its pitch axis as in x500's Visual.xml.
 -->
 <visual>
   <propeller file="meshes/prop_cw.glb" motor="rotor_0" axis="0 0 1"/>
@@ -25,8 +21,8 @@
   <fixture file="meshes/cgo3_camera_link__cgo3_camera_visual.glb" xyz="-0.0412 0 0.162" rpy="0 0 90" parent="cgo3"/>
   <!-- 1.5 mm aft of where it sat on the source body: the rebuilt body stands 0.7 mm proud and came 0.5 mm through its back -->
   <fixture name="power4_flight_pack" file="meshes/power4_flight_pack.glb" xyz="-0.0138958285 0 0.0315825504"/>
-  <surface file="meshes/skid_right.glb" name="right_skid" source="h480/skid-angle-deg" axis="1 0 0" hinge="0.0118641715 0.040515 -0.0137174496" xyz="-0.00565162837 -0.040515 0.0052716994" limit="55"/>
-  <surface file="meshes/skid_left.glb" name="left_skid" source="h480/skid-angle-deg" axis="-1 0 0" hinge="0.0118641715 -0.040515 -0.0137174496" xyz="-0.00565162837 0.040515 0.0052716994" limit="55"/>
+  <surface file="meshes/skid_right.glb" name="right_skid" source="h480/skid-angle-deg" axis="1 0 0" hinge="0.0118641715 0.040515 -0.0137174496" xyz="-0.00565162837 -0.040515 0.0052716994"/>
+  <surface file="meshes/skid_left.glb" name="left_skid" source="h480/skid-angle-deg" axis="-1 0 0" hinge="0.0118641715 -0.040515 -0.0137174496" xyz="-0.00565162837 0.040515 0.0052716994"/>
   <!-- chosen: about three spans behind and a little above, so the whole hexacopter fits the frame -->
   <chase xyz="0.00621254316 0 0.0815542498" rpy="0 -21 0" length="1.65"/>
 </visual>

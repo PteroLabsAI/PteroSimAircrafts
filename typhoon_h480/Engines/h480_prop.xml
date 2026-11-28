@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <propeller name="h480_prop" version="1.1">
   <!--Static power inferred from the APC 10x4.5MR figure of merit; see NOTICE.-->
+  <!--diameter: the source model's rotor radius 0.128 m (typhoon_h480.sdf); ixx: rotor and motor bell about the shaft, chosen-->
   <diameter unit="IN">10.0787402</diameter>
   <numblades>2</numblades>
-  <constspeed>0</constspeed>
   <ixx unit="KG*M2">0.0001</ixx>
   <table name="C_THRUST" type="internal">
     <tableData>

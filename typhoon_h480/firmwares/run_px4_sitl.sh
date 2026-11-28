@@ -9,7 +9,7 @@ fi
 build="$(cd "$1" && pwd)"
 firmwares="$(cd "$(dirname "$0")" && pwd)"
 session="$(mktemp -d -t pterosim-h480.XXXXXXXX)"
-trap 'rm -rf -- "$session"' EXIT
+trap 'rm -rf -- "$session/romfs"; echo "PX4 logs and parameters of this run: $session/run" >&2' EXIT
 mkdir "$session/romfs" "$session/run"
 cp -aL "$build/etc" "$session/romfs/"
 
@@ -21,7 +21,4 @@ done
 cp "$firmwares/px4_typhoon_h480" "$airframes/${autostart}_none_typhoon_h480"
 
 export PX4_SYS_AUTOSTART="$autostart"
-export PX4_SIM_MODEL=none_typhoon_h480
-export PX4_LOCKSTEP=1
-export PX4_SIM_SPEED_FACTOR=1
 "$build/bin/px4" -w "$session/run" "$session/romfs/etc"

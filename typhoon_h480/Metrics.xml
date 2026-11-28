@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <metrics>
+  <!-- reference only, Aero.xml models rotor drag and reads none of them: a 0.67 m square, chosen; the three locations
+       sit at the takeoff CG Mass.xml gives -->
   <wingarea unit="M2">0.4489</wingarea>
   <wingspan unit="M">0.67</wingspan>
   <chord unit="M">0.67</chord>
