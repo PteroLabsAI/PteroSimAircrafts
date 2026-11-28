@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <visual>
   <fixture file="meshes/flightgear-b52f.glb" xyz="0 0 0" rpy="0 0 0" />
+  <fixture name="landing_gear" file="meshes/flightgear-b52f-gear.glb" animation="FlightGearLandingGear" source="gear/gear-pos-norm" input="1 0" />
   <!-- Measured from the CG with the default fuel load, 21.138 m aft and 0.469 m up in Mass.xml's frame. -->
   <surface name="left_aileron" file="meshes/left_aileron.glb" xyz="0 0 0" rpy="0 0 0" source="fcs/left-aileron-pos-deg" axis="-0.57 -1 -0.08" hinge="-2.902 -10.700 0.371" limit="21" />
   <surface name="right_aileron" file="meshes/right_aileron.glb" xyz="0 0 0" rpy="0 0 0" source="fcs/right-aileron-pos-deg" axis="0.57 -1 0.08" hinge="-2.902 10.700 0.371" limit="21" />
