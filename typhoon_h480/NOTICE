@@ -12,9 +12,10 @@ welded, shaded smooth and textured as x500's NOTICE describes. That model is
 distributed under the BSD 3-Clause License; LICENSE.gimbal holds its text and
 copyright notice.
 
-The body's normals are smoothed only across edges whose faces differ by less
-than 30 degrees, and its stray sliver triangles are removed.
-The body's two materials are split along smooth lines through the mesh,
+The body is the source's main_body_remeshed_v3.stl at its full resolution
+(178,900 triangles). Its normals are smoothed only across edges whose faces
+differ by less than 30 degrees, and stray sliver triangles are removed.
+The body's two materials are split along clean lines through the mesh,
 and each propeller hand sits on the rotors that turn its way; the source
 model mounts its clockwise blades on the counter-clockwise rotors.
 
