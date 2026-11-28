@@ -3,7 +3,7 @@
   A sidecar: JSBSim never reads this file. The sensor set every ArduPilot vehicle in PteroSimAircrafts declares (c172p,
   standard_vtol Sensors.xml): imu, barometer, gps, airspeed; the magnetometer rides inside the imu sensor, as on those vehicles.
   The names are theirs; the rates are this aircraft's:
-    imu 300 Hz        SCHED_LOOP_RATE 300 (param): the loop rate ArduPlane consumes IMU samples at
+    imu 240 Hz        PteroSim default physics rate; use 300 Hz with the ArduPlane profile (see README)
     barometer 80 Hz   MS5611 on the Pixhawk1 (BOM): the driver runs a 100 Hz timer and reads pressure in 4 of every 5 slots
                       (ArduPilot libraries/AP_Baro/AP_Baro_MS5611.cpp, register_periodic_callback(10 * AP_USEC_PER_MSEC), _state % 5)
     gps 5 Hz          GPS_RATE_MS 200 (param), M8N (BOM)
@@ -13,7 +13,7 @@
   No camera: none in the BOM.
 -->
 <sensors>
-  <sensor type="imu" name="imu_sensor" hz="300"/>
+  <sensor type="imu" name="imu_sensor" hz="240"/>
   <sensor type="barometer" name="air_pressure_sensor" hz="80"/>
   <sensor type="gps" name="navsat_sensor" hz="5"/>
   <sensor type="airspeed" name="airspeed"/>

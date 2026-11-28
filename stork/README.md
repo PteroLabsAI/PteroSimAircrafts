@@ -31,7 +31,9 @@ the folder name in the five `file=` lines of `Visual.xml`.
 
 ## Run it
 
-Under ArduPilot, with PteroSim's physics at 1 kHz (at 240 Hz ArduCopter's gyro and loop-rate checks refuse to arm):
+For the ArduCopter SITL profile, set **Physics Hz** to **1000** in PteroSim and set the IMU's
+`hz="400"` in the installed `Sensors.xml` before opening the aircraft. At 240 Hz, ArduCopter's gyro
+and loop-rate checks refuse to arm. The shipped sensor file uses 240 Hz for the default PteroSim session.
 
 ```
 sim_vehicle.py -v ArduCopter -f quad --model JSON:<host> --add-param-file=firmwares/ardupilot_stork.param

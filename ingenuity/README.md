@@ -27,7 +27,9 @@ LICENSE, NOTICE      GPL-3.0, sources
 
 ## Run it
 
-Under ArduPilot:
+For the ArduCopter SITL profile, set **Physics Hz** to **1000** in PteroSim and set the IMU's
+`hz="400"` in the installed `Sensors.xml` before opening the aircraft. ArduCopter's default
+`SCHED_LOOP_RATE` is 400 Hz. The shipped sensor file uses 240 Hz for the default PteroSim session.
 
 ```
 sim_vehicle.py -v ArduCopter -f heli-dual --model JSON:<host> --add-param-file=firmwares/ardupilot_ingenuity.param

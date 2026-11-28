@@ -24,7 +24,11 @@ LICENSE, NOTICE      GPL-3.0, sources
 
 ## Run it
 
-ArduPlane, with the team's parameter file translated to current names (the file's header says what was left out):
+For the ArduPlane SITL profile, set **Physics Hz** to at least **300** in PteroSim and set the IMU's
+`hz="300"` in the installed `Sensors.xml` before opening the aircraft. The profile sets
+`SCHED_LOOP_RATE=300`. The shipped sensor file uses 240 Hz for the default PteroSim session.
+
+Run ArduPlane with the team's parameter file translated to current names.
 
 ```
 sim_vehicle.py -v ArduPlane --model JSON:<host> --add-param-file=firmwares/ardupilot_explora.param
