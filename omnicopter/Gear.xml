@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- Eight contact pads on the cage mesh, in the JSBSim structural frame. -->
+<ground_reactions>
+  <contact type="STRUCTURE" name="bottom-forward-left">
+    <location unit="M"><x>-0.16938</x> <y>-0.1604</y> <z>-0.19688</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="bottom-forward-right">
+    <location unit="M"><x>-0.17309</x> <y>0.17598</y> <z>-0.1969</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="bottom-aft-left">
+    <location unit="M"><x>0.16794</x> <y>-0.15652</y> <z>-0.19687</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="bottom-aft-right">
+    <location unit="M"><x>0.16346</x> <y>0.18031</y> <z>-0.19688</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="top-forward-left">
+    <location unit="M"><x>-0.17272</x> <y>-0.15706</y> <z>0.17358</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="top-forward-right">
+    <location unit="M"><x>-0.16863</x> <y>0.18047</y> <z>0.17358</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="top-aft-left">
+    <location unit="M"><x>0.16357</x> <y>-0.16089</y> <z>0.17357</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="top-aft-right">
+    <location unit="M"><x>0.16804</x> <y>0.17573</y> <z>0.17357</z></location>
+    <static_friction>0.7</static_friction>
+    <dynamic_friction>0.5</dynamic_friction>
+    <spring_coeff unit="LBS/FT">140</spring_coeff>
+    <damping_coeff unit="LBS/FT/SEC">5</damping_coeff>
+  </contact>
+</ground_reactions>

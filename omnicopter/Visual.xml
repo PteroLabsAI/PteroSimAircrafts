@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- Measured from the protruding CAD motor shafts. Each propeller surrounds
+     its shaft through a 5.1 mm bore and sits 0.5 mm out from the motor shoulder.
+     Positions are in metres (forward, right, up); the shaft axes are baked into the GLBs. -->
+<visual>
+  <fixture file="meshes/cage.glb"/>
+  <fixture file="meshes/rotor_0.glb" xyz="0.0774615 -0.0921080 0.0999934" animation="Spin" source="fcs/omnicopter/rotor-0-phase" input="0 1"/>
+  <fixture file="meshes/rotor_1.glb" xyz="-0.0991097 -0.0651330 0.0999795" animation="Spin" source="fcs/omnicopter/rotor-1-phase" input="0 1"/>
+  <fixture file="meshes/rotor_2.glb" xyz="0.0930325 0.1269953 0.0688443" animation="Spin" source="fcs/omnicopter/rotor-2-phase" input="0 1"/>
+  <fixture file="meshes/rotor_3.glb" xyz="-0.1146755 0.1000246 0.0688460" animation="Spin" source="fcs/omnicopter/rotor-3-phase" input="0 1"/>
+  <fixture file="meshes/rotor_4.glb" xyz="0.0774661 -0.0921231 -0.1232936" animation="Spin" source="fcs/omnicopter/rotor-4-phase" input="0 1"/>
+  <fixture file="meshes/rotor_5.glb" xyz="-0.0991101 -0.0651439 -0.1232936" animation="Spin" source="fcs/omnicopter/rotor-5-phase" input="0 1"/>
+  <fixture file="meshes/rotor_6.glb" xyz="0.0930375 0.1269954 -0.0921422" animation="Spin" source="fcs/omnicopter/rotor-6-phase" input="0 1"/>
+  <fixture file="meshes/rotor_7.glb" xyz="-0.1146712 0.1000189 -0.0921415" animation="Spin" source="fcs/omnicopter/rotor-7-phase" input="0 1"/>
+</visual>

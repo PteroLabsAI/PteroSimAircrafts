@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- SDF base, IMU, GPS and eight rotor rigid bodies, combined at the SDF origin. -->
+<mass_balance>
+  <emptywt unit="KG">1.57</emptywt>
+  <ixx unit="KG*M2">0.0869622962</ixx>
+  <iyy unit="KG*M2">0.0880508129</iyy>
+  <izz unit="KG*M2">0.0875065549</izz>
+  <ixy unit="KG*M2">0.000314227501</ixy>
+  <ixz unit="KG*M2">0</ixz>
+  <iyz unit="KG*M2">0</iyz>
+  <location name="CG" unit="M"><x>0</x> <y>0</y> <z>0</z></location>
+</mass_balance>
