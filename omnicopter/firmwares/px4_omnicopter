@@ -13,6 +13,9 @@ param set-default CA_ROTOR_COUNT 8
 param set-default CA_R_REV 255
 param set-default CA_METHOD 0
 param set-default THR_MDL_FAC 1
+# The canted rotors have high yaw authority. The generic gain saturates the
+# reversible motors and sustains a yaw oscillation with their response lag.
+param set-default MC_YAWRATE_K 0.16
 
 param set-default CA_ROTOR0_PX 0.1
 param set-default CA_ROTOR0_PY -0.1
