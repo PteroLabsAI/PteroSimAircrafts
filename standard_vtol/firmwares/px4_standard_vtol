@@ -60,5 +60,7 @@ param set-default PWM_MAIN_FUNC6 201
 param set-default PWM_MAIN_FUNC7 202
 param set-default PWM_MAIN_FUNC8 203
 
-param set-default SIM_BAT_ENABLE 0
+# PX4's battery simulator off: SIM_BAT_ENABLE 0 up to v1.17, SIM_BAT_DRAIN 0 from v1.18 (rcS starts it when > 0).
+param set-default -s SIM_BAT_ENABLE 0
+param set-default SIM_BAT_DRAIN 0
 param set-default COM_ARM_CHK_ESCS 0

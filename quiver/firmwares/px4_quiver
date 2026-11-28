@@ -63,7 +63,9 @@ param set-default THR_MDL_FAC 0.74
 # (Systems/esc_map.xml) is thrust 0.26 * 0.536 + 0.74 * 0.536^2 = 0.352. PX4's first guess before it learns the
 # hover (MPC_USE_HTE).
 param set-default MPC_THR_HOVER 0.352
-param set-default SIM_BAT_ENABLE 0
+# PX4's battery simulator off: SIM_BAT_ENABLE 0 up to v1.17, SIM_BAT_DRAIN 0 from v1.18 (rcS starts it when > 0).
+param set-default -s SIM_BAT_ENABLE 0
+param set-default SIM_BAT_DRAIN 0
 param set-default SYS_HAS_NUM_ASPD 0
 
 # No sticks in SITL: with the joystick input rcS asks for, a takeoff into Hold trips the RC-loss failsafe and RTLs.

@@ -69,7 +69,9 @@ param set-default MPC_Z_P 1.5
 param set-default MPC_Z_VEL_P_ACC 8
 param set-default MPC_Z_VEL_I_ACC 6
 
-param set-default SIM_BAT_ENABLE 0
+# PX4's battery simulator off: SIM_BAT_ENABLE 0 up to v1.17, SIM_BAT_DRAIN 0 from v1.18 (rcS starts it when > 0).
+param set-default -s SIM_BAT_ENABLE 0
+param set-default SIM_BAT_DRAIN 0
 param set-default COM_ARM_CHK_ESCS 0
 param set-default SYS_HAS_NUM_ASPD 0
 param set-default COM_RC_IN_MODE 4
