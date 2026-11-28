@@ -23,7 +23,8 @@
   <fixture file="meshes/cgo3_vertical_arm_link__cgo3_vertical_arm_visual.glb" xyz="-0.0412 0 0.162" rpy="0 0 90" parent="cgo3.yaw"/>
   <fixture file="meshes/cgo3_horizontal_arm_link__cgo3_horizontal_arm_visual.glb" xyz="-0.0412 0 0.162" rpy="0 0 90" parent="cgo3.roll"/>
   <fixture file="meshes/cgo3_camera_link__cgo3_camera_visual.glb" xyz="-0.0412 0 0.162" rpy="0 0 90" parent="cgo3"/>
-  <fixture name="power4_flight_pack" file="meshes/power4_flight_pack.glb" xyz="-0.0123958285 0 0.0315825504"/>
+  <!-- 1.5 mm aft of where it sat on the source body: the rebuilt body stands 0.7 mm proud and came 0.5 mm through its back -->
+  <fixture name="power4_flight_pack" file="meshes/power4_flight_pack.glb" xyz="-0.0138958285 0 0.0315825504"/>
   <surface file="meshes/skid_right.glb" name="right_skid" source="h480/skid-angle-deg" axis="1 0 0" hinge="0.0118641715 0.040515 -0.0137174496" xyz="-0.00565162837 -0.040515 0.0052716994" limit="55"/>
   <surface file="meshes/skid_left.glb" name="left_skid" source="h480/skid-angle-deg" axis="-1 0 0" hinge="0.0118641715 -0.040515 -0.0137174496" xyz="-0.00565162837 0.040515 0.0052716994" limit="55"/>
   <!-- chosen: about three spans behind and a little above, so the whole hexacopter fits the frame -->
