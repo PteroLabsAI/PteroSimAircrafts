@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<visual>
+  <!-- The source mesh origin is already near the model CG. Keep it in the
+       same frame as the ground contacts and the gear hinges. -->
+  <fixture file="meshes/x15_body_fixed.glb" xyz="0 0 0" rpy="0 0 90"/>
+  <fixture file="meshes/x15_flap_left.glb" xyz="0 0 0" rpy="0 0 90"/>
+  <fixture file="meshes/x15_flap_right.glb" xyz="0 0 0" rpy="0 0 90"/>
+  <surface file="meshes/x15_elevon_left.glb" xyz="6.25 1.25 0.15" rpy="0 0 90" source="fcs/x15-visual-left-tail-deg" axis="0 -1 0" hinge="-6.25 -1.25 -0.15" limit="35"/>
+  <surface file="meshes/x15_elevon_right.glb" xyz="6.25 -1.25 0.15" rpy="0 0 90" source="fcs/x15-visual-right-tail-deg" axis="0 -1 0" hinge="-6.25 1.25 -0.15" limit="35"/>
+  <surface file="meshes/x15_rudder_upper.glb" xyz="6.25 0 -1.2" rpy="0 0 90" source="fcs/x15-visual-rudder-deg" axis="0 0 -1" hinge="-6.25 0 1.2" limit="30"/>
+  <surface file="meshes/x15_rudder_lower.glb" xyz="6.25 0 1.6" rpy="0 0 90" source="fcs/x15-visual-rudder-deg" axis="0 0 -1" hinge="-6.25 0 -1.6" limit="30"/>
+  <surface file="meshes/x15_gear_nose.glb" xyz="0 0 0" rpy="0 0 90" source="fcs/nose-gear-fold-deg" axis="0 -1 0" hinge="6.9 0 -0.49"/>
+  <surface file="meshes/x15_gear_left.glb" xyz="0 0 0" rpy="0 0 90" source="fcs/main-gear-fold-deg" axis="-0.2426896 -0.8692193 0.4307662" hinge="-4.58 -0.80 -0.43"/>
+  <surface file="meshes/x15_gear_right.glb" xyz="0 0 0" rpy="0 0 90" source="fcs/main-gear-fold-deg" axis="0.2426896 -0.8692193 -0.4307662" hinge="-4.58 0.80 -0.43"/>
+</visual>
