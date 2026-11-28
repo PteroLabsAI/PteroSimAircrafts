@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fdm_config name="typhoon_h480" version="2.0" release="ALPHA">
+  <metrics file="Metrics.xml" />
+  <mass_balance file="Mass.xml" />
+  <ground_reactions file="Gear.xml" />
+  <propulsion file="Propulsion.xml" />
+  <aerodynamics file="Aero.xml" />
+  <system file="esc_map" />
+  <system file="skid_retract" />
+</fdm_config>

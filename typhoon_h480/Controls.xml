@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<control_bindings stack="PX4" pilot="multicopter">
+  <binding stack="PX4" channel="0" type="Motor" index="0" label="rotor_0" />
+  <binding stack="PX4" channel="1" type="Motor" index="1" label="rotor_1" />
+  <binding stack="PX4" channel="2" type="Motor" index="2" label="rotor_2" />
+  <binding stack="PX4" channel="3" type="Motor" index="3" label="rotor_3" />
+  <binding stack="PX4" channel="4" type="Motor" index="4" label="rotor_4" />
+  <binding stack="PX4" channel="5" type="Motor" index="5" label="rotor_5" />
+  <binding stack="PX4" channel="6" type="Gimbal" index="0" label="CGO3 roll" in="-1 1" out="-45 45" />
+  <binding stack="PX4" channel="7" type="Gimbal" index="1" label="CGO3 pitch" in="-1 1" out="-90 90" />
+  <binding stack="PX4" channel="8" type="Gimbal" index="2" label="CGO3 yaw" in="-1 1" out="-180 180" />
+</control_bindings>

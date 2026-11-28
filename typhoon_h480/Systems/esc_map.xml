@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<system name="Typhoon H480 ESC">
+  <function type="template" name="h480-duty">
+    <interpolate1d>
+      <p>#</p>
+      <v>0</v>
+      <v>0</v>
+      <v>0.05</v>
+      <v>0.02843897</v>
+      <v>0.1</v>
+      <v>0.056914829</v>
+      <v>0.15</v>
+      <v>0.085427577</v>
+      <v>0.2</v>
+      <v>0.113977214</v>
+      <v>0.25</v>
+      <v>0.14256374</v>
+      <v>0.3</v>
+      <v>0.171187155</v>
+      <v>0.35</v>
+      <v>0.199847459</v>
+      <v>0.4</v>
+      <v>0.228544651</v>
+      <v>0.45</v>
+      <v>0.257278733</v>
+      <v>0.5</v>
+      <v>0.286049704</v>
+      <v>0.55</v>
+      <v>0.314857564</v>
+      <v>0.6</v>
+      <v>0.343702312</v>
+      <v>0.65</v>
+      <v>0.37258395</v>
+      <v>0.7</v>
+      <v>0.401502477</v>
+      <v>0.75</v>
+      <v>0.430457892</v>
+      <v>0.8</v>
+      <v>0.459450197</v>
+      <v>0.85</v>
+      <v>0.48847939</v>
+      <v>0.9</v>
+      <v>0.517545473</v>
+      <v>0.95</v>
+      <v>0.546648444</v>
+      <v>1</v>
+      <v>0.575788305</v>
+    </interpolate1d>
+  </function>
+  <channel name="ESC">
+    <fcs_function name="fcs/esc/duty[0]">
+      <function>
+        <property apply="h480-duty">fcs/throttle-cmd-norm[0]</property>
+      </function>
+      <output>fcs/throttle-pos-norm[0]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[1]">
+      <function>
+        <property apply="h480-duty">fcs/throttle-cmd-norm[1]</property>
+      </function>
+      <output>fcs/throttle-pos-norm[1]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[2]">
+      <function>
+        <property apply="h480-duty">fcs/throttle-cmd-norm[2]</property>
+      </function>
+      <output>fcs/throttle-pos-norm[2]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[3]">
+      <function>
+        <property apply="h480-duty">fcs/throttle-cmd-norm[3]</property>
+      </function>
+      <output>fcs/throttle-pos-norm[3]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[4]">
+      <function>
+        <property apply="h480-duty">fcs/throttle-cmd-norm[4]</property>
+      </function>
+      <output>fcs/throttle-pos-norm[4]</output>
+    </fcs_function>
+    <fcs_function name="fcs/esc/duty[5]">
+      <function>
+        <property apply="h480-duty">fcs/throttle-cmd-norm[5]</property>
+      </function>
+      <output>fcs/throttle-pos-norm[5]</output>
+    </fcs_function>
+  </channel>
+</system>

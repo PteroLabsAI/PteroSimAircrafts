@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ground_reactions>
+  <contact type="STRUCTURE" name="left_leg_front">
+    <location unit="M">
+      <x>-0.144999739</x>
+      <y>0.14314</y>
+      <z>-0.219181051</z>
+    </location>
+    <static_friction>0.8</static_friction>
+    <dynamic_friction>0.55</dynamic_friction>
+    <spring_coeff unit="N/M">1400</spring_coeff>
+    <damping_coeff unit="N/M/SEC">32</damping_coeff>
+    <retractable>1</retractable>
+  </contact>
+  <contact type="STRUCTURE" name="left_leg_rear">
+    <location unit="M">
+      <x>0.154999739</x>
+      <y>0.14314</y>
+      <z>-0.219740949</z>
+    </location>
+    <static_friction>0.8</static_friction>
+    <dynamic_friction>0.55</dynamic_friction>
+    <spring_coeff unit="N/M">1400</spring_coeff>
+    <damping_coeff unit="N/M/SEC">32</damping_coeff>
+    <retractable>1</retractable>
+  </contact>
+  <contact type="STRUCTURE" name="right_leg_front">
+    <location unit="M">
+      <x>-0.144999739</x>
+      <y>-0.14314</y>
+      <z>-0.219181051</z>
+    </location>
+    <static_friction>0.8</static_friction>
+    <dynamic_friction>0.55</dynamic_friction>
+    <spring_coeff unit="N/M">1400</spring_coeff>
+    <damping_coeff unit="N/M/SEC">32</damping_coeff>
+    <retractable>1</retractable>
+  </contact>
+  <contact type="STRUCTURE" name="right_leg_rear">
+    <location unit="M">
+      <x>0.154999739</x>
+      <y>-0.14314</y>
+      <z>-0.219740949</z>
+    </location>
+    <static_friction>0.8</static_friction>
+    <dynamic_friction>0.55</dynamic_friction>
+    <spring_coeff unit="N/M">1400</spring_coeff>
+    <damping_coeff unit="N/M/SEC">32</damping_coeff>
+    <retractable>1</retractable>
+  </contact>
+</ground_reactions>

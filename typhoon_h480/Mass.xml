@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mass_balance negated_crossproduct_inertia="false">
+  <!--Standard 1.950 kg takeoff configuration. See NOTICE for sources and assumptions.-->
+  <emptywt unit="KG">1.145</emptywt>
+  <location unit="M" name="CG">
+    <x>-0.000896825784</x>
+    <y>0</y>
+    <z>-0.0252410247</z>
+  </location>
+  <ixx unit="KG*M2">0.0133089992</ixx>
+  <iyy unit="KG*M2">0.0132607727</iyy>
+  <izz unit="KG*M2">0.0154287516</izz>
+  <ixy unit="KG*M2">0</ixy>
+  <ixz unit="KG*M2">1.67295915e-05</ixz>
+  <iyz unit="KG*M2">0</iyz>
+  <pointmass name="POWER 4 flight pack">
+    <weight unit="KG">0.55</weight>
+    <location unit="M">
+      <x>0.024</x>
+      <y>0</y>
+      <z>-0.0027</z>
+    </location>
+    <ixx unit="KG*M2">0.0001984125</ixx>
+    <iyy unit="KG*M2">0.0008914125</iyy>
+    <izz unit="KG*M2">0.0009042</izz>
+    <ixy unit="KG*M2">0</ixy>
+    <ixz unit="KG*M2">0</ixz>
+    <iyz unit="KG*M2">0</iyz>
+  </pointmass>
+  <pointmass name="CGO3+ camera and mount">
+    <weight unit="KG">0.255</weight>
+    <location unit="M">
+      <x>0.041</x>
+      <y>0</y>
+      <z>-0.143</z>
+    </location>
+    <ixx unit="KG*M2">0.00024924125</ixx>
+    <iyy unit="KG*M2">0.000308125</iyy>
+    <izz unit="KG*M2">0.00028536625</izz>
+    <ixy unit="KG*M2">0</ixy>
+    <ixz unit="KG*M2">0</ixz>
+    <iyz unit="KG*M2">0</iyz>
+  </pointmass>
+</mass_balance>

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<battery chemistry="LiPo" series="4" parallel="1" cell_capacity_mah="5400" initial_charge_percent="100" cell_resistance_mohm="1" warn_charge_percent="15" avionics_watts="1.85" infinite="false" />

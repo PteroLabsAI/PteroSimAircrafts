@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<brushless_dc_motor name="h480_motor">
+  <maxvolts>16.8</maxvolts>
+  <velocityconstant>1000</velocityconstant>
+  <coilresistance>0.012</coilresistance>
+  <noloadcurrent>0</noloadcurrent>
+</brushless_dc_motor>

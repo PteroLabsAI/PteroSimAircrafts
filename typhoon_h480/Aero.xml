@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<aerodynamics>
+  <axis name="X">
+    <function name="aero/force/rotor-drag-x">
+      <product>
+        <value>-5.78659068e-06</value>
+        <property>velocities/u-aero-fps</property>
+        <sum>
+          <property>propulsion/engine[0]/propeller-rpm</property>
+          <property>propulsion/engine[1]/propeller-rpm</property>
+          <property>propulsion/engine[2]/propeller-rpm</property>
+          <property>propulsion/engine[3]/propeller-rpm</property>
+          <property>propulsion/engine[4]/propeller-rpm</property>
+          <property>propulsion/engine[5]/propeller-rpm</property>
+        </sum>
+      </product>
+    </function>
+  </axis>
+  <axis name="Y">
+    <function name="aero/force/rotor-drag-y">
+      <product>
+        <value>-5.78659068e-06</value>
+        <property>velocities/v-aero-fps</property>
+        <sum>
+          <property>propulsion/engine[0]/propeller-rpm</property>
+          <property>propulsion/engine[1]/propeller-rpm</property>
+          <property>propulsion/engine[2]/propeller-rpm</property>
+          <property>propulsion/engine[3]/propeller-rpm</property>
+          <property>propulsion/engine[4]/propeller-rpm</property>
+          <property>propulsion/engine[5]/propeller-rpm</property>
+        </sum>
+      </product>
+    </function>
+  </axis>
+</aerodynamics>
