@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
-<!-- The CAD is in the Gazebo body frame. Rotor orientations are baked into the GLBs. -->
+<!-- Rotor meshes sit on the measured shaft faces of cage.glb, in metres (forward, right, up).
+     Each disc is offset 3.3 mm from its motor face to clear the cage through a full turn.
+     Rotor axes are baked into the GLBs. The aerodynamic rotor positions are defined in omnicopter.xml. -->
 <visual>
   <fixture file="meshes/cage.glb"/>
-  <fixture file="meshes/rotor_0.glb" xyz="0.1 -0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-0-phase" input="0 1"/>
-  <fixture file="meshes/rotor_1.glb" xyz="-0.1 -0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-1-phase" input="0 1"/>
-  <fixture file="meshes/rotor_2.glb" xyz="0.1 0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-2-phase" input="0 1"/>
-  <fixture file="meshes/rotor_3.glb" xyz="-0.1 0.1 0.1" animation="Spin" source="fcs/omnicopter/rotor-3-phase" input="0 1"/>
-  <fixture file="meshes/rotor_4.glb" xyz="0.1 -0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-4-phase" input="0 1"/>
-  <fixture file="meshes/rotor_5.glb" xyz="-0.1 -0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-5-phase" input="0 1"/>
-  <fixture file="meshes/rotor_6.glb" xyz="0.1 0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-6-phase" input="0 1"/>
-  <fixture file="meshes/rotor_7.glb" xyz="-0.1 0.1 -0.1" animation="Spin" source="fcs/omnicopter/rotor-7-phase" input="0 1"/>
+  <fixture file="meshes/rotor_0.glb" xyz="0.1064661 -0.0843312 0.0787695" animation="Spin" source="fcs/omnicopter/rotor-0-phase" input="0 1"/>
+  <fixture file="meshes/rotor_1.glb" xyz="-0.0912667 -0.0941312 0.0787709" animation="Spin" source="fcs/omnicopter/rotor-1-phase" input="0 1"/>
+  <fixture file="meshes/rotor_2.glb" xyz="0.1007543 0.0979807 0.0900750" animation="Spin" source="fcs/omnicopter/rotor-2-phase" input="0 1"/>
+  <fixture file="meshes/rotor_3.glb" xyz="-0.0857163 0.1077292 0.0901577" animation="Spin" source="fcs/omnicopter/rotor-3-phase" input="0 1"/>
+  <fixture file="meshes/rotor_4.glb" xyz="0.1064397 -0.0843294 -0.1020333" animation="Spin" source="fcs/omnicopter/rotor-4-phase" input="0 1"/>
+  <fixture file="meshes/rotor_5.glb" xyz="-0.0914356 -0.0941438 -0.1020258" animation="Spin" source="fcs/omnicopter/rotor-5-phase" input="0 1"/>
+  <fixture file="meshes/rotor_6.glb" xyz="0.1008586 0.0980528 -0.1134344" animation="Spin" source="fcs/omnicopter/rotor-6-phase" input="0 1"/>
+  <fixture file="meshes/rotor_7.glb" xyz="-0.0857431 0.1077857 -0.1134737" animation="Spin" source="fcs/omnicopter/rotor-7-phase" input="0 1"/>
 </visual>
