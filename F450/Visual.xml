@@ -24,7 +24,16 @@
        pair is the front one, modelled at 315 and 45 degrees, and the axis swap glTF applies puts that
        bisector on an axis I twice predicted wrongly. At -90 the red pair led. Nothing is baked into the
        mesh; the arms sit at 45 degrees either way, so the propellers stay on their tips. -->
-  <fixture file="meshes/F450_body.glb" xyz="0 0 0" rpy="0 0 -90"/>
+  <fixture name="body" file="meshes/F450_body.glb" xyz="0 0 0" rpy="0 0 -90"/>
+
+  <!-- Modelled in the body mesh's own frame, so each rides the body with no offset and moves with it. The pack sits on
+       the top plate (the feet leave 15 mm under the bottom one) and the radio beside it, out of the camera's view. -->
+  <fixture file="meshes/F450_battery.glb" xyz="0 0 0" rpy="0 0 0" parent="body"/>
+  <fixture file="meshes/F450_fc.glb" xyz="0 0 0" rpy="0 0 0" parent="body"/>
+  <fixture file="meshes/F450_gps.glb" xyz="0 0 0" rpy="0 0 0" parent="body"/>
+  <fixture file="meshes/F450_escs.glb" xyz="0 0 0" rpy="0 0 0" parent="body"/>
+  <fixture file="meshes/F450_power.glb" xyz="0 0 0" rpy="0 0 0" parent="body"/>
+  <fixture file="meshes/F450_radio.glb" xyz="0 0 0" rpy="0 0 0" parent="body"/>
 
   <!-- The hub is the motor's own place, read from Propulsion.xml, so xyz here is only the mesh's offset
        from that hub - and this blade is modelled on its hub, so it has none.
